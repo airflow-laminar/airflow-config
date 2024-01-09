@@ -1,0 +1,74 @@
+[build-system]
+requires = ["setuptools", "wheel"]
+build-backend="setuptools.build_meta"
+
+[project]
+name = "airflow-config"
+authors = [{name = "Tim Paine", email = "t.paine154@gmail.com"}]
+description="Airflow utilities for configuration of many DAGs and DAG environments"
+readme = "README.md"
+license = { text = "Apache-2.0" }
+version = "0.1.0"
+requires-python = ">=3.8"
+keywords = [
+    "airflow",
+    "scheduler",
+    "config",
+]
+dependencies = [
+    "apache-airflow",
+    "omegaconf",
+]
+
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Programming Language :: Python :: Implementation :: CPython",
+    "Programming Language :: Python :: Implementation :: PyPy",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+
+
+[project.urls]
+Repository = "https://github.com/timkpaine/airflow-config"
+Homepage = "https://github.com/timkpaine/airflow-config"
+
+[project.optional-dependencies]
+develop = [
+    "bump2version",
+    "check-manifest",
+    "isort",
+    "pytest",
+    "pytest-cov",
+    "ruff",
+    "twine",
+    "wheel",
+]
+
+[tool.check-manifest]
+ignore = []
+
+[tool.isort]
+combine_as_imports = true
+include_trailing_comma = true
+line_length = 120
+profile = "black"
+
+default_section = "THIRDPARTY"
+sections = "FUTURE,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+
+known_first_party = "airflow_config"
+
+[tool.pytest.ini_options]
+asyncio_mode = "strict"
+testpaths = "airflow_config/tests"
+
+[tool.ruff]
+line-length = 120
+
+[tool.ruff.per-file-ignores]
+"__init__.py" = ["F401", "F403"]

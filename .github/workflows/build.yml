@@ -1,0 +1,82 @@
+name: Build Status
+
+on:
+  push:
+    branches:
+      - main
+    tags:
+      - v*
+    paths-ignore:
+      - LICENSE
+      - README.md
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.head_ref || github.run_id }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+  pull-requests: write
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        python-version: [3.9]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+        cache-dependency-path: 'pyproject.toml'
+
+    - name: Install dependencies
+      run: make develop
+
+    - name: Lint
+      run: make lint
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+
+    - name: Checks
+      run: make checks
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+
+    - name: Build
+      run: make build
+
+    - name: Test
+      run: make coverage
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      with:
+        name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
+        path: junit.xml
+      if: ${{ always() }}
+
+    - name: Publish Unit Test Results
+      uses: EnricoMi/publish-unit-test-result-action@v2
+      with:
+        files: |
+            **/junit.xml
+      if: ${{ matrix.os == 'ubuntu-latest' }}
+
+    - name: Upload coverage
+      uses: codecov/codecov-action@v3
+
+    - name: Make dist
+      run: make dist
+      if: ${{ matrix.os == 'ubuntu-latest' }}
