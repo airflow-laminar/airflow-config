@@ -1,3 +1,4 @@
+
 name: Build Status
 
 on:
@@ -30,7 +31,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        python-version: [3.9]
+        python-version: ["3.11"]
 
     steps:
     - uses: actions/checkout@v4
@@ -59,8 +60,8 @@ jobs:
     - name: Test
       run: make coverage
       if: ${{ matrix.os == 'ubuntu-latest' }}
-
-    - name: Upload test results
+      
+    - name: Upload test results (Python)
       uses: actions/upload-artifact@v4
       with:
         name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
@@ -76,7 +77,10 @@ jobs:
 
     - name: Upload coverage
       uses: codecov/codecov-action@v4
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
 
     - name: Make dist
       run: make dist
       if: ${{ matrix.os == 'ubuntu-latest' }}
+
