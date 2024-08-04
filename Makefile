@@ -7,7 +7,7 @@ develop:  ## install dependencies and build library
 	python -m pip install -e .[develop]
 
 build:  ## build the python library
-	python setup.py build build_ext --inplace
+	python -m build -w -s
 
 install:  ## install library
 	python -m pip install .
@@ -18,15 +18,15 @@ install:  ## install library
 .PHONY: lint lints fix format
 
 lint:  ## run python linter with ruff
-	python -m isort --check airflow_config setup.py
-	python -m ruff airflow_config setup.py
+	python -m ruff check airflow_config
+	python -m ruff format --check airflow_config
 
 # Alias
 lints: lint
 
 fix:  ## fix python formatting with ruff
-	python -m isort airflow_config setup.py
-	python -m ruff format airflow_config setup.py
+	python -m ruff check --fix airflow_config
+	python -m ruff format airflow_config
 
 # alias
 format: fix
@@ -34,7 +34,7 @@ format: fix
 ################
 # Other Checks #
 ################
-.PHONY: check-manifest checks check
+.PHONY: check-manifest checks check annotate
 
 check-manifest:  ## check python sdist manifest with check-manifest
 	check-manifest -v
@@ -43,6 +43,9 @@ checks: check-manifest
 
 # Alias
 check: checks
+
+annotate:  ## run python type annotation checks with mypy
+	python -m mypy ./airflow_config
 
 #########
 # TESTS #
@@ -53,7 +56,7 @@ test:  ## run python tests
 	python -m pytest -v airflow_config/tests --junitxml=junit.xml
 
 coverage:  ## run tests and collect test coverage
-	python -m pytest -v airflow_config/tests --junitxml=junit.xml --cov=airflow_config --cov-branch --cov-fail-under=50 --cov-report term-missing --cov-report xml
+	python -m pytest -v airflow_config/tests --junitxml=junit.xml --cov=airflow_config --cov-branch --cov-fail-under=60 --cov-report term-missing --cov-report xml
 
 # Alias
 tests: test
@@ -64,16 +67,16 @@ tests: test
 .PHONY: show-version patch minor major
 
 show-version:  ## show current library version
-	bump2version --dry-run --allow-dirty setup.py --list | grep current | awk -F= '{print $2}'
+	@bump-my-version show current_version
 
 patch:  ## bump a patch version
-	bump2version patch
+	@bump-my-version bump patch
 
 minor:  ## bump a minor version
-	bump2version minor
+	@bump-my-version bump minor
 
 major:  ## bump a major version
-	bump2version major
+	@bump-my-version bump major
 
 ########
 # DIST #

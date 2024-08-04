@@ -1,0 +1,5 @@
+# @package _global_
+_target_: airflow_config.Configuration
+global_:
+  _target_: airflow_config.GlobalDagConfiguration
+  owner: test

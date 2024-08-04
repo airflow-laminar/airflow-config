@@ -1,0 +1,3 @@
+# @package _global_
+python:
+  _target_: airflow_config.PythonConfiguration

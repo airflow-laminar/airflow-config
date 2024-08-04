@@ -1,23 +1,19 @@
 [build-system]
-requires = ["setuptools", "wheel"]
-build-backend="setuptools.build_meta"
+requires = ["hatchling"]
+build-backend="hatchling.build"
 
 [project]
 name = "airflow-config"
-authors = [{name = "The airflow-config authors", email = "3105306+timkpaine@users.noreply.github.com"}]
-description="Airflow utilities for configuration of many DAGs and DAG environments"
+authors = [{name = "the airflow-config authors", email = "3105306+timkpaine@users.noreply.github.com"}]
+description = "Airflow utilities for configuration of many DAGs and DAG environments"
 readme = "README.md"
 license = { text = "Apache-2.0" }
 version = "0.1.0"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 keywords = [
     "airflow",
     "scheduler",
     "config",
-]
-dependencies = [
-    "apache-airflow",
-    "omegaconf",
 ]
 
 classifiers = [
@@ -32,6 +28,11 @@ classifiers = [
     "Programming Language :: Python :: 3.12",
 ]
 
+dependencies = [
+    "apache-airflow>=2.8,<3",
+    "hydra-core",
+    "omegaconf",
+]
 
 [project.urls]
 Repository = "https://github.com/airflow-laminar/airflow-config"
@@ -39,9 +40,10 @@ Homepage = "https://github.com/airflow-laminar/airflow-config"
 
 [project.optional-dependencies]
 develop = [
-    "bump2version",
+    "build",
+    "bump-my-version",
     "check-manifest",
-    "isort",
+    "hatchling",
     "pytest",
     "pytest-cov",
     "ruff",
@@ -49,26 +51,80 @@ develop = [
     "wheel",
 ]
 
+[project.scripts]
+
+[tool.bumpversion]
+current_version = "0.1.0"
+commit = true
+tag = true
+
+[[tool.bumpversion.files]]
+filename = "airflow_config/__init__.py"
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
+[[tool.bumpversion.files]]
+filename = "pyproject.toml"
+search = 'version = "{current_version}"'
+replace = 'version = "{new_version}"'
+
 [tool.check-manifest]
-ignore = []
+ignore = [
+    "Makefile",
+    "setup.py",
+    "example_dags/*",
+]
 
-[tool.isort]
-combine_as_imports = true
-include_trailing_comma = true
-line_length = 120
-profile = "black"
+[tool.hatch.build]
+artifacts = []
 
-default_section = "THIRDPARTY"
-sections = "FUTURE,THIRDPARTY,FIRSTPARTY,LOCALFOLDER"
+[tool.hatch.build.sources]
+src = "/"
 
-known_first_party = "airflow_config"
+[tool.hatch.build.targets.sdist]
+include = [
+    "/airflow_config",
+    "LICENSE",
+    "README.md",
+]
+exclude = [
+    "/.github",
+    "/.gitattributes",
+    "/.gitignore",
+    "/example_dags",
+]
+
+[tool.hatch.build.targets.wheel]
+include = [
+    "/airflow_config",
+]
+exclude = [
+    "/.github",
+    "/.gitattributes",
+    "/.gitignore",
+    "/pyproject.toml",
+    "/example_dags",
+]
+
+[tool.hatch.build.targets.wheel.shared-data]
 
 [tool.pytest.ini_options]
 asyncio_mode = "strict"
 testpaths = "airflow_config/tests"
 
 [tool.ruff]
-line-length = 120
+line-length = 150
 
-[tool.ruff.per-file-ignores]
+[tool.ruff.lint.isort]
+combine-as-imports = true
+default-section = "third-party"
+known-first-party = ["airflow_config"]
+section-order = [
+    "future",
+    "third-party",
+    "first-party",
+    "local-folder",
+]
+
+[tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
