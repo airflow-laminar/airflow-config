@@ -1,6 +1,8 @@
-import pytest
 from unittest.mock import patch
-from airflow_config import load_config, ConfigNotFoundError
+
+import pytest
+
+from airflow_config import ConfigNotFoundError, load_config
 
 
 def test_no_config_file():

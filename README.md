@@ -57,14 +57,16 @@ Now consider the alternative, config-driven approach:
 ```yaml
 # @package _global_
 _target_: airflow_config.Configuration
-global_:
-  _target_: airflow_config.GlobalDagConfiguration
+default_args:
+  _target_: airflow_config.DefaultArgs
   owner: test
   email: [myemail@myemail.com]
   email_on_failure: false
   email_on_retry: false
   retries: 0
   depends_on_past: false
+all_dags:
+  _target_: airflow_config.DAGArgs
   schedule: "01:00"
   start_date: "2024-01-01"
   catchup: false
