@@ -11,7 +11,7 @@ def test_generate_dag_id(airflow_config):
 def test_create_dag_base(configuration):
     with patch("airflow_config.dag.generate_dag_id") as m:
         m.return_value = "testdag"
-        d = create_dag(config=configuration)
+        d = create_dag(configuration)
         assert d.dag_id == "testdag"
 
 
