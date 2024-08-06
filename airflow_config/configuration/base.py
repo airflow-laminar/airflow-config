@@ -6,7 +6,7 @@ from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import BaseModel, Field
 
-from airflow_config.configuration.airflow import DAGArgs, DagConfiguration, DefaultArgs
+from airflow_config.configuration.airflow import DagArgs, DagConfiguration, DefaultArgs
 from airflow_config.configuration.python import PythonConfiguration
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
@@ -21,7 +21,7 @@ class Configuration(BaseModel):
     default_args: DefaultArgs = Field(
         default_factory=DefaultArgs, description="Task-level args to set for all DAGs, unless overridden in the DAG itself"
     )
-    all_dags: DAGArgs = Field(default_factory=DAGArgs, description="Per-dag arguments to set global defaults")
+    all_dags: DagArgs = Field(default_factory=DagArgs, description="Per-dag arguments to set global defaults")
     python: PythonConfiguration = Field(default_factory=PythonConfiguration, description="Global Python configuration")
     dags: Optional[Dict[str, DagConfiguration]] = Field(description="List of dags statically configured via Pydantic")
     # user_configuration: UserConfiguration
