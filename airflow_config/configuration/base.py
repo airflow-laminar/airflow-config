@@ -1,16 +1,15 @@
 import os
 from pathlib import Path
-from pydantic import BaseModel, Field
 from typing import Dict, Optional
 
-from hydra import initialize_config_dir, compose
+from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
+from pydantic import BaseModel, Field
 
+from airflow_config.configuration.airflow import DAGArgs, DagConfiguration, DefaultArgs
+from airflow_config.configuration.python import PythonConfiguration
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
-from airflow_config.configuration.airflow import GlobalDagConfiguration, DagConfiguration
-from airflow_config.configuration.python import PythonConfiguration
-
 
 __all__ = (
     "Configuration",
@@ -19,8 +18,11 @@ __all__ = (
 
 
 class Configuration(BaseModel):
-    global_: GlobalDagConfiguration = Field(description="Global DAG configuration, to apply to all DAGs unless explicitly overridden")
-    python: PythonConfiguration = Field(description="Global Python configuration")
+    default_args: DefaultArgs = Field(
+        default_factory=DefaultArgs, description="Task-level args to set for all DAGs, unless overridden in the DAG itself"
+    )
+    all_dags: DAGArgs = Field(default_factory=DAGArgs, description="Per-dag arguments to set global defaults")
+    python: PythonConfiguration = Field(default_factory=PythonConfiguration, description="Global Python configuration")
     dags: Optional[Dict[str, DagConfiguration]] = Field(description="List of dags statically configured via Pydantic")
     # user_configuration: UserConfiguration
 
@@ -76,6 +78,29 @@ class Configuration(BaseModel):
             if not isinstance(config, Configuration):
                 config = Configuration(**config)
             return config
+
+    def pre_apply(self, dag, dag_kwargs):
+        # update options in config based on hard-coded overrides
+        # in the DAG file itself
+        if "default_args" not in dag_kwargs:
+            dag_kwargs["default_args"] = {}
+        if "owner" not in dag_kwargs["default_args"] and self.default_args.owner:
+            dag_kwargs["default_args"]["owner"] = self.default_args.owner
+
+    def apply(self, dag, **dag_kwargs):
+        # update the options in the dag
+        # TODO loop
+        dag.start_date = self.all_dags.start_date
+        dag.end_date = self.all_dags.end_date
+        dag.catchup = self.all_dags.catchup
+        dag.tags = self.all_dags.tags
+
+        dag.email = self.default_args.email
+        dag.email_on_failure = self.default_args.email_on_failure
+        dag.email_on_retry = self.default_args.email_on_retry
+        dag.retries = self.default_args.retries
+        dag.retry_delay = self.default_args.retry_delay
+        dag.depends_on_past = self.default_args.depends_on_past
 
 
 load_config = Configuration.load

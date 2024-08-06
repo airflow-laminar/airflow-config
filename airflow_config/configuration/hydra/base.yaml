@@ -2,8 +2,8 @@
 
 defaults:
   # https://hydra.cc/docs/configure_hydra/logging/
-  - global/default
-  - python/default
+  - default_args/default
+  - dag_args/default
   - override hydra/job_logging: custom
   - override hydra/hydra_logging: custom
   - _self_

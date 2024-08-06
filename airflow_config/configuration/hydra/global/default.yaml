@@ -1,3 +1,0 @@
-# @package _global_
-global_:
-  _target_: airflow_config.GlobalDagConfiguration
