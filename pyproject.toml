@@ -56,7 +56,7 @@ develop = [
 [tool.bumpversion]
 current_version = "0.1.0"
 commit = true
-tag = true
+tag = false
 
 [[tool.bumpversion.files]]
 filename = "airflow_config/__init__.py"
