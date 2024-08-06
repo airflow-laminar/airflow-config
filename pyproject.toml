@@ -8,7 +8,7 @@ authors = [{name = "the airflow-config authors", email = "3105306+timkpaine@user
 description = "Airflow utilities for configuration of many DAGs and DAG environments"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-version = "0.1.0"
+version = "0.1.1"
 requires-python = ">=3.9"
 keywords = [
     "airflow",
@@ -54,9 +54,9 @@ develop = [
 [project.scripts]
 
 [tool.bumpversion]
-current_version = "0.1.0"
+current_version = "0.1.1"
 commit = true
-tag = true
+tag = false
 
 [[tool.bumpversion.files]]
 filename = "airflow_config/__init__.py"
