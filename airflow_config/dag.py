@@ -20,10 +20,9 @@ class DAG(BaseDag):
     def __init__(self, config: Configuration = None, **kwargs):
         if config:
             config.pre_apply(self, kwargs)
-            print(kwargs)
         super().__init__(**kwargs)
         if config:
-            config.apply(self)
+            config.apply(self, kwargs)
 
 
 def generate_dag_id(name: str = "", dag_root: str = "", *args: str, **kwargs: str) -> str:
