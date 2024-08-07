@@ -1,0 +1,9 @@
+# @package _global_
+_target_: airflow_config.Configuration
+default_args:
+  _target_: airflow_config.DefaultArgs
+  owner: test
+
+extensions:
+  priority:
+    _target_: airflow_config.PriorityConfiguration

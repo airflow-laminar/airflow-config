@@ -23,8 +23,8 @@ class Configuration(BaseModel):
     )
     all_dags: DagArgs = Field(default_factory=DagArgs, description="Per-dag arguments to set global defaults")
     python: PythonConfiguration = Field(default_factory=PythonConfiguration, description="Global Python configuration")
-    dags: Optional[Dict[str, DagConfiguration]] = Field(description="List of dags statically configured via Pydantic")
-    # user_configuration: UserConfiguration
+    extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
+    dags: Optional[Dict[str, DagConfiguration]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
     @staticmethod
     def _find_parent_config_folder(config_dir: str = "config", config_name: str = ""):
@@ -87,7 +87,7 @@ class Configuration(BaseModel):
         if "owner" not in dag_kwargs["default_args"] and self.default_args.owner:
             dag_kwargs["default_args"]["owner"] = self.default_args.owner
 
-    def apply(self, dag, **dag_kwargs):
+    def apply(self, dag, dag_kwargs):
         # update the options in the dag
         # TODO loop
         dag.start_date = self.all_dags.start_date
