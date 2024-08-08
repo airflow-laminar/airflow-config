@@ -1,6 +1,6 @@
-{% raw %}
 [core]
-dags_folder = ~/airflow/dags
+dags_folder = {{ DAGS_ROOT }}
+{% raw %}
 hostname_callable = airflow.utils.net.getfqdn
 might_contain_dag_callable = airflow.utils.file.might_contain_dag_via_default_heuristic
 default_timezone = utc

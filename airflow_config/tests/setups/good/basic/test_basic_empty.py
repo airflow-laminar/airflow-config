@@ -1,10 +1,13 @@
-from unittest.mock import patch
-
-from airflow_config import load_config
+from airflow_config import create_dag, load_config
 
 
 def test_config_and_empty_file():
-    with patch("airflow_config.configuration.base._get_calling_dag") as m1:
-        m1.return_value = __file__
-        conf = load_config("config", "test")
-        assert conf.default_args.owner == "test"
+    conf = load_config("config", "test")
+    assert conf.default_args.owner == "test"
+
+
+def test_config_and_empty_file_create_dag():
+    d = create_dag("config", "test")
+    assert d.dag_id == "tests-setups-good-basic-test-basic-empty"
+    assert d.dag_id in globals()
+    assert d.default_args["owner"] == "test"

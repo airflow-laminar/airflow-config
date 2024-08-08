@@ -25,13 +25,12 @@ class DAG(BaseDag):
             config.apply(self, kwargs)
 
 
-def generate_dag_id(name: str = "", dag_root: str = "", *args: str, **kwargs: str) -> str:
+def generate_dag_id(name: str = "", dag_root: str = "", offset: int = 2) -> str:
     if not name:
         try:
             # get file of calling python file, can't use the module name as one might
             # have the same module in multiple folders
-            caller = _get_calling_dag()
-
+            caller = _get_calling_dag(offset=offset)
             # remove python suffix, replace path with dash
             name = caller.replace(".py", "").replace("/", "-").replace("_", "-")
             # remove root folder
@@ -45,35 +44,38 @@ def generate_dag_id(name: str = "", dag_root: str = "", *args: str, **kwargs: st
 
 
 @singledispatch
-def create_dag(arg, *args: Any, **kwargs: Any) -> DAG:
+def create_dag(arg, **kwargs: Any) -> DAG:
     raise NotImplementedError()
 
 
 @singledispatch
-def create_dags(arg, *args: Any, **kwargs: Any) -> DAG:
+def create_dags(arg, **kwargs: Any) -> DAG:
     raise NotImplementedError()
 
 
 @create_dag.register
-def create_dag_config(config: Configuration, dag_id: str = "", *args: Any, **kwargs: Any) -> DAG:
-    dag = DAG(
-        config=config,
-        dag_id=dag_id or generate_dag_id(),
-    )
-    currentframe().f_back.f_back.f_globals[dag_id] = dag
+def _create_dag_config(config: Configuration, dag_id: str = "", _offset: int = 3) -> DAG:
+    dag_id = dag_id or generate_dag_id(offset=_offset + 1)
+    dag = DAG(config=config, dag_id=dag_id)
+    cur_frame = currentframe()
+    for _ in range(_offset - 1):
+        if hasattr(cur_frame, "f_back") and cur_frame.f_back and hasattr(cur_frame.f_back, "f_globals"):
+            cur_frame = cur_frame.f_back
+        else:
+            break
+    cur_frame.f_globals[dag_id] = dag
     return dag
 
 
 @create_dag.register
-def create_dag_dir(
-    config_dir: str = "config", config_name: str = "", overrides: Optional[list[str]] = None, dag_id: str = "", *args: Any, **kwargs: Any
-) -> DAG:
-    config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides)
-    return create_dag(config, dag_id=dag_id, *args, **kwargs)
+def _create_dag_dir(config_dir: str = "config", config_name: str = "", overrides: Optional[list[str]] = None, dag_id: str = "", **kwargs: Any) -> DAG:
+    dag_id = dag_id or generate_dag_id(offset=4)
+    config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides, _offset=5)
+    return create_dag(config, dag_id=dag_id, _offset=5, **kwargs)
 
 
 @create_dags.register
-def create_dags_config(configs: list = None, dag_ids: list[str] = None, *args: Any, **kwargs: Any) -> list[DAG]:
+def _create_dags_config(configs: list = None, dag_ids: list[str] = None, **kwargs: Any) -> list[DAG]:
     ret = []
     dag_ids = dag_ids or []
     for i, config in enumerate(configs):
@@ -81,22 +83,21 @@ def create_dags_config(configs: list = None, dag_ids: list[str] = None, *args: A
             dag_id = dag_ids[i]
         else:
             dag_id = ""
-        ret.append(create_dag(config, dag_id=dag_id, *args, **kwargs))
+        ret.append(create_dag(config, dag_id=dag_id, _offset=5, **kwargs))
     return ret
 
 
 @create_dags.register
-def create_dags_dirs(
+def _create_dags_dirs(
     config_dir: str = "config",
     config_names: list[list[str]] = None,
     overrides: Optional[list[str]] = None,
     dag_id_base: str = "",
-    *args: Any,
     **kwargs: Any,
 ) -> list[DAG]:
     ret = []
-    dag_id_base = dag_id_base or generate_dag_id()
+    dag_id_base = dag_id_base or generate_dag_id(offset=4)
     for config_name in config_names:
-        config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides)
-        ret.append(create_dag(config, dag_id=f"{dag_id_base}-{config_name}", *args, **kwargs))
+        config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides, _offset=5)
+        ret.append(create_dag(config, dag_id=f"{dag_id_base}-{config_name}", _offset=5, **kwargs))
     return ret

@@ -13,7 +13,10 @@ def airflow_config():
     config_template = (Path(__file__).parent / "airflow.cfg.jinja").read_text()
     j2 = Environment(loader=DictLoader({"airflow.cfg": config_template}), trim_blocks=True)
     with TemporaryDirectory() as td:
-        tmpl = j2.get_template("airflow.cfg").render()
+        tmpl = j2.get_template("airflow.cfg").render(
+            # Set to root path of airflow_config
+            DAGS_ROOT=str(Path(__file__).parent.parent.resolve()),
+        )
         (Path(td) / "airflow.cfg").write_text(tmpl)
         os.environ["AIRFLOW_HOME"] = str(Path(td))
         os.environ["AIRFLOW_CONFIG"] = str((Path(td) / "airflow.cfg"))

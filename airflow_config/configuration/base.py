@@ -27,9 +27,15 @@ class Configuration(BaseModel):
     dags: Optional[Dict[str, DagConfiguration]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
     @staticmethod
-    def _find_parent_config_folder(config_dir: str = "config", config_name: str = ""):
-        calling_dag = _get_calling_dag()
-        folder = Path(calling_dag).parent.resolve()
+    def _find_parent_config_folder(config_dir: str = "config", config_name: str = "", *, basepath: str = "", _offset: int = 2):
+        if basepath:
+            if basepath.endswith((".py", ".cfg", ".yml", ".yaml")):
+                calling_dag = Path(basepath)
+            else:
+                calling_dag = Path(basepath) / "dummy.py"
+        else:
+            calling_dag = Path(_get_calling_dag(offset=_offset))
+        folder = calling_dag.parent.resolve()
         exists = (
             (folder / config_dir).exists()
             if not config_name
@@ -38,7 +44,7 @@ class Configuration(BaseModel):
         while not exists:
             folder = folder.parent
             if str(folder) == os.path.abspath(os.sep):
-                raise ConfigNotFoundError(calling_dag)
+                raise ConfigNotFoundError(config_dir=config_dir, dagfile=calling_dag)
             exists = (
                 (folder / config_dir).exists()
                 if not config_name
@@ -57,12 +63,17 @@ class Configuration(BaseModel):
         config_dir: str = "config",
         config_name: str = "",
         overrides: Optional[list[str]] = None,
+        *,
+        basepath: str = "",
+        _offset: int = 3,
     ) -> "Configuration":
         overrides = overrides or []
 
         with initialize_config_dir(config_dir=str(Path(__file__).resolve().parent / "hydra"), version_base=None):
             if config_dir:
-                hydra_folder, config_dir, _ = Configuration._find_parent_config_folder(config_dir=config_dir, config_name=config_name)
+                hydra_folder, config_dir, _ = Configuration._find_parent_config_folder(
+                    config_dir=config_dir, config_name=config_name, basepath=basepath, _offset=_offset
+                )
 
                 cfg = compose(config_name="base", overrides=[], return_hydra_config=True)
                 searchpaths = cfg["hydra"]["searchpath"]
