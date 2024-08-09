@@ -204,14 +204,14 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../docs/src/API.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/DIRNAME/airflow_config.Configuration.html">airflow_config.Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/DIRNAME/airflow_config.DagArgs.html">airflow_config.DagArgs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/DIRNAME/airflow_config.PythonConfiguration.html">airflow_config.PythonConfiguration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/DIRNAME/airflow_config.DagConfiguration.html">airflow_config.DagConfiguration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/DIRNAME/airflow_config.DAG.html">airflow_config.DAG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/DIRNAME/airflow_config.generate_dag_id.html">airflow_config.generate_dag_id</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/DIRNAME/airflow_config.create_dag.html">airflow_config.create_dag</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../docs/src/DIRNAME/airflow_config.create_dags.html">airflow_config.create_dags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_config.Configuration.html">airflow_config.Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_config.DagArgs.html">airflow_config.DagArgs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_config.PythonConfiguration.html">airflow_config.PythonConfiguration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_config.DagConfiguration.html">airflow_config.DagConfiguration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_config.DAG.html">airflow_config.DAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_config.generate_dag_id.html">airflow_config.generate_dag_id</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_config.create_dag.html">airflow_config.create_dag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../docs/src/_build/airflow_config.create_dags.html">airflow_config.create_dags</a></li>
 </ul>
 </li>
 </ul>
@@ -268,10 +268,10 @@
 
 
 <div class="viewcode-block" id="DAG">
-<a class="viewcode-back" href="../../docs/src/DIRNAME/airflow_config.DAG.html#airflow_config.DAG">[docs]</a>
+<a class="viewcode-back" href="../../docs/src/_build/airflow_config.DAG.html#airflow_config.DAG">[docs]</a>
 <span class="k">class</span> <span class="nc">DAG</span><span class="p">(</span><span class="n">BaseDag</span><span class="p">):</span>
 <div class="viewcode-block" id="DAG.__init__">
-<a class="viewcode-back" href="../../docs/src/DIRNAME/airflow_config.DAG.html#airflow_config.DAG.__init__">[docs]</a>
+<a class="viewcode-back" href="../../docs/src/_build/airflow_config.DAG.html#airflow_config.DAG.__init__">[docs]</a>
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
             <span class="n">config</span><span class="o">.</span><span class="n">pre_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
@@ -283,7 +283,7 @@
 
 
 <div class="viewcode-block" id="generate_dag_id">
-<a class="viewcode-back" href="../../docs/src/DIRNAME/airflow_config.generate_dag_id.html#airflow_config.generate_dag_id">[docs]</a>
+<a class="viewcode-back" href="../../docs/src/_build/airflow_config.generate_dag_id.html#airflow_config.generate_dag_id">[docs]</a>
 <span class="k">def</span> <span class="nf">generate_dag_id</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">dag_root</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">name</span><span class="p">:</span>
         <span class="k">try</span><span class="p">:</span>
@@ -304,7 +304,7 @@
 
 
 <div class="viewcode-block" id="create_dag">
-<a class="viewcode-back" href="../../docs/src/DIRNAME/airflow_config.create_dag.html#airflow_config.create_dag">[docs]</a>
+<a class="viewcode-back" href="../../docs/src/_build/airflow_config.create_dag.html#airflow_config.create_dag">[docs]</a>
 <span class="nd">@singledispatch</span>
 <span class="k">def</span> <span class="nf">create_dag</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
@@ -312,7 +312,7 @@
 
 
 <div class="viewcode-block" id="create_dags">
-<a class="viewcode-back" href="../../docs/src/DIRNAME/airflow_config.create_dags.html#airflow_config.create_dags">[docs]</a>
+<a class="viewcode-back" href="../../docs/src/_build/airflow_config.create_dags.html#airflow_config.create_dags">[docs]</a>
 <span class="nd">@singledispatch</span>
 <span class="k">def</span> <span class="nf">create_dags</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
     <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>

@@ -204,14 +204,14 @@
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../docs/src/API.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/DIRNAME/airflow_config.Configuration.html">airflow_config.Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/DIRNAME/airflow_config.DagArgs.html">airflow_config.DagArgs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/DIRNAME/airflow_config.PythonConfiguration.html">airflow_config.PythonConfiguration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/DIRNAME/airflow_config.DagConfiguration.html">airflow_config.DagConfiguration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/DIRNAME/airflow_config.DAG.html">airflow_config.DAG</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/DIRNAME/airflow_config.generate_dag_id.html">airflow_config.generate_dag_id</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/DIRNAME/airflow_config.create_dag.html">airflow_config.create_dag</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/DIRNAME/airflow_config.create_dags.html">airflow_config.create_dags</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.Configuration.html">airflow_config.Configuration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.DagArgs.html">airflow_config.DagArgs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.PythonConfiguration.html">airflow_config.PythonConfiguration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.DagConfiguration.html">airflow_config.DagConfiguration</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.DAG.html">airflow_config.DAG</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.generate_dag_id.html">airflow_config.generate_dag_id</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.create_dag.html">airflow_config.create_dag</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.create_dags.html">airflow_config.create_dags</a></li>
 </ul>
 </li>
 </ul>
@@ -269,7 +269,7 @@
 
 
 <div class="viewcode-block" id="Configuration">
-<a class="viewcode-back" href="../../../docs/src/DIRNAME/airflow_config.Configuration.html#airflow_config.Configuration">[docs]</a>
+<a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration">[docs]</a>
 <span class="k">class</span> <span class="nc">Configuration</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">default_args</span><span class="p">:</span> <span class="n">DefaultArgs</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default_factory</span><span class="o">=</span><span class="n">DefaultArgs</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Task-level args to set for all DAGs, unless overridden in the DAG itself&quot;</span>
@@ -312,7 +312,7 @@
         <span class="k">return</span> <span class="n">folder</span><span class="o">.</span><span class="n">resolve</span><span class="p">(),</span> <span class="n">config_dir</span><span class="p">,</span> <span class="p">(</span><span class="n">folder</span> <span class="o">/</span> <span class="n">config_dir</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">config_name</span><span class="si">}</span><span class="s2">.yaml&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Configuration.load">
-<a class="viewcode-back" href="../../../docs/src/DIRNAME/airflow_config.Configuration.html#airflow_config.Configuration.load">[docs]</a>
+<a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration.load">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">load</span><span class="p">(</span>
         <span class="n">config_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span>
@@ -347,7 +347,7 @@
 
 
 <div class="viewcode-block" id="Configuration.pre_apply">
-<a class="viewcode-back" href="../../../docs/src/DIRNAME/airflow_config.Configuration.html#airflow_config.Configuration.pre_apply">[docs]</a>
+<a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration.pre_apply">[docs]</a>
     <span class="k">def</span> <span class="nf">pre_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">,</span> <span class="n">dag_kwargs</span><span class="p">):</span>
         <span class="c1"># update options in config based on hard-coded overrides</span>
         <span class="c1"># in the DAG file itself</span>
@@ -358,7 +358,7 @@
 
 
 <div class="viewcode-block" id="Configuration.apply">
-<a class="viewcode-back" href="../../../docs/src/DIRNAME/airflow_config.Configuration.html#airflow_config.Configuration.apply">[docs]</a>
+<a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration.apply">[docs]</a>
     <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">,</span> <span class="n">dag_kwargs</span><span class="p">):</span>
         <span class="c1"># update the options in the dag</span>
         <span class="c1"># TODO loop</span>
