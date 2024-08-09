@@ -6,7 +6,7 @@
 .. currentmodule:: airflow_config
 
 .. autosummary::
-   :toctree: DIRNAME
+   :toctree: _build
 
     Configuration
     DagArgs
@@ -20,7 +20,7 @@
 .. currentmodule:: airflow_config
 
 .. autosummary::
-   :toctree: DIRNAME
+   :toctree: _build
 
     DAG
     generate_dag_id

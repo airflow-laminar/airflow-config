@@ -125,11 +125,11 @@ dmypy.json
 
 # Documentation
 docs/_build/
+docs/src/_build/
 /site
 docs/api
 docs/index.md
 docs/html
-docs/src/DIRNAME
 index.md
 _template/labextension
 
