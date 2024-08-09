@@ -1,0 +1,6 @@
+﻿airflow\_config.generate\_dag\_id
+=================================
+
+.. currentmodule:: airflow_config
+
+.. autofunction:: generate_dag_id

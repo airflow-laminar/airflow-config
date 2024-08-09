@@ -1,0 +1,6 @@
+﻿airflow\_config.create\_dag
+===========================
+
+.. currentmodule:: airflow_config
+
+.. autofunction:: create_dag

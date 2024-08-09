@@ -1,0 +1,6 @@
+﻿airflow\_config.Configuration
+=============================
+
+.. currentmodule:: airflow_config
+
+.. autopydantic_model:: Configuration
