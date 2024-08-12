@@ -75,7 +75,7 @@ def _create_dag_dir(config_dir: str = "config", config_name: str = "", overrides
 
 
 @create_dags.register
-def _create_dags_config(configs: list = None, dag_ids: list[str] = None, **kwargs: Any) -> list[DAG]:
+def _create_dags_config(configs: list, dag_ids: list[str] = None, **kwargs: Any) -> list[DAG]:
     ret = []
     dag_ids = dag_ids or []
     for i, config in enumerate(configs):
