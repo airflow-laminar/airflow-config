@@ -75,13 +75,13 @@
       ~DAG.set_edge_info
       ~DAG.set_task_group_state
       ~DAG.set_task_instance_state
-      ~DAG.simplify_dataset_expression
       ~DAG.sub_dag
       ~DAG.sync_to_db
       ~DAG.test
       ~DAG.topological_sort
       ~DAG.tree_view
       ~DAG.validate
+      ~DAG.validate_executor_field
       ~DAG.validate_schedule_and_params
       ~DAG.validate_setup_teardown
    

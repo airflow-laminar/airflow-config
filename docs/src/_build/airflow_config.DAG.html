@@ -456,26 +456,26 @@
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">set_task_instance_state</span></code>(*, task_id[, ...])</p></td>
 <td><p>Set the state of a TaskInstance and clear downstream tasks in failed or upstream_failed state.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">simplify_dataset_expression</span></code>(dataset_expression)</p></td>
-<td><p>Simplifies a nested dataset expression into a 'any' or 'all' format with URIs.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sub_dag</span></code>(*args, **kwargs)</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sub_dag</span></code>(*args, **kwargs)</p></td>
 <td><p>Use <cite>airflow.models.DAG.partial_subset</cite>, this method is deprecated.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sync_to_db</span></code>([processor_subdir, session])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">sync_to_db</span></code>([processor_subdir, session])</p></td>
 <td><p>Save attributes about this DAG to the DB.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">test</span></code>([execution_date, run_conf, ...])</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">test</span></code>([execution_date, run_conf, ...])</p></td>
 <td><p>Execute one single DagRun for a given DAG and execution date.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">topological_sort</span></code>([include_subdag_tasks])</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">topological_sort</span></code>([include_subdag_tasks])</p></td>
 <td><p>Sorts tasks in topographical order, such that a task comes after any of its upstream dependencies.</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tree_view</span></code>()</p></td>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tree_view</span></code>()</p></td>
 <td><p>Print an ASCII tree representation of the DAG.</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>()</p></td>
+<tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate</span></code>()</p></td>
 <td><p>Validate the DAG has a coherent setup.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_executor_field</span></code>()</p></td>
+<td><p></p></td>
 </tr>
 <tr class="row-even"><td><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">validate_schedule_and_params</span></code>()</p></td>
 <td><p>Validate Param values when the DAG has schedule defined.</p></td>
