@@ -73,6 +73,7 @@ replace = 'version = "{new_version}"'
 
 [tool.check-manifest]
 ignore = [
+    ".copier-answers.yml",
     "Makefile",
     "setup.py",
     "docs/*/*",
@@ -92,6 +93,7 @@ include = [
     "README.md",
 ]
 exclude = [
+    ".copier-answers.yml",
     "/.github",
     "/.gitattributes",
     "/.gitignore",
@@ -104,6 +106,7 @@ include = [
     "/airflow_config",
 ]
 exclude = [
+    ".copier-answers.yml",
     "/.github",
     "/.gitattributes",
     "/.gitignore",
