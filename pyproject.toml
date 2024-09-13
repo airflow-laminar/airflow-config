@@ -121,16 +121,14 @@ testpaths = "airflow_config/tests"
 [tool.ruff]
 line-length = 150
 
+[tool.ruff.lint]
+extend-select = ["I"]
+
 [tool.ruff.lint.isort]
 combine-as-imports = true
 default-section = "third-party"
 known-first-party = ["airflow_config"]
-section-order = [
-    "future",
-    "third-party",
-    "first-party",
-    "local-folder",
-]
+section-order = ["future", "standard-library", "third-party", "first-party", "local-folder"]
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
