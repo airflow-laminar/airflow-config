@@ -95,20 +95,15 @@ class Configuration(BaseModel):
         # in the DAG file itself
         if "default_args" not in dag_kwargs:
             dag_kwargs["default_args"] = {}
-        if "owner" not in dag_kwargs["default_args"] and self.default_args.owner:
-            dag_kwargs["default_args"]["owner"] = self.default_args.owner
+        for attr in DefaultArgs.model_fields:
+            if attr not in dag_kwargs["default_args"] and getattr(self.default_args, attr, None) is not None:
+                dag_kwargs["default_args"][attr] = getattr(self.default_args, attr)
 
-        for attr in (
-            "start_date",
-            "end_date",
-            "default_view",
-            "orientation",
-            "catchup",
-            "is_paused_upon_creation",
-            "tags",
-        ):
+        for attr in DagArgs.model_fields:
             if attr not in dag_kwargs:
-                dag_kwargs[attr] = getattr(self.all_dags, attr)
+                val = getattr(self.all_dags, attr, None)
+                if val is not None:
+                    dag_kwargs[attr] = val
 
         # TODO look up per-dag options
 

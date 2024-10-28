@@ -10,9 +10,9 @@ def _get_calling_dag(offset: int = 2) -> str:
             cur_frame = cur_frame.f_back
         else:
             break
-    if "__file__" not in cur_frame.f_globals:
+    if "__file__" not in cur_frame.f_globals:  # pragma: no cover
         # Assumed in ipython/interpreter
-        return path.join(getcwd(), "ipython.py")
+        return path.join(getcwd(), "ipython.py")  # pragma: no cover
     return cur_frame.f_globals["__file__"]
 
 

@@ -8,9 +8,9 @@ def test_create_dag_from_multiple():
     assert dags[0].dag_id in globals()
     assert dags[1].dag_id in globals()
     assert dags[0].default_args["owner"] == "dev"
-    assert dags[0].email == ["myemail@myemail.com"]
+    assert dags[0].default_args["email"] == ["myemail@myemail.com"]
     assert dags[1].default_args["owner"] == "prod"
-    assert dags[1].email == ["myemail@myemail.com"]
+    assert dags[1].default_args["email"] == ["myemail@myemail.com"]
 
 
 def test_create_dag_from_multiple_configs():
@@ -22,6 +22,6 @@ def test_create_dag_from_multiple_configs():
     assert dags[0].dag_id in globals()
     assert dags[1].dag_id in globals()
     assert dags[0].default_args["owner"] == "dev"
-    assert dags[0].email == ["myemail@myemail.com"]
+    assert dags[0].default_args["email"] == ["myemail@myemail.com"]
     assert dags[1].default_args["owner"] == "prod"
-    assert dags[1].email == ["myemail@myemail.com"]
+    assert dags[1].default_args["email"] == ["myemail@myemail.com"]
