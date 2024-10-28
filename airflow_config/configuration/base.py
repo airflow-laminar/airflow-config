@@ -95,23 +95,22 @@ class Configuration(BaseModel):
         # in the DAG file itself
         if "default_args" not in dag_kwargs:
             dag_kwargs["default_args"] = {}
-        if "owner" not in dag_kwargs["default_args"] and self.default_args.owner:
-            dag_kwargs["default_args"]["owner"] = self.default_args.owner
+        for attr in DefaultArgs.model_fields:
+            if attr not in dag_kwargs["default_args"] and getattr(self.default_args, attr, None) is not None:
+                dag_kwargs["default_args"][attr] = getattr(self.default_args, attr)
+
+        for attr in DagArgs.model_fields:
+            if attr not in dag_kwargs:
+                val = getattr(self.all_dags, attr, None)
+                if val is not None:
+                    dag_kwargs[attr] = val
+
+        # TODO look up per-dag options
 
     def apply(self, dag, dag_kwargs):
         # update the options in the dag
-        # TODO loop
-        dag.start_date = self.all_dags.start_date
-        dag.end_date = self.all_dags.end_date
-        dag.catchup = self.all_dags.catchup
-        dag.tags = self.all_dags.tags
-
-        dag.email = self.default_args.email
-        dag.email_on_failure = self.default_args.email_on_failure
-        dag.email_on_retry = self.default_args.email_on_retry
-        dag.retries = self.default_args.retries
-        dag.retry_delay = self.default_args.retry_delay
-        dag.depends_on_past = self.default_args.depends_on_past
+        # TODO
+        pass
 
 
 load_config = Configuration.load
