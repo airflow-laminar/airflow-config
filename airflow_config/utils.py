@@ -1,6 +1,6 @@
 from configparser import ConfigParser
 from inspect import currentframe
-from os import environ, path
+from os import environ, getcwd, path
 
 
 def _get_calling_dag(offset: int = 2) -> str:
@@ -10,6 +10,9 @@ def _get_calling_dag(offset: int = 2) -> str:
             cur_frame = cur_frame.f_back
         else:
             break
+    if "__file__" not in cur_frame.f_globals:
+        # Assumed in ipython/interpreter
+        return path.join(getcwd(), "ipython.py")
     return cur_frame.f_globals["__file__"]
 
 

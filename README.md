@@ -52,7 +52,7 @@ If we want to change these in our DAG, we need to modify code. Now imagine we ha
 
 Now consider the alternative, config-driven approach:
 
-`config/config.yaml`
+`config/dev.yaml`
 
 ```yaml
 # @package _global_
@@ -74,13 +74,17 @@ all_dags:
 ```
 
 ```python
-from airflow import DAG
 from airflow.operators.bash import BashOperator
 from airflow_config import DAG, load_config
 
-config = load_config()
+config = load_config(config_name="dev")
 
-with DAG(dag_id="test-dag", description="test that dag is working properly", config=config):
+with DAG(
+    dag_id="test-dag",
+    description="test that dag is working properly",
+    schedule=timedelta(minutes=1),
+    config=config
+):
     BashOperator(
         task_id="test-task",
         bash_command="echo 'test'",
