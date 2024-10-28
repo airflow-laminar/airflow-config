@@ -101,6 +101,10 @@ This has a number of benefits:
 
 More documentation coming soon!
 
+## Integrations
+
+Configuration can be arbitrarily extended by the key `extensions`. Support is built in for [`airflow-priority`](https://github.com/airflow-laminar/airflow-priority), but can be extended to any aribitrary pydantic model as seen in the [README of `airflow-supervisor`](https://github.com/airflow-laminar/airflow-supervisor).
+
 ## License
 
 This software is licensed under the Apache 2.0 license. See the [LICENSE](LICENSE) file for details.
