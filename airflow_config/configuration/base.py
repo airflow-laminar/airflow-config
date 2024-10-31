@@ -6,7 +6,7 @@ from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import BaseModel, Field
 
-from airflow_config.configuration.airflow import DagArgs, DagConfiguration, DefaultArgs
+from airflow_config.configuration.airflow import DagArgs, DefaultArgs, TaskArgs
 from airflow_config.configuration.python import PythonConfiguration
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
@@ -18,13 +18,14 @@ __all__ = (
 
 
 class Configuration(BaseModel):
-    default_args: DefaultArgs = Field(
-        default_factory=DefaultArgs, description="Task-level args to set for all DAGs, unless overridden in the DAG itself"
-    )
-    all_dags: DagArgs = Field(default_factory=DagArgs, description="Per-dag arguments to set global defaults")
+    default_args: DefaultArgs = Field(default_factory=DefaultArgs, description="Global default default_args (task arguments)")
+    default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
+
+    dag_args: Optional[Dict[str, DagArgs]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+    task_args: Optional[Dict[str, TaskArgs]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+
     python: PythonConfiguration = Field(default_factory=PythonConfiguration, description="Global Python configuration")
     extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
-    dags: Optional[Dict[str, DagConfiguration]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
     @staticmethod
     def _find_parent_config_folder(config_dir: str = "config", config_name: str = "", *, basepath: str = "", _offset: int = 2):
@@ -101,7 +102,7 @@ class Configuration(BaseModel):
 
         for attr in DagArgs.model_fields:
             if attr not in dag_kwargs:
-                val = getattr(self.all_dags, attr, None)
+                val = getattr(self.default_dag_args, attr, None)
                 if val is not None:
                     dag_kwargs[attr] = val
 
