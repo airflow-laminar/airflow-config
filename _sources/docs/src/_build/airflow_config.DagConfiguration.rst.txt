@@ -1,6 +1,0 @@
-﻿airflow\_config.DagConfiguration
-================================
-
-.. currentmodule:: airflow_config
-
-.. autopydantic_model:: DagConfiguration
