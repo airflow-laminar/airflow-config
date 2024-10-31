@@ -35,8 +35,8 @@ def airflow_config():
 def configuration() -> Configuration:
     config = Configuration(
         default_args=DefaultArgs(),
-        all_dags=DagArgs(),
+        default_dag_args=DagArgs(),
         python=PythonConfiguration(),
-        dags={},
+        dag_args={},
     )
     return config

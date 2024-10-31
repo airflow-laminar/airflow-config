@@ -12,9 +12,9 @@ def test_config_and_options():
     assert conf.default_args.retries == 0
     assert conf.default_args.depends_on_past is False
     # assert conf.global_.schedule == timedelta(seconds=60)
-    assert conf.all_dags.start_date == datetime(2024, 1, 1)
-    assert conf.all_dags.catchup is False
-    assert conf.all_dags.tags == ["utility", "test"]
+    assert conf.default_dag_args.start_date == datetime(2024, 1, 1)
+    assert conf.default_dag_args.catchup is False
+    assert conf.default_dag_args.tags == ["utility", "test"]
 
 
 def test_create_dag_from_config():
