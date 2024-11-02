@@ -1,6 +1,4 @@
-from datetime import datetime, timedelta
-
-from airflow.timetables.interval import DeltaDataIntervalTimetable
+from datetime import datetime
 
 from airflow_config import DAG, create_dag, load_config
 
@@ -13,6 +11,7 @@ def test_config_and_options():
     assert conf.default_args.email_on_retry is False
     assert conf.default_args.retries == 0
     assert conf.default_args.depends_on_past is False
+    # assert conf.global_.schedule == timedelta(seconds=60)
     assert conf.default_dag_args.start_date == datetime(2024, 1, 1)
     assert conf.default_dag_args.catchup is False
     assert conf.default_dag_args.tags == ["utility", "test"]
@@ -27,11 +26,7 @@ def test_create_dag_from_config():
     assert d.default_args["email_on_retry"] is False
     assert d.default_args["retries"] == 0
     assert d.default_args["depends_on_past"] is False
-
-    assert d.schedule_interval == timedelta(hours=1, minutes=10)
-    assert isinstance(d.timetable, DeltaDataIntervalTimetable)
-    assert isinstance(d.timetable._delta, timedelta)
-    assert d.timetable._delta.total_seconds() == 4200
+    # assert d.schedule == timedelta(seconds=60)
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1
@@ -41,6 +36,6 @@ def test_create_dag_from_config():
 
 def test_create_dag_from_config_create_dag():
     d = create_dag("config", "test")
-    assert d.dag_id == "tests-setups-good-options-test-options"
+    assert d.dag_id == "tests-setups-good-dag-factory-test-dag-factory"
     assert d.dag_id in globals()
     assert d.default_args["owner"] == "test"

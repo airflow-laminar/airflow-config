@@ -6,7 +6,7 @@ from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import BaseModel, Field
 
-from airflow_config.configuration.airflow import DagArgs, DefaultArgs, TaskArgs
+from airflow_config.configuration.airflow import DagArgs, DefaultDagArgs, DefaultTaskArgs, TaskArgs
 from airflow_config.configuration.python import PythonConfiguration
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
@@ -18,8 +18,8 @@ __all__ = (
 
 
 class Configuration(BaseModel):
-    default_args: DefaultArgs = Field(default_factory=DefaultArgs, description="Global default default_args (task arguments)")
-    default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
+    default_args: DefaultTaskArgs = Field(default_factory=DefaultTaskArgs, description="Global default default_args (task arguments)")
+    default_dag_args: DefaultDagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
     dag_args: Optional[Dict[str, DagArgs]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
     task_args: Optional[Dict[str, TaskArgs]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
@@ -96,7 +96,7 @@ class Configuration(BaseModel):
         # in the DAG file itself
         if "default_args" not in dag_kwargs:
             dag_kwargs["default_args"] = {}
-        for attr in DefaultArgs.model_fields:
+        for attr in DefaultTaskArgs.model_fields:
             if attr not in dag_kwargs["default_args"] and getattr(self.default_args, attr, None) is not None:
                 dag_kwargs["default_args"][attr] = getattr(self.default_args, attr)
 

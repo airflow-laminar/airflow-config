@@ -32,6 +32,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.11"]
+        airflow-version: ["2.8.1", "2.9.2", "2.10.1"]
 
     steps:
     - uses: actions/checkout@v4
@@ -45,6 +46,9 @@ jobs:
 
     - name: Install dependencies
       run: make develop
+
+    - name: Install airflow
+      run: pip install -U apache-airflow==${{ matrix.airflow-version }}
 
     - name: Lint
       run: make lint

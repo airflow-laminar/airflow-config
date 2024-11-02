@@ -1,0 +1,3 @@
+# @package _global_
+default_dag_args:
+  _target_: airflow_config.DefaultDagArgs

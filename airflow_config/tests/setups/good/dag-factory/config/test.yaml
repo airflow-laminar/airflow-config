@@ -10,7 +10,18 @@ default_args:
   depends_on_past: false
 default_dag_args:
   _target: airflow_config.DagArgs
-  schedule: "01:10"
+  schedule: "01:00"
   start_date: "2024-01-01"
   catchup: false
   tags: ["utility", "test"]
+dags:
+  default_args:
+    owner: "different_owner"
+  concurrency: 1
+  max_active_runs: 1
+  dagrun_timeout_sec: 600
+  default_view: "tree"
+  orientation: "LR"
+  schedule: "0 1 * * *"
+  on_failure_callback_name: print_hello_from_callback
+  on_failure_callback_file: $CONFIG_ROOT_DIR/print_hello.py
