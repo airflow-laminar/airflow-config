@@ -257,9 +257,10 @@
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">RelativeDelta</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="s2">&quot;DefaultArgs&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;DagArgs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DefaultTaskArgs&quot;</span><span class="p">,</span>
     <span class="s2">&quot;TaskArgs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DefaultDagArgs&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;DagArgs&quot;</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="c1"># TODO</span>
@@ -267,12 +268,12 @@
 <span class="c1"># ScheduleArg = Union[ArgNotSet, ScheduleInterval, Timetable, BaseDatasetEventInput, Collection[&quot;Dataset&quot;]]</span>
 <span class="c1"># ScheduleInterval = Union[None, str, timedelta, relativedelta]</span>
 
-<span class="n">ScheduleArg</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;NOTSET&quot;</span><span class="p">],</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">,</span> <span class="n">RelativeDelta</span><span class="p">]</span>
+<span class="c1"># ScheduleArg = Union[timedelta, RelativeDelta, Literal[&quot;NOTSET&quot;], str, None]</span>
+<span class="n">ScheduleArg</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">timedelta</span><span class="p">,</span> <span class="n">RelativeDelta</span><span class="p">,</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;NOTSET&quot;</span><span class="p">],</span> <span class="nb">str</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
 
 
-<span class="k">class</span> <span class="nc">DefaultArgs</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">DefaultTaskArgs</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="c1"># Operator Args</span>
-    <span class="c1"># https://airflow.apache.org/docs/apache-airflow/1.10.1/code.html#airflow.models.BaseOperator</span>
     <span class="c1"># https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/baseoperator/index.html#airflow.models.baseoperator.BaseOperator</span>
     <span class="n">owner</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="s2">&quot;airflow&quot;</span><span class="p">,</span>
@@ -367,14 +368,19 @@
     <span class="c1"># allow_nested_operators (bool) – if True, when an operator is executed within another one a warning message will be logged. If False, then an exception will be raised if the operator is badly used (e.g. nested within another one). In future releases of Airflow this parameter will be removed and an exception will always be thrown when operators are nested within each other (default is True).</span>
 
 
-<span class="k">class</span> <span class="nc">TaskArgs</span><span class="p">(</span><span class="n">DefaultArgs</span><span class="p">):</span> <span class="o">...</span>
+<span class="k">class</span> <span class="nc">TaskArgs</span><span class="p">(</span><span class="n">DefaultTaskArgs</span><span class="p">):</span>
+    <span class="n">task_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;a unique, meaningful id for the task&quot;</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="DagArgs">
-<a class="viewcode-back" href="../../../docs/src/_build/airflow_config.DagArgs.html#airflow_config.DagArgs">[docs]</a>
-<span class="k">class</span> <span class="nc">DagArgs</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">DefaultDagArgs</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="c1"># DAG args</span>
     <span class="c1"># https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG</span>
+    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The description for the DAG to e.g. be shown on the webserver&quot;</span><span class="p">)</span>
+    <span class="n">schedule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduleArg</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
+        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Defines the rules according to which DAG runs are scheduled. Can accept cron string, timedelta object, Timetable, or list of Dataset objects. If this is not provided, the DAG will be set to the default schedule timedelta(days=1). See also Customizing DAG Scheduling with Timetables.&quot;</span><span class="p">,</span>
+        <span class="n">union_mode</span><span class="o">=</span><span class="s2">&quot;left_to_right&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
     <span class="n">start_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The timestamp from which the scheduler will attempt to backfill&quot;</span><span class="p">)</span>
     <span class="n">end_date</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;A date beyond which your DAG won’t run, leave to None for open-ended scheduling&quot;</span><span class="p">)</span>
     <span class="c1"># template_searchpath: Optional[List[str]] = Field(default_factory=None, description=&quot;This list of folders (non-relative) defines where jinja will look for your templates. Order matters. Note that jinja/airflow includes the path of your DAG file by default&quot;)</span>
@@ -409,16 +415,12 @@
     <span class="c1"># fail_stop (bool) – Fails currently running tasks when task in DAG fails. Warning: A fail stop dag can only have tasks with the default trigger rule (“all_success”). An exception will be thrown if any task in a fail stop dag has a non default trigger rule.</span>
     <span class="c1"># dag_display_name (str | None) – The display name of the DAG which appears on the UI.</span>
 
-    <span class="c1"># DEFINED PER-DAG:</span>
-    <span class="c1"># DAG args</span>
-    <span class="c1"># https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG</span>
+
+<div class="viewcode-block" id="DagArgs">
+<a class="viewcode-back" href="../../../docs/src/_build/airflow_config.DagArgs.html#airflow_config.DagArgs">[docs]</a>
+<span class="k">class</span> <span class="nc">DagArgs</span><span class="p">(</span><span class="n">DefaultDagArgs</span><span class="p">):</span>
     <span class="n">dag_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The id of the DAG; must consist exclusively of alphanumeric characters, dashes, dots and underscores (all ASCII)&quot;</span>
-    <span class="p">)</span>
-    <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The description for the DAG to e.g. be shown on the webserver&quot;</span><span class="p">)</span>
-    <span class="n">schedule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduleArg</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
-        <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-        <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Defines the rules according to which DAG runs are scheduled. Can accept cron string, timedelta object, Timetable, or list of Dataset objects. If this is not provided, the DAG will be set to the default schedule timedelta(days=1). See also Customizing DAG Scheduling with Timetables.&quot;</span><span class="p">,</span>
     <span class="p">)</span></div>
 
 </pre></div>
