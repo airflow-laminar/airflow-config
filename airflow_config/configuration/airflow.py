@@ -6,9 +6,10 @@ from pydantic import BaseModel, Field
 from .utils import RelativeDelta
 
 __all__ = (
-    "DefaultArgs",
-    "DagArgs",
+    "DefaultTaskArgs",
     "TaskArgs",
+    "DefaultDagArgs",
+    "DagArgs",
 )
 
 # TODO
@@ -16,12 +17,12 @@ __all__ = (
 # ScheduleArg = Union[ArgNotSet, ScheduleInterval, Timetable, BaseDatasetEventInput, Collection["Dataset"]]
 # ScheduleInterval = Union[None, str, timedelta, relativedelta]
 
-ScheduleArg = Union[Literal["NOTSET"], None, str, timedelta, RelativeDelta]
+# ScheduleArg = Union[timedelta, RelativeDelta, Literal["NOTSET"], str, None]
+ScheduleArg = Union[timedelta, RelativeDelta, Literal["NOTSET"], str, None]
 
 
-class DefaultArgs(BaseModel):
+class DefaultTaskArgs(BaseModel):
     # Operator Args
-    # https://airflow.apache.org/docs/apache-airflow/1.10.1/code.html#airflow.models.BaseOperator
     # https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/baseoperator/index.html#airflow.models.baseoperator.BaseOperator
     owner: str = Field(
         default="airflow",
@@ -116,12 +117,19 @@ class DefaultArgs(BaseModel):
     # allow_nested_operators (bool) – if True, when an operator is executed within another one a warning message will be logged. If False, then an exception will be raised if the operator is badly used (e.g. nested within another one). In future releases of Airflow this parameter will be removed and an exception will always be thrown when operators are nested within each other (default is True).
 
 
-class TaskArgs(DefaultArgs): ...
+class TaskArgs(DefaultTaskArgs):
+    task_id: Optional[str] = Field(default=None, description="a unique, meaningful id for the task")
 
 
-class DagArgs(BaseModel):
+class DefaultDagArgs(BaseModel):
     # DAG args
     # https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG
+    description: Optional[str] = Field(default=None, description="The description for the DAG to e.g. be shown on the webserver")
+    schedule: Optional[ScheduleArg] = Field(
+        default=None,
+        description="Defines the rules according to which DAG runs are scheduled. Can accept cron string, timedelta object, Timetable, or list of Dataset objects. If this is not provided, the DAG will be set to the default schedule timedelta(days=1). See also Customizing DAG Scheduling with Timetables.",
+        union_mode="left_to_right",
+    )
     start_date: Optional[datetime] = Field(default=None, description="The timestamp from which the scheduler will attempt to backfill")
     end_date: Optional[datetime] = Field(default=None, description="A date beyond which your DAG won’t run, leave to None for open-ended scheduling")
     # template_searchpath: Optional[List[str]] = Field(default_factory=None, description="This list of folders (non-relative) defines where jinja will look for your templates. Order matters. Note that jinja/airflow includes the path of your DAG file by default")
@@ -156,14 +164,8 @@ class DagArgs(BaseModel):
     # fail_stop (bool) – Fails currently running tasks when task in DAG fails. Warning: A fail stop dag can only have tasks with the default trigger rule (“all_success”). An exception will be thrown if any task in a fail stop dag has a non default trigger rule.
     # dag_display_name (str | None) – The display name of the DAG which appears on the UI.
 
-    # DEFINED PER-DAG:
-    # DAG args
-    # https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG
+
+class DagArgs(DefaultDagArgs):
     dag_id: Optional[str] = Field(
         default=None, description="The id of the DAG; must consist exclusively of alphanumeric characters, dashes, dots and underscores (all ASCII)"
-    )
-    description: Optional[str] = Field(default=None, description="The description for the DAG to e.g. be shown on the webserver")
-    schedule: Optional[ScheduleArg] = Field(
-        default=None,
-        description="Defines the rules according to which DAG runs are scheduled. Can accept cron string, timedelta object, Timetable, or list of Dataset objects. If this is not provided, the DAG will be set to the default schedule timedelta(days=1). See also Customizing DAG Scheduling with Timetables.",
     )

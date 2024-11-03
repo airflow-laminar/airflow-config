@@ -1,3 +1,0 @@
-# @package _global_
-default_args:
-  _target_: airflow_config.DefaultArgs

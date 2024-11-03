@@ -58,14 +58,14 @@ Now consider the alternative, config-driven approach:
 # @package _global_
 _target_: airflow_config.Configuration
 default_args:
-  _target_: airflow_config.DefaultArgs
+  _target_: airflow_config.DefaultTaskArgs
   owner: test
   email: [myemail@myemail.com]
   email_on_failure: false
   email_on_retry: false
   retries: 0
   depends_on_past: false
-all_dags:
+default_dag_args:
   _target_: airflow_config.DagArgs
   schedule: "01:00"
   start_date: "2024-01-01"
