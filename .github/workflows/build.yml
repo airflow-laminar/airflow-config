@@ -68,7 +68,7 @@ jobs:
     - name: Upload test results (Python)
       uses: actions/upload-artifact@v4
       with:
-        name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}
+        name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.airflow-version }}
         path: junit.xml
       if: ${{ always() }}
 
@@ -86,5 +86,5 @@ jobs:
 
     - name: Make dist
       run: make dist
-      if: ${{ matrix.os == 'ubuntu-latest' }}
+
 
