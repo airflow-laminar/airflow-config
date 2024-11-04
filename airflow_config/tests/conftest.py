@@ -5,7 +5,7 @@ from tempfile import TemporaryDirectory
 import pytest
 from jinja2 import DictLoader, Environment
 
-from airflow_config import Configuration, DagArgs, DefaultTaskArgs, PythonConfiguration
+from airflow_config import Configuration, DagArgs, PythonConfiguration, TaskArgs
 
 
 @pytest.fixture(autouse=True)
@@ -34,9 +34,9 @@ def airflow_config():
 @pytest.fixture(scope="function", autouse=True)
 def configuration() -> Configuration:
     config = Configuration(
-        default_args=DefaultTaskArgs(),
+        default_args=TaskArgs(),
         default_dag_args=DagArgs(),
         python=PythonConfiguration(),
-        dag_args={},
+        dags={},
     )
     return config
