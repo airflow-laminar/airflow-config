@@ -135,9 +135,21 @@ class Configuration(BaseModel):
                     dag_kwargs[attr] = val
 
     def apply(self, dag, dag_kwargs):
-        # update the options in the dag
-        # TODO
-        pass
+        # update the options in the dag if necessary,
+        # instantiate tasks
+        if dag.dag_id in self.dags:
+            tasks = self.dags[dag.dag_id].tasks
+            task_insts = {}
+            if tasks:
+                for task_id, task_inst in tasks.items():
+                    task_inst.task_id = task_id
+                    task_insts[task_id] = task_inst.instantiate(dag=dag)
+            for task_id, task_inst in task_insts.items():
+                task_deps = tasks[task_id].dependencies
+                print(task_insts)
+                if task_deps:
+                    for dep in task_deps:
+                        task_insts[dep] >> task_inst
 
 
 load_config = Configuration.load

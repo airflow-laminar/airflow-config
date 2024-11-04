@@ -3,7 +3,7 @@ from typing import Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field
 
-from .utils import RelativeDelta
+from .utils import CallablePath, ImportPath, RelativeDelta
 
 __all__ = (
     "TaskArgs",
@@ -119,8 +119,18 @@ class TaskArgs(BaseModel):
 
 class Task(TaskArgs):
     task_id: Optional[str] = Field(default=None, description="a unique, meaningful id for the task")
+    operator: ImportPath = Field(description="airflow operator path")
+    dependencies: Optional[List[str]] = Field(default=None, description="dependencies")
 
-    # TODO
+    # Task shared
+    python_callable: Optional[CallablePath] = Field(default=None, description="python_callable")
+    bash_command: Optional[str] = Field(default=None, description="bash_command")
+
+    def instantiate(self, dag):
+        kwargs = {k: v for k, v in self.model_dump().items() if v}
+        kwargs.pop("operator", None)
+        kwargs.pop("dependencies", None)
+        return self.operator(dag=dag, **kwargs)
 
 
 class DagArgs(BaseModel):
