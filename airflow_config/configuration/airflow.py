@@ -1,15 +1,15 @@
 from datetime import datetime, timedelta
-from typing import List, Literal, Optional, Union
+from typing import Dict, List, Literal, Optional, Union
 
 from pydantic import BaseModel, Field
 
 from .utils import RelativeDelta
 
 __all__ = (
-    "DefaultTaskArgs",
     "TaskArgs",
-    "DefaultDagArgs",
+    "Task",
     "DagArgs",
+    "Dag",
 )
 
 # TODO
@@ -21,14 +21,14 @@ __all__ = (
 ScheduleArg = Union[timedelta, RelativeDelta, Literal["NOTSET"], str, None]
 
 
-class DefaultTaskArgs(BaseModel):
+class TaskArgs(BaseModel):
     # Operator Args
     # https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/baseoperator/index.html#airflow.models.baseoperator.BaseOperator
     owner: str = Field(
         default="airflow",
         description="the owner of the task. Using a meaningful description (e.g. user/person/team/role name) to clarify ownership is recommended.",
     )
-    email: List[str] = Field(default_factory=list, description="the 'to' email address(es) used in email alerts")
+    email: Optional[List[str]] = Field(default=None, description="the 'to' email address(es) used in email alerts")
     email_on_failure: bool = Field(default=False, description="Indicates whether email alerts should be sent when a task failed")
     email_on_retry: bool = Field(default=False, description="Indicates whether email alerts should be sent when a task is retried")
     retries: int = Field(default=0, description="the number of retries that should be performed before failing the task")
@@ -117,11 +117,13 @@ class DefaultTaskArgs(BaseModel):
     # allow_nested_operators (bool) – if True, when an operator is executed within another one a warning message will be logged. If False, then an exception will be raised if the operator is badly used (e.g. nested within another one). In future releases of Airflow this parameter will be removed and an exception will always be thrown when operators are nested within each other (default is True).
 
 
-class TaskArgs(DefaultTaskArgs):
+class Task(TaskArgs):
     task_id: Optional[str] = Field(default=None, description="a unique, meaningful id for the task")
 
+    # TODO
 
-class DefaultDagArgs(BaseModel):
+
+class DagArgs(BaseModel):
     # DAG args
     # https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG
     description: Optional[str] = Field(default=None, description="The description for the DAG to e.g. be shown on the webserver")
@@ -165,7 +167,10 @@ class DefaultDagArgs(BaseModel):
     # dag_display_name (str | None) – The display name of the DAG which appears on the UI.
 
 
-class DagArgs(DefaultDagArgs):
+class Dag(DagArgs):
     dag_id: Optional[str] = Field(
         default=None, description="The id of the DAG; must consist exclusively of alphanumeric characters, dashes, dots and underscores (all ASCII)"
     )
+    default_args: Optional[TaskArgs] = Field(default=None, description="Default arguments for tasks in the DAG")
+
+    tasks: Optional[Dict[str, Task]] = Field(default_factory=list, description="List of tasks in the DAG")

@@ -6,7 +6,7 @@ from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import BaseModel, Field
 
-from airflow_config.configuration.airflow import DagArgs, DefaultDagArgs, DefaultTaskArgs, TaskArgs
+from airflow_config.configuration.airflow import Dag, DagArgs, Task, TaskArgs
 from airflow_config.configuration.python import PythonConfiguration
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
@@ -18,14 +18,18 @@ __all__ = (
 
 
 class Configuration(BaseModel):
-    default_args: DefaultTaskArgs = Field(default_factory=DefaultTaskArgs, description="Global default default_args (task arguments)")
-    default_dag_args: DefaultDagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
+    default_task_args: TaskArgs = Field(default_factory=TaskArgs, description="Global default default_args (task arguments)", alias="default_args")
+    default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
-    dag_args: Optional[Dict[str, DagArgs]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
-    task_args: Optional[Dict[str, TaskArgs]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+    dags: Optional[Dict[str, Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+    tasks: Optional[Dict[str, Task]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
     python: PythonConfiguration = Field(default_factory=PythonConfiguration, description="Global Python configuration")
     extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
+
+    @property
+    def default_args(self):
+        return self.default_task_args
 
     @staticmethod
     def _find_parent_config_folder(config_dir: str = "config", config_name: str = "", *, basepath: str = "", _offset: int = 2):
@@ -96,17 +100,39 @@ class Configuration(BaseModel):
         # in the DAG file itself
         if "default_args" not in dag_kwargs:
             dag_kwargs["default_args"] = {}
-        for attr in DefaultTaskArgs.model_fields:
+
+        # look up per-dag options
+        if dag_kwargs.get("dag_id", None) in self.dags:
+            # first try to see if per-dag options have default_args for subtasks
+            per_dag_kwargs = self.dags[dag_kwargs["dag_id"]]
+            default_args = per_dag_kwargs.default_args
+            for attr in TaskArgs.model_fields:
+                if attr not in dag_kwargs["default_args"] and getattr(default_args, attr, None):
+                    dag_kwargs["default_args"][attr] = getattr(default_args, attr)
+
+            for attr in DagArgs.model_fields:
+                if attr == "default_args":
+                    # skip
+                    continue
+                if attr == "dag_id":
+                    # set
+                    per_dag_kwargs.dag_id = dag_kwargs["dag_id"]
+                    continue
+
+                val = getattr(per_dag_kwargs, attr, None)
+
+                if attr not in dag_kwargs and val:
+                    dag_kwargs[attr] = val
+
+        for attr in TaskArgs.model_fields:
             if attr not in dag_kwargs["default_args"] and getattr(self.default_args, attr, None) is not None:
                 dag_kwargs["default_args"][attr] = getattr(self.default_args, attr)
 
         for attr in DagArgs.model_fields:
             if attr not in dag_kwargs:
                 val = getattr(self.default_dag_args, attr, None)
-                if val is not None:
+                if attr not in dag_kwargs and val is not None:
                     dag_kwargs[attr] = val
-
-        # TODO look up per-dag options
 
     def apply(self, dag, dag_kwargs):
         # update the options in the dag
