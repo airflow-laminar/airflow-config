@@ -1,4 +1,6 @@
-from datetime import datetime
+from datetime import datetime, timedelta
+
+from airflow.timetables.interval import DeltaDataIntervalTimetable
 
 from airflow_config import DAG, create_dag, load_config
 
@@ -16,6 +18,8 @@ def test_config_and_options():
     assert conf.default_dag_args.catchup is False
     assert conf.default_dag_args.tags == ["utility", "test"]
 
+    assert conf.dags["example_dag"].default_args.owner == "custom_owner"
+
 
 def test_create_dag_from_config():
     conf = load_config("config", "test")
@@ -26,12 +30,35 @@ def test_create_dag_from_config():
     assert d.default_args["email_on_retry"] is False
     assert d.default_args["retries"] == 0
     assert d.default_args["depends_on_past"] is False
-    # assert d.schedule == timedelta(seconds=60)
+    assert d.schedule_interval == timedelta(seconds=3600)
+    assert isinstance(d.timetable, DeltaDataIntervalTimetable)
+    assert isinstance(d.timetable._delta, timedelta)
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
     assert d.tags == ["utility", "test"]
+
+    d = DAG(dag_id="example_dag", config=conf)
+    assert d.default_args["owner"] == "custom_owner"
+    assert d.default_args["email"] == ["myemail@myemail.com"]
+    assert d.schedule_interval == "0 3 * * *"
+
+    d = DAG(dag_id="example_dag2", config=conf)
+    assert d.default_args["owner"] == "custom_owner2"
+    assert d.default_args["email"] == ["myemail@myemail.com"]
+    assert d.schedule_interval == "0 4 * * *"
+
+
+def test_create_dag_tasks_from_config():
+    conf = load_config("config", "test")
+    d = DAG(dag_id="example_dag", config=conf)
+    assert len(d.tasks) == 3
+    assert d.tasks[0].task_id == "task_1"
+    assert d.tasks[1].task_id == "task_2"
+    assert d.tasks[1].upstream_task_ids == {"task_1"}
+    assert d.tasks[2].task_id == "task_3"
+    assert d.tasks[2].upstream_task_ids == {"task_1"}
 
 
 def test_create_dag_from_config_create_dag():
