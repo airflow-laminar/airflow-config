@@ -396,9 +396,21 @@
 <div class="viewcode-block" id="Configuration.apply">
 <a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration.apply">[docs]</a>
     <span class="k">def</span> <span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">,</span> <span class="n">dag_kwargs</span><span class="p">):</span>
-        <span class="c1"># update the options in the dag</span>
-        <span class="c1"># TODO</span>
-        <span class="k">pass</span></div>
+        <span class="c1"># update the options in the dag if necessary,</span>
+        <span class="c1"># instantiate tasks</span>
+        <span class="k">if</span> <span class="n">dag</span><span class="o">.</span><span class="n">dag_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">:</span>
+            <span class="n">tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">[</span><span class="n">dag</span><span class="o">.</span><span class="n">dag_id</span><span class="p">]</span><span class="o">.</span><span class="n">tasks</span>
+            <span class="n">task_insts</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">if</span> <span class="n">tasks</span><span class="p">:</span>
+                <span class="k">for</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">task_inst</span> <span class="ow">in</span> <span class="n">tasks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                    <span class="n">task_inst</span><span class="o">.</span><span class="n">task_id</span> <span class="o">=</span> <span class="n">task_id</span>
+                    <span class="n">task_insts</span><span class="p">[</span><span class="n">task_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">task_inst</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">task_inst</span> <span class="ow">in</span> <span class="n">task_insts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">task_deps</span> <span class="o">=</span> <span class="n">tasks</span><span class="p">[</span><span class="n">task_id</span><span class="p">]</span><span class="o">.</span><span class="n">dependencies</span>
+                <span class="nb">print</span><span class="p">(</span><span class="n">task_insts</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">task_deps</span><span class="p">:</span>
+                    <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">task_deps</span><span class="p">:</span>
+                        <span class="n">task_insts</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">task_inst</span></div>
 </div>
 
 
