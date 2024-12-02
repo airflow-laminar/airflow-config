@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 from typing import Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, ConfigDict, Extra, Field
 
 from .utils import CallablePath, ImportPath, RelativeDelta
 
@@ -117,14 +117,31 @@ class TaskArgs(BaseModel):
     # allow_nested_operators (bool) – if True, when an operator is executed within another one a warning message will be logged. If False, then an exception will be raised if the operator is badly used (e.g. nested within another one). In future releases of Airflow this parameter will be removed and an exception will always be thrown when operators are nested within each other (default is True).
 
 
-class Task(TaskArgs):
+class Task(TaskArgs, extra=Extra.allow):
     task_id: Optional[str] = Field(default=None, description="a unique, meaningful id for the task")
     operator: ImportPath = Field(description="airflow operator path")
     dependencies: Optional[List[str]] = Field(default=None, description="dependencies")
 
-    # Task shared
+    # task shared
+    # python operator args
+    # https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/python/index.html#airflow.operators.python.PythonOperator
     python_callable: Optional[CallablePath] = Field(default=None, description="python_callable")
+
+    # bash operator args
+    # https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/operators/bash/index.html#airflow.operators.bash.BashOperator
     bash_command: Optional[str] = Field(default=None, description="bash_command")
+    env: Optional[Dict[str, str]] = Field(default=None)
+    append_env: Optional[bool] = Field(default=False)
+    output_encoding: Optional[str] = Field(default="utf-8")
+    skip_exit_code: Optional[bool] = Field(default=None)
+    skip_on_exit_code: Optional[int] = Field(default=99)
+    cwd: Optional[str] = Field(default=None)
+    output_processor: Optional[CallablePath] = None
+
+    # ssh operator args
+
+    # generic extras
+    model_config = ConfigDict(extra="allow")
 
     def instantiate(self, dag):
         kwargs = {k: v for k, v in self.model_dump().items() if v}
