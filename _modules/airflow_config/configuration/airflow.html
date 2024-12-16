@@ -252,13 +252,14 @@
 <span></span><span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span><span class="p">,</span> <span class="n">timedelta</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Union</span>
 
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Extra</span><span class="p">,</span> <span class="n">Field</span>
 
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">CallablePath</span><span class="p">,</span> <span class="n">ImportPath</span><span class="p">,</span> <span class="n">RelativeDelta</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">ImportPath</span><span class="p">,</span> <span class="n">RelativeDelta</span>
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;TaskArgs&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Task&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;_TaskSpecificArgs&quot;</span><span class="p">,</span>
     <span class="s2">&quot;DagArgs&quot;</span><span class="p">,</span>
     <span class="s2">&quot;Dag&quot;</span><span class="p">,</span>
 <span class="p">)</span>
@@ -368,20 +369,18 @@
     <span class="c1"># allow_nested_operators (bool) – if True, when an operator is executed within another one a warning message will be logged. If False, then an exception will be raised if the operator is badly used (e.g. nested within another one). In future releases of Airflow this parameter will be removed and an exception will always be thrown when operators are nested within each other (default is True).</span>
 
 
-<span class="k">class</span> <span class="nc">Task</span><span class="p">(</span><span class="n">TaskArgs</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">_TaskSpecificArgs</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span> <span class="o">...</span>
+
+
+<span class="k">class</span> <span class="nc">Task</span><span class="p">(</span><span class="n">TaskArgs</span><span class="p">,</span> <span class="n">extra</span><span class="o">=</span><span class="n">Extra</span><span class="o">.</span><span class="n">allow</span><span class="p">):</span>
     <span class="n">task_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;a unique, meaningful id for the task&quot;</span><span class="p">)</span>
     <span class="n">operator</span><span class="p">:</span> <span class="n">ImportPath</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">description</span><span class="o">=</span><span class="s2">&quot;airflow operator path&quot;</span><span class="p">)</span>
     <span class="n">dependencies</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;dependencies&quot;</span><span class="p">)</span>
+    <span class="n">args</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_TaskSpecificArgs</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
 
-    <span class="c1"># Task shared</span>
-    <span class="n">python_callable</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">CallablePath</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;python_callable&quot;</span><span class="p">)</span>
-    <span class="n">bash_command</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;bash_command&quot;</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">instantiate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">):</span>
-        <span class="n">kwargs</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">v</span><span class="p">}</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;operator&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s2">&quot;dependencies&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">def</span> <span class="nf">instantiate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">args</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">exclude_none</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span> <span class="k">else</span> <span class="p">{}),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span> <span class="s2">&quot;task_id&quot;</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">task_id</span><span class="p">}</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">operator</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">,</span> <span class="o">**</span><span class="n">args</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="DagArgs">
