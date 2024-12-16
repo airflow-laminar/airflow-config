@@ -1,13 +1,14 @@
 from datetime import datetime, timedelta
 from typing import Dict, List, Literal, Optional, Union
 
-from pydantic import BaseModel, Field
+from pydantic import BaseModel, Extra, Field
 
-from .utils import CallablePath, ImportPath, RelativeDelta
+from .utils import ImportPath, RelativeDelta
 
 __all__ = (
     "TaskArgs",
     "Task",
+    "_TaskSpecificArgs",
     "DagArgs",
     "Dag",
 )
@@ -117,20 +118,18 @@ class TaskArgs(BaseModel):
     # allow_nested_operators (bool) – if True, when an operator is executed within another one a warning message will be logged. If False, then an exception will be raised if the operator is badly used (e.g. nested within another one). In future releases of Airflow this parameter will be removed and an exception will always be thrown when operators are nested within each other (default is True).
 
 
-class Task(TaskArgs):
+class _TaskSpecificArgs(BaseModel): ...
+
+
+class Task(TaskArgs, extra=Extra.allow):
     task_id: Optional[str] = Field(default=None, description="a unique, meaningful id for the task")
     operator: ImportPath = Field(description="airflow operator path")
     dependencies: Optional[List[str]] = Field(default=None, description="dependencies")
+    args: Optional[_TaskSpecificArgs] = Field(default=None)
 
-    # Task shared
-    python_callable: Optional[CallablePath] = Field(default=None, description="python_callable")
-    bash_command: Optional[str] = Field(default=None, description="bash_command")
-
-    def instantiate(self, dag):
-        kwargs = {k: v for k, v in self.model_dump().items() if v}
-        kwargs.pop("operator", None)
-        kwargs.pop("dependencies", None)
-        return self.operator(dag=dag, **kwargs)
+    def instantiate(self, dag, **kwargs):
+        args = {**(self.args.model_dump(exclude_none=True) if self.args else {}), **kwargs, "task_id": self.task_id}
+        return self.operator(dag=dag, **args)
 
 
 class DagArgs(BaseModel):

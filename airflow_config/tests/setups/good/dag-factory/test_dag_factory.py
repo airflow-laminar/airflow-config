@@ -59,6 +59,7 @@ def test_create_dag_tasks_from_config():
     assert d.tasks[1].upstream_task_ids == {"task_1"}
     assert d.tasks[2].task_id == "task_3"
     assert d.tasks[2].upstream_task_ids == {"task_1"}
+    assert conf.dags["example_dag"].tasks["task_3"].args.model_dump()["show_return_value_in_logs"] is True
 
 
 def test_create_dag_from_config_create_dag():

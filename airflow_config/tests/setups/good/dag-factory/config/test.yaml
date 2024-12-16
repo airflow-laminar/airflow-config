@@ -27,14 +27,25 @@ dags:
     tasks:
       task_1:
         operator: "airflow.operators.bash_operator.BashOperator"
-        bash_command: "echo 1"
+        args:
+          _target_: airflow_config.BashOperatorArgs
+          bash_command: "echo 1"
       task_2:
         operator: "airflow.operators.bash_operator.BashOperator"
-        bash_command: "echo 2"
+        args:
+          _target_: airflow_config.BashOperatorArgs
+          bash_command: "echo 2"
         dependencies: [task_1]
       task_3:
         operator: "airflow.operators.python_operator.PythonOperator"
-        python_callable: airflow_config.tests.setups.good.utils.print_hello.print_hello
+        args:
+          _target_: airflow_config.PythonOperatorArgs
+          python_callable: airflow_config.tests.setups.good.utils.print_hello.print_hello
+          op_args: []
+          op_kwargs: {}
+          templates_dict: {}
+          templates_exts: null
+          show_return_value_in_logs: true
         dependencies: [task_1]
 
   example_dag2:
@@ -44,14 +55,20 @@ dags:
     tasks:
       task_1:
         operator: airflow.operators.bash_operator.BashOperator
-        bash_command: "echo 1"
+        args:
+          _target_: airflow_config.BashOperatorArgs
+          bash_command: "echo 1"
       task_2:
         operator: airflow.operators.bash_operator.BashOperator
-        bash_command: "echo 2"
+        args:
+          _target_: airflow_config.BashOperatorArgs
+          bash_command: "echo 2"
         dependencies: [task_1]
       task_3:
         operator: airflow.operators.bash_operator.BashOperator
-        bash_command: "echo 3"
+        args:
+          _target_: airflow_config.BashOperatorArgs
+          bash_command: "echo 3"
         dependencies: [task_1]
 
 #   example_dag3:
