@@ -128,7 +128,7 @@ class Task(TaskArgs, extra=Extra.allow):
     args: Optional[_TaskSpecificArgs] = Field(default=None)
 
     def instantiate(self, dag, **kwargs):
-        args = {**(self.args.model_dump() if self.args else {}), **kwargs, "task_id": self.task_id}
+        args = {**(self.args.model_dump(exclude_none=True) if self.args else {}), **kwargs, "task_id": self.task_id}
         return self.operator(dag=dag, **args)
 
 
