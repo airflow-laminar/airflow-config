@@ -1,6 +1,6 @@
 # airflow-config
 
-[Apache Airflow](https://airflow.apache.org) utilities for for configuration of many DAGs and DAG environments
+[Apache Airflow](https://airflow.apache.org) utilities for configuration of DAGs and DAG environments
 
 [![Build Status](https://github.com/airflow-laminar/airflow-config/actions/workflows/build.yml/badge.svg?branch=main&event=push)](https://github.com/airflow-laminar/airflow-config/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/airflow-laminar/airflow-config/branch/main/graph/badge.svg)](https://codecov.io/gh/airflow-laminar/airflow-config)
