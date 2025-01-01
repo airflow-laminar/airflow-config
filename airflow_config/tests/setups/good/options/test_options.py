@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 from airflow.timetables.interval import DeltaDataIntervalTimetable
+from pytz import timezone
 
 from airflow_config import DAG, create_dag, load_config
 
@@ -13,7 +14,7 @@ def test_config_and_options():
     assert conf.default_args.email_on_retry is False
     assert conf.default_args.retries == 0
     assert conf.default_args.depends_on_past is False
-    assert conf.default_dag_args.start_date == datetime(2024, 1, 1)
+    assert conf.default_dag_args.start_date == datetime(2024, 1, 1, tzinfo=timezone("America/New_York"))
     assert conf.default_dag_args.catchup is False
     assert conf.default_dag_args.tags == ["utility", "test"]
 
