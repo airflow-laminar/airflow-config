@@ -6,5 +6,5 @@ email: t.paine154@gmail.com
 github: airflow-laminar
 project_description: Airflow utilities for configuration of many DAGs and DAG environments
 project_name: airflow config
-python_version_primary: '3.9'
+python_version_primary: '3.11'
 team: the airflow-config authors
