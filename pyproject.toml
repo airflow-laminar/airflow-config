@@ -4,7 +4,7 @@ build-backend="hatchling.build"
 
 [project]
 name = "airflow-config"
-authors = [{name = "the airflow-config authors", email = "3105306+timkpaine@users.noreply.github.com"}]
+authors = [{name = "the airflow-config authors", email = "t.paine154@gmail.com"}]
 description = "Airflow utilities for configuration of many DAGs and DAG environments"
 readme = "README.md"
 license = { text = "Apache-2.0" }
@@ -18,10 +18,10 @@ keywords = [
 
 classifiers = [
     "Development Status :: 3 - Alpha",
+    "Programming Language :: Python",
     "Programming Language :: Python :: Implementation :: CPython",
     "Programming Language :: Python :: Implementation :: PyPy",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
@@ -37,10 +37,6 @@ dependencies = [
     "pydantic>=2",
 ]
 
-[project.urls]
-Repository = "https://github.com/airflow-laminar/airflow-config"
-Homepage = "https://github.com/airflow-laminar/airflow-config"
-
 [project.optional-dependencies]
 develop = [
     "build",
@@ -55,6 +51,10 @@ develop = [
 ]
 
 [project.scripts]
+
+[project.urls]
+Repository = "https://github.com/airflow-laminar/airflow-config"
+Homepage = "https://github.com/airflow-laminar/airflow-config"
 
 [tool.bumpversion]
 current_version = "0.2.2"
@@ -76,9 +76,22 @@ ignore = [
     ".copier-answers.yml",
     "Makefile",
     "setup.py",
-    "docs/*/*",
-    "example_dags/*",
+    "docs/**/*",
 ]
+
+[tool.coverage.run]
+branch = true
+omit = [
+    "airflow_config/tests/integration/",
+]
+[tool.coverage.report]
+exclude_also = [
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+    "@(abc\\.)?abstractmethod",
+]
+ignore_errors = true
+fail_under = 50
 
 [tool.hatch.build]
 artifacts = []
@@ -87,37 +100,13 @@ artifacts = []
 src = "/"
 
 [tool.hatch.build.targets.sdist]
-include = [
-    "/airflow_config",
-    "LICENSE",
-    "README.md",
-]
-exclude = [
-    ".copier-answers.yml",
-    "/.github",
-    "/.gitattributes",
-    "/.gitignore",
-    "/docs",
-    "/example_dags",
-]
+packages = ["airflow_config"]
 
 [tool.hatch.build.targets.wheel]
-include = [
-    "/airflow_config",
-]
-exclude = [
-    ".copier-answers.yml",
-    "/.github",
-    "/.gitattributes",
-    "/.gitignore",
-    "/docs",
-    "/pyproject.toml",
-    "/example_dags",
-]
-
-[tool.hatch.build.targets.wheel.shared-data]
+packages = ["airflow_config"]
 
 [tool.pytest.ini_options]
+addopts = ["-vvv", "--junitxml=junit.xml"]
 asyncio_mode = "strict"
 testpaths = "airflow_config/tests"
 

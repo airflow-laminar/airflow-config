@@ -1,4 +1,3 @@
-
 name: Build Status
 
 on:
@@ -32,7 +31,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.11"]
-        airflow-version: ["2.8.1", "2.9.2", "2.10.1"]
+        airflow-version: ["2.8.1", "2.9.2", "2.10.4"]
 
     steps:
     - uses: actions/checkout@v4
@@ -52,39 +51,40 @@ jobs:
 
     - name: Lint
       run: make lint
-      if: ${{ matrix.os == 'ubuntu-latest' }}
 
     - name: Checks
       run: make checks
-      if: ${{ matrix.os == 'ubuntu-latest' }}
 
     - name: Build
       run: make build
 
     - name: Test
       run: make coverage
-      if: ${{ matrix.os == 'ubuntu-latest' }}
-      
+
     - name: Upload test results (Python)
       uses: actions/upload-artifact@v4
       with:
-        name: pytest-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.airflow-version }}
+        name: test-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.airflow-version }}
         path: junit.xml
       if: ${{ always() }}
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
-        files: |
-            **/junit.xml
-      if: ${{ matrix.os == 'ubuntu-latest' }}
+        files: '**/junit.xml'
+      if: matrix.airflow-version == '2.10.4'
 
     - name: Upload coverage
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
+      if: matrix.airflow-version == '2.10.4'
 
     - name: Make dist
       run: make dist
 
-
+    - uses: actions/upload-artifact@v4
+      with:
+        name: dist-${{matrix.os}}
+        path: dist
+      if: matrix.airflow-version == '2.10.4'
