@@ -1,8 +1,8 @@
 # Changes here will be overwritten by Copier
-_commit: 941f1c9
+_commit: ea9f24b
 _src_path: git@github.com:python-project-templates/base.git
 add_extension: python
-email: 3105306+timkpaine@users.noreply.github.com
+email: t.paine154@gmail.com
 github: airflow-laminar
 project_description: Airflow utilities for configuration of many DAGs and DAG environments
 project_name: airflow config
