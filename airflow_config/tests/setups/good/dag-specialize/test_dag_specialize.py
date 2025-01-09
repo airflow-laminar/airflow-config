@@ -42,6 +42,8 @@ def test_create_dag_from_config():
     d = DAG(dag_id="example_dag", config=conf)
     assert d.default_args["owner"] == "custom_owner"
     assert d.default_args["email"] == ["myemail@myemail.com"]
+    assert d.max_active_tasks == 1
+    assert d.max_active_runs == 1
     assert d.schedule_interval == "0 3 * * *"
 
     d = DAG(dag_id="example_dag2", config=conf)
