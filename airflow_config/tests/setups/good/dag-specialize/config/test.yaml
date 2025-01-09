@@ -22,6 +22,8 @@ dags:
       owner: "custom_owner"
     description: "this is an example dag"
     schedule: "0 3 * * *"
+    max_active_tasks: 1
+    max_active_runs: 1
 
   example_dag2:
     default_args:

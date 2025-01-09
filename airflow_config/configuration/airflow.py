@@ -166,8 +166,11 @@ class DagArgs(BaseModel):
     # user_defined_filters (dict | None) – a dictionary of filters that will be exposed in your jinja templates. For example, passing dict(hello=lambda name: 'Hello %s' % name) to this argument allows you to {{ 'world' | hello }} in all jinja templates related to this DAG.
     # default_args (dict | None) – A dictionary of default parameters to be used as constructor keyword parameters when initialising operators. Note that operators have the same hook, and precede those defined here, meaning that if your dict contains ‘depends_on_past’: True here and ‘depends_on_past’: False in the operator’s call default_args, the actual value will be False.
     # params (collections.abc.MutableMapping | None) – a dictionary of DAG level parameters that are made accessible in templates, namespaced under params. These params can be overridden at the task level.
-    # max_active_tasks: Optional[int] = Field(default=None, description="the number of task instances allowed to run concurrently")
-    # max_active_runs: Optional[int] = Field(default=None, description="maximum number of active DAG runs, beyond this number of DAG runs in a running state, the scheduler won’t create new active DAG runs")
+    max_active_tasks: Optional[int] = Field(default=None, description="the number of task instances allowed to run concurrently")
+    max_active_runs: Optional[int] = Field(
+        default=None,
+        description="maximum number of active DAG runs, beyond this number of DAG runs in a running state, the scheduler won’t create new active DAG runs",
+    )
     # max_consecutive_failed_dag_runs: Optional[int] = Field(default=None, description="maximum number of consecutive failed DAG runs, beyond this the scheduler will disable the DAG")
     # dagrun_timeout (datetime.timedelta | None) – specify how long a DagRun should be up before timing out / failing, so that new DagRuns can be created.
     # sla_miss_callback (None | SLAMissCallback | list[SLAMissCallback]) – specify a function or list of functions to call when reporting SLA timeouts. See sla_miss_callback for more information about the function signature and parameters that are passed to the callback.
@@ -190,7 +193,7 @@ class DagArgs(BaseModel):
     # owner_links (dict[str, str] | None) – Dict of owners and their links, that will be clickable on the DAGs view UI. Can be used as an HTTP link (for example the link to your Slack channel), or a mailto link. e.g: {“dag_owner”: “https://airflow.apache.org/”}
     # auto_register (bool) – Automatically register this DAG when it is used in a with block
     # fail_stop (bool) – Fails currently running tasks when task in DAG fails. Warning: A fail stop dag can only have tasks with the default trigger rule (“all_success”). An exception will be thrown if any task in a fail stop dag has a non default trigger rule.
-    # dag_display_name (str | None) – The display name of the DAG which appears on the UI.
+    dag_display_name: Optional[str] = Field(default=None, description="The display name of the DAG which appears on the UI.")
 
 
 class Dag(DagArgs):
