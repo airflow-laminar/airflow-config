@@ -75,7 +75,6 @@ replace = 'version = "{new_version}"'
 ignore = [
     ".copier-answers.yml",
     "Makefile",
-    "setup.py",
     "docs/**/*",
 ]
 

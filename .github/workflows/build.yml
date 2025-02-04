@@ -72,7 +72,10 @@ jobs:
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
         files: '**/junit.xml'
+<<<<<<< before updating
       if: matrix.airflow-version == '2.10.4'
+=======
+>>>>>>> after updating
 
     - name: Upload coverage
       uses: codecov/codecov-action@v5
@@ -87,4 +90,7 @@ jobs:
       with:
         name: dist-${{matrix.os}}
         path: dist
+<<<<<<< before updating
       if: matrix.airflow-version == '2.10.4'
+=======
+>>>>>>> after updating
