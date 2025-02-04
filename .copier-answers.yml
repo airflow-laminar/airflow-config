@@ -1,6 +1,6 @@
 # Changes here will be overwritten by Copier
 _commit: ea9f24b
-_src_path: git@github.com:python-project-templates/base.git
+_src_path: https://github.com/python-project-templates/base.git
 add_extension: python
 email: t.paine154@gmail.com
 github: airflow-laminar
