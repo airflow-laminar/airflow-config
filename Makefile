@@ -86,7 +86,7 @@ dist-build:  # build python dists
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*
 
-dist: clean build dist-build dist-check  ## build all dists
+dist: clean dist-build dist-check  ## build all dists
 
 publish: dist  # publish python assets
 
