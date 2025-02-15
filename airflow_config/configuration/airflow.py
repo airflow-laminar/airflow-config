@@ -197,6 +197,8 @@ class DagArgs(BaseModel):
 
 
 class Dag(DagArgs):
+    enabled: Optional[bool] = Field(default=True, description="Whether the DAG is enabled")
+
     dag_id: Optional[str] = Field(
         default=None, description="The id of the DAG; must consist exclusively of alphanumeric characters, dashes, dots and underscores (all ASCII)"
     )
