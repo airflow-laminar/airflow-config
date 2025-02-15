@@ -207,7 +207,6 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../docs/src/API.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.Configuration.html">airflow_config.Configuration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.DagArgs.html">airflow_config.DagArgs</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.PythonConfiguration.html">airflow_config.PythonConfiguration</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.DAG.html">airflow_config.DAG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.generate_dag_id.html">airflow_config.generate_dag_id</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.create_dag.html">airflow_config.create_dag</a></li>
@@ -451,6 +450,8 @@
 
 
 <span class="k">class</span><span class="w"> </span><span class="nc">Dag</span><span class="p">(</span><span class="n">DagArgs</span><span class="p">):</span>
+    <span class="n">enabled</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">bool</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Whether the DAG is enabled&quot;</span><span class="p">)</span>
+
     <span class="n">dag_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The id of the DAG; must consist exclusively of alphanumeric characters, dashes, dots and underscores (all ASCII)&quot;</span>
     <span class="p">)</span>
