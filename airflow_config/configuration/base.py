@@ -111,8 +111,8 @@ class Configuration(BaseModel):
             # first try to see if per-dag options have default_args for subtasks
             per_dag_kwargs = self.dags[dag_kwargs["dag_id"]]
 
-            # if dag is disabled, quit right away
-            if per_dag_kwargs.enabled is False:
+            # if dag is disabled directly, quit right away
+            if per_dag_kwargs.enabled is False or (per_dag_kwargs.enabled is None and self.default_dag_args.enabled is False):
                 sys.exit(0)
 
             default_args = per_dag_kwargs.default_args
@@ -121,7 +121,7 @@ class Configuration(BaseModel):
                     dag_kwargs["default_args"][attr] = getattr(default_args, attr)
 
             for attr in DagArgs.model_fields:
-                if attr == "default_args":
+                if attr in ("default_args", "enabled"):
                     # skip
                     continue
                 if attr == "dag_id":
@@ -134,12 +134,16 @@ class Configuration(BaseModel):
                 if attr not in dag_kwargs and val:
                     dag_kwargs[attr] = val
 
+        elif self.default_dag_args.enabled is False:
+            # if dag has no per-dag-config, but default dag args is disabled, quit right away
+            sys.exit(0)
+
         for attr in TaskArgs.model_fields:
             if attr not in dag_kwargs["default_args"] and getattr(self.default_args, attr, None) is not None:
                 dag_kwargs["default_args"][attr] = getattr(self.default_args, attr)
 
         for attr in DagArgs.model_fields:
-            if attr not in dag_kwargs:
+            if attr not in dag_kwargs and attr not in ("enabled",):
                 val = getattr(self.default_dag_args, attr, None)
                 if attr not in dag_kwargs and val is not None:
                     dag_kwargs[attr] = val
