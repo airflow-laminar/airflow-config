@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 from typing import Dict, Optional
 
@@ -7,7 +8,6 @@ from hydra.utils import instantiate
 from pydantic import BaseModel, Field
 
 from airflow_config.configuration.airflow import Dag, DagArgs, Task, TaskArgs
-from airflow_config.configuration.python import PythonConfiguration
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
 
@@ -24,8 +24,13 @@ class Configuration(BaseModel):
     dags: Optional[Dict[str, Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
     tasks: Optional[Dict[str, Task]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
-    python: PythonConfiguration = Field(default_factory=PythonConfiguration, description="Global Python configuration")
     extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
+
+    # Generic options
+    env: Optional[str] = Field(default="", description="Environment to use for this configuration")
+    name: Optional[str] = Field(default="", description="Name of the configuration")
+    root: Optional[Path] = Field(default=None, description="Root path")
+    tags: Optional[Dict[str, str]] = Field(default_factory=dict, description="Generic Tags for config. NOTE: Not related to dag tags")
 
     @property
     def default_args(self):
@@ -105,6 +110,11 @@ class Configuration(BaseModel):
         if dag_kwargs.get("dag_id", None) in self.dags:
             # first try to see if per-dag options have default_args for subtasks
             per_dag_kwargs = self.dags[dag_kwargs["dag_id"]]
+
+            # if dag is disabled, quit right away
+            if per_dag_kwargs.enabled is False:
+                sys.exit(0)
+
             default_args = per_dag_kwargs.default_args
             for attr in TaskArgs.model_fields:
                 if attr not in dag_kwargs["default_args"] and getattr(default_args, attr, None):
