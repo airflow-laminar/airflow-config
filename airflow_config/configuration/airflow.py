@@ -195,13 +195,13 @@ class DagArgs(BaseModel):
     # fail_stop (bool) – Fails currently running tasks when task in DAG fails. Warning: A fail stop dag can only have tasks with the default trigger rule (“all_success”). An exception will be thrown if any task in a fail stop dag has a non default trigger rule.
     dag_display_name: Optional[str] = Field(default=None, description="The display name of the DAG which appears on the UI.")
 
+    # Extras
+    enabled: Optional[bool] = Field(default=None, description="Whether the DAG is enabled")
+
 
 class Dag(DagArgs):
-    enabled: Optional[bool] = Field(default=True, description="Whether the DAG is enabled")
-
     dag_id: Optional[str] = Field(
         default=None, description="The id of the DAG; must consist exclusively of alphanumeric characters, dashes, dots and underscores (all ASCII)"
     )
     default_args: Optional[TaskArgs] = Field(default=None, description="Default arguments for tasks in the DAG")
-
     tasks: Optional[Dict[str, Task]] = Field(default_factory=list, description="List of tasks in the DAG")
