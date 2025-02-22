@@ -6,7 +6,7 @@ default_args:
   email: [myemail@myemail.com]
   email_on_failure: false
   email_on_retry: false
-  retries: 0
+  retries: 5
   depends_on_past: false
 
 default_dag_args:
