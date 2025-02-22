@@ -4,8 +4,8 @@
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
-    <!-- Generated with Sphinx 8.2.0 and Furo 2024.08.06 -->
-        <title>airflow_pydantic.dag - airflow-config v1.2.0</title>
+    <!-- Generated with Sphinx 8.2.1 and Furo 2024.08.06 -->
+        <title>airflow_pydantic.dag - airflow-config v1.3.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -171,7 +171,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.2.0</code></div></a>
+      <a href="../../index.html"><div class="brand">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.3.0</code></div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -195,7 +195,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.2.0</code></span>
+  <span class="sidebar-brand-text">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.3.0</code></span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -266,6 +266,8 @@
 <span class="k">class</span><span class="w"> </span><span class="nc">DagArgs</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="c1"># DAG args</span>
     <span class="c1"># https://airflow.apache.org/docs/apache-airflow/stable/_api/airflow/models/dag/index.html#airflow.models.dag.DAG</span>
+
+    <span class="c1"># NOTE: All fields here should be default None</span>
     <span class="n">description</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The description for the DAG to e.g. be shown on the webserver&quot;</span><span class="p">)</span>
     <span class="n">schedule</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">ScheduleArg</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
@@ -308,7 +310,7 @@
     <span class="p">)</span>
     <span class="c1"># jinja_environment_kwargs (dict | None) – additional configuration options to be passed to Jinja Environment for template rendering</span>
     <span class="c1"># render_template_as_native_obj (bool) – If True, uses a Jinja NativeEnvironment to render templates as native Python types. If False, a Jinja Environment is used to render templates as string values.</span>
-    <span class="n">tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">list</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of tags to help filtering DAGs in the UI.&quot;</span><span class="p">)</span>
+    <span class="n">tags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of tags to help filtering DAGs in the UI.&quot;</span><span class="p">)</span>
     <span class="c1"># owner_links (dict[str, str] | None) – Dict of owners and their links, that will be clickable on the DAGs view UI. Can be used as an HTTP link (for example the link to your Slack channel), or a mailto link. e.g: {“dag_owner”: “https://airflow.apache.org/”}</span>
     <span class="c1"># auto_register (bool) – Automatically register this DAG when it is used in a with block</span>
     <span class="c1"># fail_stop (bool) – Fails currently running tasks when task in DAG fails. Warning: A fail stop dag can only have tasks with the default trigger rule (“all_success”). An exception will be thrown if any task in a fail stop dag has a non default trigger rule.</span>
@@ -357,7 +359,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=6efca38a"></script>
+</div><script src="../../_static/documentation_options.js?v=1f29e9d3"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
