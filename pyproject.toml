@@ -53,6 +53,9 @@ develop = [
     "wheel",
 ]
 
+[project.entry-points."airflow.plugins"]
+airflow-config-viewer = "airflow_config.plugins.viewer:AirflowConfigViewerPlugin"
+
 [project.scripts]
 
 [project.urls]
