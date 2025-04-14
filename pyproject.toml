@@ -87,6 +87,7 @@ ignore = [
 [tool.coverage.run]
 branch = true
 omit = [
+    "airflow_config/plugins/",
     "airflow_config/tests/integration/",
 ]
 [tool.coverage.report]

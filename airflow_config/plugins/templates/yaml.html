@@ -1,4 +1,5 @@
 {% extends "appbuilder/base.html" %}
 {% block content %}
-    <p>Airflow is {{ content }}!</p>
+    <h2>Yaml:</h2>
+    <pre>{{ config|safe }}</pre>
 {% endblock %}
