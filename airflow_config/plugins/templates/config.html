@@ -1,0 +1,20 @@
+{% extends "appbuilder/base.html" %}
+{% block content %}
+    <h2>Found:</h2>
+    <ul>
+        {% for item in yamls %}
+            <li><a onclick="document.getElementById('yaml').value = this.innerHTML">{{ item }}</a></li>
+        {% endfor %}
+    </ul>
+    <h2>Manual:</h2>
+    <form action="" method="GET">
+        <input type="text" id="yaml" name="yaml" value="" placeholder="Enter path to yaml" style="width: 400px;">
+        <br>
+        <br>
+        <input type="textarea" id="overrides" name="overrides" value="" placeholder="Enter any overrides" style="width: 400px; height: 100px;">
+        <br>
+        <br>
+        <button type="submit" style="width: 400px">Submit</button>
+    </form>
+
+{% endblock %}

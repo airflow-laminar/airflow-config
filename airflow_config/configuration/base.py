@@ -38,35 +38,33 @@ class Configuration(BaseModel):
 
     @staticmethod
     def _find_parent_config_folder(config_dir: str = "config", config_name: str = "", *, basepath: str = "", _offset: int = 2):
+        if config_name.endswith(".yml"):
+            raise Exception("Config file must be .yaml, not .yml")
+        if config_name and not config_name.endswith(".yaml"):
+            config_name = f"{config_name}.yaml"
         if basepath:
-            if basepath.endswith((".py", ".cfg", ".yml", ".yaml")):
+            if basepath.endswith((".py", ".cfg", ".yaml")):
                 calling_dag = Path(basepath)
             else:
                 calling_dag = Path(basepath) / "dummy.py"
         else:
             calling_dag = Path(_get_calling_dag(offset=_offset))
         folder = calling_dag.parent.resolve()
-        exists = (
-            (folder / config_dir).exists()
-            if not config_name
-            else ((folder / config_dir / f"{config_name}.yml").exists() or (folder / config_dir / f"{config_name}.yaml").exists())
-        )
+        exists = (folder / config_dir).exists() if not config_name else (folder / config_dir / f"{config_name}").exists()
         while not exists:
             folder = folder.parent
             if str(folder) == os.path.abspath(os.sep):
                 raise ConfigNotFoundError(config_dir=config_dir, dagfile=calling_dag)
-            exists = (
-                (folder / config_dir).exists()
-                if not config_name
-                else ((folder / config_dir / f"{config_name}.yml").exists() or (folder / config_dir / f"{config_name}.yaml").exists())
-            )
+            exists = (folder / config_dir).exists() if not config_name else (folder / config_dir / f"{config_name}").exists()
+            if not exists and (folder / config_dir / f"{config_name}.yml").exists():
+                raise Exception(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
 
         config_dir = (folder / config_dir).resolve()
         if not config_name:
             return folder.resolve(), config_dir, ""
         elif (folder / config_dir / f"{config_name}.yml").exists():
-            return folder.resolve(), config_dir, (folder / config_dir / f"{config_name}.yml").resolve()
-        return folder.resolve(), config_dir, (folder / config_dir / f"{config_name}.yaml").resolve()
+            raise Exception(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
+        return folder.resolve(), config_dir, (folder / config_dir / f"{config_name}").resolve()
 
     @staticmethod
     def load(
