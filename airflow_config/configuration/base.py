@@ -68,7 +68,7 @@ class Configuration(BaseModel):
 
     @staticmethod
     def load(
-        config_dir: str = "config",
+        config_dir: str = "airflow_config",
         config_name: str = "",
         overrides: Optional[list[str]] = None,
         *,
@@ -77,13 +77,13 @@ class Configuration(BaseModel):
     ) -> "Configuration":
         overrides = overrides or []
 
-        with initialize_config_dir(config_dir=str(Path(__file__).resolve().parent / "hydra"), version_base=None):
+        with initialize_config_dir(config_dir=str(Path(__file__).resolve().parent / "airflow_config"), version_base=None):
             if config_dir:
                 hydra_folder, config_dir, _ = Configuration._find_parent_config_folder(
                     config_dir=config_dir, config_name=config_name, basepath=basepath, _offset=_offset
                 )
 
-                cfg = compose(config_name="base", overrides=[], return_hydra_config=True)
+                cfg = compose(config_name="conf", overrides=[], return_hydra_config=True)
                 searchpaths = cfg["hydra"]["searchpath"]
                 searchpaths.extend([hydra_folder, config_dir])
                 if config_name:
@@ -91,7 +91,7 @@ class Configuration(BaseModel):
                 else:
                     overrides = [*overrides.copy(), f"hydra.searchpath=[{','.join(searchpaths)}]"]
 
-            cfg = compose(config_name="base", overrides=overrides)
+            cfg = compose(config_name="conf", overrides=overrides)
             config = instantiate(cfg)
 
             if not isinstance(config, Configuration):
