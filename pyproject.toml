@@ -54,7 +54,7 @@ develop = [
 ]
 
 [project.entry-points."airflow.plugins"]
-airflow-config-viewer = "airflow_config.plugins.viewer:AirflowConfigViewerPlugin"
+airflow-config-viewer = "airflow_config.ui:AirflowConfigViewerPlugin"
 
 [project.scripts]
 
@@ -87,9 +87,10 @@ ignore = [
 [tool.coverage.run]
 branch = true
 omit = [
-    "airflow_config/plugins/",
+    "airflow_config/ui/",
     "airflow_config/tests/integration/",
 ]
+
 [tool.coverage.report]
 exclude_also = [
     "raise NotImplementedError",
