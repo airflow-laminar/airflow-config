@@ -12,6 +12,11 @@ from flask_appbuilder import BaseView, expose
 
 from airflow_config import load_config
 
+__all__ = (
+    "AirflowConfigViewerPluginView",
+    "AirflowConfigViewerPlugin",
+)
+
 
 class AirflowConfigViewerPluginView(BaseView):
     """Creating a Flask-AppBuilder View"""
@@ -68,7 +73,7 @@ docs_link_subitem = {
     "category": "Docs",
 }
 
-view_subitem = {"label": "Config", "category": "Laminar", "name": "Laminar", "view": airflow_config_viewer_plugin_view}
+view_subitem = {"label": "Airflow Config Viewer", "category": "Laminar", "name": "Laminar", "view": airflow_config_viewer_plugin_view}
 
 
 class AirflowConfigViewerPlugin(AirflowPlugin):
