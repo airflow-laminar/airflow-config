@@ -23,25 +23,26 @@ class AirflowConfigViewerPluginView(BaseView):
 
     default_view = "home"
 
+    @expose("/yaml")
+    @has_access([(permissions.ACTION_CAN_READ, permissions.RESOURCE_WEBSITE)])
+    def yaml(self):
+        yaml = request.args.get("yaml")
+        overrides = (request.args.get("overrides") or "").split()
+        # Process the yaml, potentially with overrides
+        yaml_file = Path(yaml).resolve()
+        cfg = load_config(str(yaml_file.parent.name), yaml_file.name, overrides=overrides, basepath=str(yaml_file))
+        if not cfg:
+            return self.render_template("airflow_config/500.html", yaml=yaml)
+        return self.render_template("airflow_config/yaml.html", config=str(cfg.model_dump_json(indent=2, serialize_as_any=True)))
+
     @expose("/")
     @has_access([(permissions.ACTION_CAN_READ, permissions.RESOURCE_WEBSITE)])
     def home(self):
         """Create default view"""
-        yaml = request.args.get("yaml")
-        overrides = (request.args.get("overrides") or "").split()
-
-        if yaml:
-            # Process the yaml, potentially with overrides
-            yaml_file = Path(yaml).resolve()
-            cfg = load_config(str(yaml_file.parent.name), yaml_file.name, overrides=overrides, basepath=str(yaml_file))
-            if not cfg:
-                return self.render_template("500.html", yaml=yaml)
-            return self.render_template("yaml.html", config=str(cfg.model_dump_json(indent=2, serialize_as_any=True)))
-
         # Locate the dags folder
         dags_folder = os.environ.get("AIRFLOW__CORE__DAGS_FOLDER", conf.getsection("core").get("dags_folder"))
         if not dags_folder:
-            return self.render_template("404.html")
+            return self.render_template("airflow_config/404.html")
 
         # Look for yamls inside the dags folder
         yamls = []
@@ -50,7 +51,7 @@ class AirflowConfigViewerPluginView(BaseView):
             if path.is_file():
                 if "_target_: airflow_config.Configuration" in path.read_text():
                     yamls.append(path)
-        return self.render_template("config.html", yamls=yamls)
+        return self.render_template("airflow_config/home.html", yamls=yamls)
 
 
 # Instantiate a view
