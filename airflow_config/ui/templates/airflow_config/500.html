@@ -1,4 +1,7 @@
 {% extends "appbuilder/base.html" %}
 {% block content %}
-    <h1>Error loading yaml {{yaml}}</h1>
+    <div class="alert alert-danger" role="alert">
+        <strong>Error loading yaml {{yaml}}</strong>
+        <p>Please check the webserver logs for more information.</p>
+    </div>
 {% endblock %}
