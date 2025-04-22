@@ -10,7 +10,7 @@ from airflow.www.auth import has_access
 from flask import Blueprint, request
 from flask_appbuilder import BaseView, expose
 
-from airflow_config import load_config
+from airflow_config import ConfigNotFoundError, load_config
 
 __all__ = (
     "AirflowConfigViewerPluginView",
@@ -28,10 +28,16 @@ class AirflowConfigViewerPluginView(BaseView):
     def yaml(self):
         yaml = request.args.get("yaml")
         overrides = (request.args.get("overrides") or "").split()
-        # Process the yaml, potentially with overrides
-        yaml_file = Path(yaml).resolve()
-        cfg = load_config(str(yaml_file.parent.name), yaml_file.name, overrides=overrides, basepath=str(yaml_file))
-        if not cfg:
+
+        if not yaml:
+            return self.render_template("airflow_config/500.html", yaml="- yaml file not specified")
+        try:
+            # Process the yaml, potentially with overrides
+            yaml_file = Path(yaml).resolve()
+            cfg = load_config(str(yaml_file.parent.name), yaml_file.name, overrides=overrides, basepath=str(yaml_file))
+            if not cfg:
+                return self.render_template("airflow_config/500.html", yaml=yaml)
+        except ConfigNotFoundError:
             return self.render_template("airflow_config/500.html", yaml=yaml)
         return self.render_template("airflow_config/yaml.html", config=str(cfg.model_dump_json(indent=2, serialize_as_any=True)))
 
