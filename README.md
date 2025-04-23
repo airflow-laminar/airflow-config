@@ -57,7 +57,7 @@ Now consider the alternative, config-driven approach:
 ```yaml
 # @package _global_
 _target_: airflow_config.Configuration
-default_args:
+default_task_args:
   _target_: airflow_config.TaskArgs
   owner: test
   email: [myemail@myemail.com]
@@ -136,7 +136,7 @@ class Configuration(BaseModel):
 # config/test.yaml
 # @package _global_
 _target_: airflow_config.Configuration
-default_args:
+default_task_args:
   _target_: airflow_config.DefaultTaskArgs
   owner: test
 ```
@@ -156,7 +156,7 @@ assert conf.default_args.owner == "test"
 # config/test.yaml
 # @package _global_
 _target_: airflow_config.Configuration
-default_args:
+default_task_args:
   _target_: airflow_config.DefaultTaskArgs
   owner: test
   email: [myemail@myemail.com]
@@ -165,7 +165,7 @@ default_args:
   retries: 0
   depends_on_past: false
 default_dag_args:
-  _target: airflow_config.DagArgs
+  _target_: airflow_config.DagArgs
   schedule: "01:10"
   start_date: "2024-01-01"
   catchup: false
@@ -195,7 +195,7 @@ assert conf.default_dag_args.tags == ["utility", "test"]
 # config/test.yaml
 # @package _global_
 _target_: airflow_config.Configuration
-default_args:
+default_task_args:
   _target_: airflow_config.TaskArgs
   owner: test
   email: [myemail@myemail.com]
@@ -205,7 +205,7 @@ default_args:
   depends_on_past: false
 
 default_dag_args:
-  _target: airflow_config.DagArgs
+  _target_: airflow_config.DagArgs
   schedule: "01:00"
   start_date: "2024-01-01"
   catchup: false

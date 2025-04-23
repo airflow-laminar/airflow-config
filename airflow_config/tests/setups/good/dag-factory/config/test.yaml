@@ -2,7 +2,7 @@
 # @package _global_
 _target_: airflow_config.Configuration
 
-default_args:
+default_task_args:
   _target_: airflow_config.TaskArgs
   owner: test
   email: [myemail@myemail.com]
@@ -12,7 +12,7 @@ default_args:
   depends_on_past: false
 
 default_dag_args:
-  _target: airflow_config.DagArgs
+  _target_: airflow_config.DagArgs
   schedule: "01:00"
   start_date: "2024-01-01"
   catchup: false
@@ -20,6 +20,7 @@ default_dag_args:
 
 dags:
   example_dag:
+    _target_: airflow_config.Dag
     default_args:
       owner: "custom_owner"
     description: "this is an example dag"
@@ -49,6 +50,7 @@ dags:
         dependencies: [task_1]
 
   example_dag2:
+    _target_: airflow_config.Dag
     default_args:
       owner: "custom_owner2"
     schedule: "0 4 * * *"
@@ -71,6 +73,12 @@ dags:
           bash_command: "echo 3"
         dependencies: [task_1]
 
+
+
+
+
+
+
 #   example_dag3:
 #     tasks:
 #       task_1:
@@ -84,7 +92,7 @@ dags:
 #         operator: airflow.operators.bash_operator.BashOperator
 #         bash_command: "echo 3"
 #         dependencies: [task_1]
-# 
+#
 #   example_dag4:
 #     description: "this dag uses task groups"
 #     task_groups:

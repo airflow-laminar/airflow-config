@@ -30,13 +30,14 @@ classifiers = [
 ]
 
 dependencies = [
-    "airflow-pydantic>=0.3.0,<1",
+    "airflow-pydantic>=1.0.0,<1.1",
     "apache-airflow>=2.8,<3",
+    "ccflow>=0.5.2,<1",
     "colorlog",
     "hydra-core",
     "jinja2",
     "omegaconf",
-    "pydantic>=2",
+    "pydantic>=2,<3",
 ]
 
 [project.optional-dependencies]
