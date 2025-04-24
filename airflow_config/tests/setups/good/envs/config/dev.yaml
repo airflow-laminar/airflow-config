@@ -1,6 +1,6 @@
 # @package _global_
 _target_: airflow_config.Configuration
-default_args:
+default_task_args:
   _target_: airflow_config.TaskArgs
   owner: dev
   email: [myemail@myemail.com]

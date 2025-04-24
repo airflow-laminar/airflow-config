@@ -70,7 +70,7 @@ def _create_dag_config(config: Configuration, dag_id: str = "", _offset: int = 3
 @create_dag.register
 def _create_dag_dir(config_dir: str = "config", config_name: str = "", overrides: Optional[list[str]] = None, dag_id: str = "", **kwargs: Any) -> DAG:
     dag_id = dag_id or generate_dag_id(offset=4)
-    config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides, _offset=5)
+    config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides, _offset=4)
     return create_dag(config, dag_id=dag_id, _offset=5, **kwargs)
 
 
@@ -98,6 +98,6 @@ def _create_dags_dirs(
     ret = []
     dag_id_base = dag_id_base or generate_dag_id(offset=4)
     for config_name in config_names:
-        config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides, _offset=5)
+        config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides, _offset=4)
         ret.append(create_dag(config, dag_id=f"{dag_id_base}-{config_name}", _offset=5, **kwargs))
     return ret

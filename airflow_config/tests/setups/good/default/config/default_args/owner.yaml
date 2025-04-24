@@ -1,4 +1,4 @@
 # @package _global_
-default_args:
+default_task_args:
   _target_: airflow_config.TaskArgs
   owner: test
