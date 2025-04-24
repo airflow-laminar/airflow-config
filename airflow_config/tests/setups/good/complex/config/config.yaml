@@ -1,0 +1,32 @@
+# @package _global_
+_target_: airflow_config.Configuration
+default_task_args:
+  _target_: airflow_config.TaskArgs
+  owner: blerg
+  email: []
+  email_on_failure: false
+  email_on_retry: false
+  retries: 0
+  depends_on_past: false
+
+default_dag_args:
+  _target_: airflow_config.DagArgs
+  start_date: ["2025-01-01", "America/New_York"]
+  catchup: false
+  max_active_runs: 1
+
+dags:
+  reboot:
+    tags: ["reboot", "utility"]
+    description: "Reboot machines"
+    schedule: "0 0 * * *"
+    max_active_tasks: 1
+  clean-logs:
+    tags: ["celery", "utility"]
+    description: "Clean worker logs"
+    schedule: "0 4 * * *"
+
+defaults:
+  - extensions/balancer@extensions.balancer
+  - extensions/libraries@extensions.libraries
+  - extensions/supervisor@extensions.supervisor

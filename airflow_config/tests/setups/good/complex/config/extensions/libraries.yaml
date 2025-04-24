@@ -1,0 +1,9 @@
+# @package extensions.libraries
+
+defaults: []
+
+_target_: airflow_common_operators.LibraryList
+git:
+  - name: airflow-balancer
+    repo: git@github.com:airflow-laminar/airflow-balancer.git
+    branch: main

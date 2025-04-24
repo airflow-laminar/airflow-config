@@ -1,0 +1,35 @@
+# @package extensions.balancer
+
+_target_: airflow_balancer.BalancerConfiguration
+default_username: blerg
+default_key_file: /home/airflow/.ssh/id_rsa
+primary_queue: primary
+secondary_queue: workers
+hosts:
+  - name: server2
+    os: ubuntu
+    size: 32
+    queues: [primary]
+    tags: []
+
+  - name: server1
+    os: ubuntu
+    size: 32
+    queues: [workers]
+    tags: []
+
+ports:
+  - host_name: server2
+    port: 22
+    tags: []
+
+  - name: named-port
+    host: ${...hosts[0]}
+    # no dupe
+    port: 23
+    tags: []
+
+  - name: test-supervisor-port
+    host_name: server2
+    port: 9091
+    tags: [supervisor]

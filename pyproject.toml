@@ -51,6 +51,11 @@ develop = [
     "twine",
     "uv",
     "wheel",
+    # Tests
+    "airflow-priority",
+    "airflow-supervisor",
+    "airflow-balancer",
+    "airflow-common-operators",
 ]
 
 [project.entry-points."airflow.plugins"]
