@@ -1,0 +1,12 @@
+# @package _global_
+
+defaults:
+  # https://hydra.cc/docs/configure_hydra/logging/
+  - default_task_args/default
+  - default_dag_args/default
+  - override hydra/job_logging: custom
+  - override hydra/hydra_logging: custom
+  - _self_
+
+_target_: airflow_config.Configuration
+dags: {}

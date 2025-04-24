@@ -1,7 +1,6 @@
 from typing import Optional
 
-from ccflow import BaseModel
-from pydantic import Field
+from pydantic import BaseModel, Field
 
 __all__ = (
     "PriorityConfiguration",

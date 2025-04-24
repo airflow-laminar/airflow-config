@@ -1,6 +1,6 @@
 # @package _global_
 _target_: airflow_config.Configuration
-default_task_args:
+default_args:
   _target_: airflow_config.TaskArgs
   owner: test
   email: [myemail@myemail.com]
@@ -9,7 +9,7 @@ default_task_args:
   retries: 0
   depends_on_past: false
 default_dag_args:
-  _target_: airflow_config.DagArgs
+  _target: airflow_config.DagArgs
   schedule: "01:10"
   start_date: ["2024-01-01", "America/New_York"]
   catchup: false

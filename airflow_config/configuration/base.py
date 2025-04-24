@@ -1,10 +1,12 @@
+import os
 import sys
 from pathlib import Path
 from typing import Dict, Optional
 
 from airflow_pydantic import Dag, DagArgs, Task, TaskArgs
-from ccflow import BaseModel, load_config as base_load_config
-from pydantic import Field
+from hydra import compose, initialize_config_dir
+from hydra.utils import instantiate
+from pydantic import BaseModel, Field
 
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
@@ -16,7 +18,7 @@ __all__ = (
 
 
 class Configuration(BaseModel):
-    default_task_args: TaskArgs = Field(default_factory=TaskArgs, description="Global default default_args (task arguments)")
+    default_task_args: TaskArgs = Field(default_factory=TaskArgs, description="Global default default_args (task arguments)", alias="default_args")
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
     dags: Optional[Dict[str, Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
@@ -35,14 +37,11 @@ class Configuration(BaseModel):
         return self.default_task_args
 
     @staticmethod
-    def load(
-        config_dir: str = "",
-        config_name: str = "",
-        overrides: Optional[list[str]] = None,
-        *,
-        basepath: str = "",
-        _offset: int = 2,
-    ) -> "Configuration":
+    def _find_parent_config_folder(config_dir: str = "config", config_name: str = "", *, basepath: str = "", _offset: int = 2):
+        if config_name.endswith(".yml"):
+            raise Exception("Config file must be .yaml, not .yml")
+        if config_name and not config_name.endswith(".yaml"):
+            config_name = f"{config_name}.yaml"
         if basepath:
             if basepath.endswith((".py", ".cfg", ".yaml")):
                 calling_dag = Path(basepath)
@@ -51,22 +50,53 @@ class Configuration(BaseModel):
         else:
             calling_dag = Path(_get_calling_dag(offset=_offset))
         folder = calling_dag.parent.resolve()
+        exists = (folder / config_dir).exists() if not config_name else (folder / config_dir / f"{config_name}").exists()
+        while not exists:
+            folder = folder.parent
+            if str(folder) == os.path.abspath(os.sep):
+                raise ConfigNotFoundError(config_dir=config_dir, dagfile=calling_dag)
+            exists = (folder / config_dir).exists() if not config_name else (folder / config_dir / f"{config_name}").exists()
+            if not exists and (folder / config_dir / f"{config_name}.yml").exists():
+                raise Exception(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
 
-        try:
-            cfg = base_load_config(
-                root_config_dir=str(Path(__file__).resolve().parent / "hydra"),
-                root_config_name="conf",
-                config_dir=config_dir,
-                config_name=config_name,
-                overrides=overrides,
-                overwrite=True,
-                basepath=folder,
-            )
-        except FileNotFoundError as e:
-            raise ConfigNotFoundError(folder, calling_dag) from e
-        # TODO: omit _target?
-        # return Configuration(**(cfg.model_dump()["models"]))
-        return Configuration(**cfg.models)
+        config_dir = (folder / config_dir).resolve()
+        if not config_name:
+            return folder.resolve(), config_dir, ""
+        elif (folder / config_dir / f"{config_name}.yml").exists():
+            raise Exception(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
+        return folder.resolve(), config_dir, (folder / config_dir / f"{config_name}").resolve()
+
+    @staticmethod
+    def load(
+        config_dir: str = "airflow_config",
+        config_name: str = "",
+        overrides: Optional[list[str]] = None,
+        *,
+        basepath: str = "",
+        _offset: int = 3,
+    ) -> "Configuration":
+        overrides = overrides or []
+
+        with initialize_config_dir(config_dir=str(Path(__file__).resolve().parent / "airflow_config"), version_base=None):
+            if config_dir:
+                hydra_folder, config_dir, _ = Configuration._find_parent_config_folder(
+                    config_dir=config_dir, config_name=config_name, basepath=basepath, _offset=_offset
+                )
+
+                cfg = compose(config_name="conf", overrides=[], return_hydra_config=True)
+                searchpaths = cfg["hydra"]["searchpath"]
+                searchpaths.extend([hydra_folder, config_dir])
+                if config_name:
+                    overrides = [f"+config={config_name}", *overrides.copy(), f"hydra.searchpath=[{','.join(searchpaths)}]"]
+                else:
+                    overrides = [*overrides.copy(), f"hydra.searchpath=[{','.join(searchpaths)}]"]
+
+            cfg = compose(config_name="conf", overrides=overrides)
+            config = instantiate(cfg)
+
+            if not isinstance(config, Configuration):
+                config = Configuration(**config)
+            return config
 
     def pre_apply(self, dag, dag_kwargs):
         # update options in config based on hard-coded overrides
