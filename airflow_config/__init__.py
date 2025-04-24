@@ -1,4 +1,4 @@
-__version__ = "1.4.0"
+__version__ = "1.5.0"
 
 # Reexport
 from airflow_pydantic import BashOperatorArgs, Dag, DagArgs, PythonOperatorArgs, SSHOperatorArgs, Task, TaskArgs
