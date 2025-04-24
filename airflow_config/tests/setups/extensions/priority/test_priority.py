@@ -9,3 +9,4 @@ def test_priority():
         conf = load_config("config", "test")
         assert conf.default_args.owner == "test"
         assert "priority" in conf.extensions
+        assert str(conf.model_dump_json(indent=2, serialize_as_any=True))
