@@ -44,7 +44,7 @@ jobs:
       run: make develop
 
     - name: Install airflow
-      run: pip install -U apache-airflow==${{ matrix.airflow-version }}
+      run: uv pip install -U apache-airflow==${{ matrix.airflow-version }} apache-airflow-providers-ssh
 
     - name: Lint
       run: make lint

@@ -30,14 +30,13 @@ classifiers = [
 ]
 
 dependencies = [
-    "airflow-pydantic>=1.0.0,<1.1",
+    "airflow-pydantic>=1,<1.1",
     "apache-airflow>=2.8,<3",
-    "ccflow>=0.5.2,<1",
     "colorlog",
     "hydra-core",
     "jinja2",
     "omegaconf",
-    "pydantic>=2,<3",
+    "pydantic>=2",
 ]
 
 [project.optional-dependencies]
@@ -52,6 +51,11 @@ develop = [
     "twine",
     "uv",
     "wheel",
+    # Tests
+    "airflow-priority",
+    "airflow-supervisor",
+    "airflow-balancer",
+    "airflow-common-operators",
 ]
 
 [project.entry-points."airflow.plugins"]

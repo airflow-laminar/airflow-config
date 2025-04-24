@@ -1,6 +1,6 @@
 # @package _global_
 _target_: airflow_config.Configuration
-default_task_args:
+default_args:
   _target_: airflow_config.TaskArgs
   owner: test
   email: [myemail@myemail.com]
@@ -19,7 +19,6 @@ default_dag_args:
 
 dags:
   example_dag:
-    _target_: airflow_config.Dag
     default_args:
       owner: "custom_owner"
     description: "this is an example dag"
@@ -29,7 +28,6 @@ dags:
     enabled: true
 
   example_dag2:
-    _target_: airflow_config.Dag
     default_args:
       owner: "custom_owner2"
     schedule: "0 4 * * *"

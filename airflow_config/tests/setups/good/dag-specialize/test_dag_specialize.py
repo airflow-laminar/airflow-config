@@ -20,6 +20,8 @@ def test_config_and_options():
 
     assert conf.dags["example_dag"].default_args.owner == "custom_owner"
 
+    assert str(conf.model_dump_json(indent=2, serialize_as_any=True))
+
 
 def test_create_dag_from_config():
     conf = load_config("config", "test")
