@@ -1,10 +1,6 @@
 {
   "name": "airflow-config",
-<<<<<<< before updating
   "version": "1.6.1",
-=======
-  "version": "0.1.0",
->>>>>>> after updating
   "description": "Airflow utilities for configuration of many DAGs and DAG environments",
   "repository": "git@github.com:airflow-laminar/airflow-config.git",
   "author": "airflow-config <t.paine154@gmail.com>",
@@ -43,10 +39,6 @@
   "dependencies": {},
   "devDependencies": {
     "@finos/perspective-esbuild-plugin": "^3.1.3",
-<<<<<<< before updating
-=======
-    "@playwright/test": "^1.47.0",
->>>>>>> after updating
     "@prospective.co/procss": "^0.1.16",
     "cpy": "^11.1.0",
     "esbuild": "^0.25.3",
