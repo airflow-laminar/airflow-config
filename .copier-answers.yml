@@ -1,7 +1,7 @@
 # Changes here will be overwritten by Copier
 _commit: c9dacb5
 _src_path: https://github.com/python-project-templates/base.git
-add_extension: python
+add_extension: js
 email: t.paine154@gmail.com
 github: airflow-laminar
 project_description: Airflow utilities for configuration of many DAGs and DAG environments

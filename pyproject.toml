@@ -1,5 +1,8 @@
 [build-system]
-requires = ["hatchling"]
+requires = [
+    "hatchling",
+    "hatch-jupyter-builder",
+]
 build-backend="hatchling.build"
 
 [project]
@@ -31,7 +34,7 @@ classifiers = [
 
 dependencies = [
     "airflow-pydantic>=1,<1.1",
-    "apache-airflow>=2.8,<3",
+    "apache-airflow>=2.9,<3",
     "colorlog",
     "hydra-core",
     "jinja2",
@@ -44,24 +47,31 @@ develop = [
     "build",
     "bump-my-version",
     "check-manifest",
+    "hatch-jupyter-builder",
     "hatchling",
     "pytest",
     "pytest-cov",
     "ruff",
     "twine",
-    "uv",
     "wheel",
     # Tests
     "airflow-priority",
     "airflow-supervisor",
     "airflow-balancer",
     "airflow-common-operators",
+    # Standalone UI
+    "email-validator>=2",
+    "flask_appbuilder",
+    "flask",
+    "fastapi",
+    "uvicorn",
 ]
 
 [project.entry-points."airflow.plugins"]
 airflow-config-viewer = "airflow_config.ui:AirflowConfigViewerPlugin"
 
 [project.scripts]
+airflow-config-viewer = "airflow_config.ui.standalone:main"
 
 [project.urls]
 Repository = "https://github.com/airflow-laminar/airflow-config"
@@ -82,17 +92,24 @@ filename = "pyproject.toml"
 search = 'version = "{current_version}"'
 replace = 'version = "{new_version}"'
 
+[[tool.bumpversion.files]]
+filename = "js/package.json"
+search = '"version": "{current_version}"'
+replace = '"version": "{new_version}"'
+
 [tool.check-manifest]
 ignore = [
     ".copier-answers.yml",
+    "js/pnpm-lock.yaml",
     "Makefile",
+    "airflow_config/ui/static/**/*",
     "docs/**/*",
+    "js/dist/**/*",
 ]
 
 [tool.coverage.run]
 branch = true
 omit = [
-    "airflow_config/ui/",
     "airflow_config/tests/integration/",
 ]
 
@@ -106,16 +123,40 @@ ignore_errors = true
 fail_under = 50
 
 [tool.hatch.build]
-artifacts = []
+artifacts = [
+    "airflow_config/ui/static",
+]
 
 [tool.hatch.build.sources]
 src = "/"
 
 [tool.hatch.build.targets.sdist]
-packages = ["airflow_config"]
+packages = ["airflow_config", "js"]
+exclude = [
+    "/js/dist",
+    "/js/node_modules",
+]
 
 [tool.hatch.build.targets.wheel]
 packages = ["airflow_config"]
+exclude = ["js"]
+
+[tool.hatch.build.hooks.jupyter-builder]
+build-function = "hatch_jupyter_builder.npm_builder"
+ensured-targets = [
+    "airflow_config/ui/static/cdn/index.js",
+]
+skip-if-exists = [
+    "airflow_config/ui/static/cdn/index.js",
+]
+dependencies = [
+    "hatch-jupyter-builder",
+]
+
+[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+path = "js"
+build_cmd = "build"
+npm = "pnpm"
 
 [tool.pytest.ini_options]
 addopts = ["-vvv", "--junitxml=junit.xml"]
