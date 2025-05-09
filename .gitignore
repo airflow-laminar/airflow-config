@@ -133,9 +133,17 @@ docs/html
 index.md
 _template/labextension
 
+# JS
+js/node_modules
+js/dist
+airflow_config/extension
+
 # Jupyter
 .ipynb_checkpoints
 .autoversion
 
 # Mac
 .DS_Store
+
+# Rust
+target

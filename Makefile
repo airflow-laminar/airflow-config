@@ -1,32 +1,53 @@
 #########
 # BUILD #
 #########
-.PHONY: develop build install
-
-develop:  ## install dependencies and build library
+.PHONY: develop-py develop-js develop
+develop-py:
 	uv pip install -e .[develop]
 
-build:  ## build the python library
-	python -m build -n
+develop-js:
+	cd js; pnpm install && npx playwright install
 
-install:  ## install library
+develop: develop-js develop-py  ## setup project for development
+
+.PHONY: build-py build-js build
+build-py:
+	python -m build -w -n
+
+build-js:
+	cd js; pnpm build
+
+build: build-js build-py  ## build the project
+
+.PHONY: install
+install:  ## install python library
 	uv pip install .
 
 #########
 # LINTS #
 #########
-.PHONY: lint lints fix format
-
-lint:  ## run python linter with ruff
+.PHONY: lint-py lint-js lint lints
+lint-py:  ## run python linter with ruff
 	python -m ruff check airflow_config
 	python -m ruff format --check airflow_config
 
-# Alias
+lint-js:  ## run js linter
+	cd js; pnpm lint
+
+lint: lint-js lint-py  ## run project linters
+
+# alias
 lints: lint
 
-fix:  ## fix python formatting with ruff
+.PHONY: fix-py fix-js fix format
+fix-py:  ## fix python formatting with ruff
 	python -m ruff check --fix airflow_config
 	python -m ruff format airflow_config
+
+fix-js:  ## fix js formatting
+	cd js; pnpm fix
+
+fix: fix-js fix-py  ## run project autoformatters
 
 # alias
 format: fix
@@ -41,21 +62,36 @@ check-manifest:  ## check python sdist manifest with check-manifest
 
 checks: check-manifest
 
-# Alias
+# alias
 check: checks
 
 #########
 # TESTS #
 #########
-.PHONY: test coverage tests
-
-test:  ## run python tests
+.PHONY: test-py tests-py coverage-py
+test-py:  ## run python tests
 	python -m pytest -v airflow_config/tests
 
-coverage:  ## run tests and collect test coverage
+# alias
+tests-py: test-py
+
+coverage-py:  ## run python tests and collect test coverage
 	python -m pytest -v airflow_config/tests --cov=airflow_config --cov-report term-missing --cov-report xml
 
-# Alias
+.PHONY: test-js tests-js coverage-js
+test-js:  ## run js tests
+	cd js; pnpm test
+
+# alias
+tests-js: test-js
+
+coverage-js: test-js  ## run js tests and collect test coverage
+
+.PHONY: test coverage tests
+test: test-py test-js  ## run all tests
+coverage: coverage-py coverage-js  ## run all tests and collect test coverage
+
+# alias
 tests: test
 
 ###########
@@ -78,15 +114,18 @@ major:  ## bump a major version
 ########
 # DIST #
 ########
-.PHONY: dist dist-build dist-sdist dist-local-wheel publish
+.PHONY: dist dist-py dist-js dist-check publish
 
-dist-build:  # build python dists
+dist-py:  # build python dists
 	python -m build -w -s
+
+dist-js:  # build js dists
+	cd js; pnpm pack
 
 dist-check:  ## run python dist checker with twine
 	python -m twine check dist/*
 
-dist: clean dist-build dist-check  ## build all dists
+dist: clean build dist-js dist-py dist-check  ## build all dists
 
 publish: dist  # publish python assets
 

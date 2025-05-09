@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-from pathlib import Path
 
 from airflow.configuration import conf
 from airflow.plugins_manager import AirflowPlugin
@@ -10,7 +9,7 @@ from airflow.www.auth import has_access
 from flask import Blueprint, request
 from flask_appbuilder import BaseView, expose
 
-from airflow_config import ConfigNotFoundError, load_config
+from .functions import get_configs_from_yaml, get_yaml_files
 
 __all__ = (
     "AirflowConfigViewerPluginView",
@@ -31,13 +30,8 @@ class AirflowConfigViewerPluginView(BaseView):
 
         if not yaml:
             return self.render_template("airflow_config/500.html", yaml="- yaml file not specified")
-        try:
-            # Process the yaml, potentially with overrides
-            yaml_file = Path(yaml).resolve()
-            cfg = load_config(str(yaml_file.parent.name), yaml_file.name, overrides=overrides, basepath=str(yaml_file))
-            if not cfg:
-                return self.render_template("airflow_config/500.html", yaml=yaml)
-        except ConfigNotFoundError:
+        cfg = get_configs_from_yaml(yaml, overrides=overrides)
+        if not cfg:
             return self.render_template("airflow_config/500.html", yaml=yaml)
         return self.render_template("airflow_config/yaml.html", config=str(cfg.model_dump_json(indent=2, serialize_as_any=True)))
 
@@ -49,14 +43,7 @@ class AirflowConfigViewerPluginView(BaseView):
         dags_folder = os.environ.get("AIRFLOW__CORE__DAGS_FOLDER", conf.getsection("core").get("dags_folder"))
         if not dags_folder:
             return self.render_template("airflow_config/404.html")
-
-        # Look for yamls inside the dags folder
-        yamls = []
-        base_path = Path(dags_folder)
-        for path in base_path.glob("**/*.yaml"):
-            if path.is_file():
-                if "_target_: airflow_config.Configuration" in path.read_text():
-                    yamls.append(path)
+        yamls = get_yaml_files(dags_folder=dags_folder)
         return self.render_template("airflow_config/home.html", yamls=yamls)
 
 
