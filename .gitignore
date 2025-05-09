@@ -130,6 +130,7 @@ docs/src/_build/
 docs/api
 docs/index.md
 docs/html
+docs/jupyter_execute
 index.md
 _template/labextension
 
