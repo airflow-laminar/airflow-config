@@ -33,7 +33,7 @@ class AirflowConfigViewerPluginView(BaseView):
         cfg = get_configs_from_yaml(yaml, overrides=overrides)
         if not cfg:
             return self.render_template("airflow_config/500.html", yaml=yaml)
-        return self.render_template("airflow_config/yaml.html", config=str(cfg.model_dump_json(indent=2, serialize_as_any=True)))
+        return self.render_template("airflow_config/yaml.html", config=cfg)
 
     @expose("/")
     @has_access([(permissions.ACTION_CAN_READ, permissions.RESOURCE_WEBSITE)])
