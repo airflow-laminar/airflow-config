@@ -67,3 +67,9 @@ def test_create_dag_from_config_create_dag():
     assert d.dag_id == "tests-setups-good-dag-factory-test-dag-factory"
     assert d.dag_id in globals()
     assert d.default_args["owner"] == "test"
+
+
+def test_serialize_with_airflow_extras():
+    conf = load_config("config", "test")
+    print(conf.model_dump_json(serialize_as_any=True))
+    assert '"operator":"airflow.operators.bash.BashOperator"' in conf.model_dump_json()

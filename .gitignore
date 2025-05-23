@@ -135,9 +135,11 @@ index.md
 _template/labextension
 
 # JS
+js/*.tgz
 js/node_modules
 js/dist
 airflow_config/extension
+airflow_config/ui/static/
 
 # Jupyter
 .ipynb_checkpoints

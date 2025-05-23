@@ -1,5 +1,19 @@
 {% extends "appbuilder/base.html" %}
+{% block head_css %}
+{{ super() }}
+<link href="{{url_for('Airflow Balancer.static',filename='css/index.css')}}" rel="stylesheet">
+{% endblock %}
+
+
+{% block head_js %}
+{{ super() }}
+<script>
+    window.__AIRFLOW_CONFIG__ = `{{ config|safe }}`;
+</script>
+<script src="{{url_for('Airflow Config.static', filename='cdn/index.js')}}" nonce="{{baselib.get_nonce()}}"></script>
+{% endblock %}
+
+
 {% block content %}
-    <h2>Yaml:</h2>
-    <pre>{{ config|safe }}</pre>
+    <div id="airflow-config-root"></div>
 {% endblock %}
