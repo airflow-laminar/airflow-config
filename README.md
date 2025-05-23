@@ -260,6 +260,8 @@ assert d.schedule_interval == "0 4 * * *"
 
 ### Examples - DAG Factory
 
+Coming soon!
+
 ## Integrations
 
 Configuration can be arbitrarily extended by the key `extensions`. Support is built in for [`airflow-priority`](https://github.com/airflow-laminar/airflow-priority), but can be extended to any aribitrary pydantic model as seen in the [README of `airflow-supervisor`](https://github.com/airflow-laminar/airflow-supervisor).

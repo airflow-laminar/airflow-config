@@ -24,7 +24,7 @@ class AD(dict):
 
 
 def _url_for(name: str, filename: str, **kwargs) -> str:
-    if name == "Airflow Balancer.static":
+    if name == "Airflow Config.static":
         return f"/static/{filename}"
     return ""
 

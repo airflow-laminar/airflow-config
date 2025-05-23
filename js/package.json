@@ -36,7 +36,9 @@
     "test": "echo TODO",
     "watch": "nodemon --watch src -e ts,less --exec \"pnpm build:debug\""
   },
-  "dependencies": {},
+  "dependencies": {
+    "@andypf/json-viewer": "^2.1.10"
+  },
   "devDependencies": {
     "@finos/perspective-esbuild-plugin": "^3.2.1",
     "@prospective.co/procss": "^0.1.16",
