@@ -1,6 +1,6 @@
 {
   "name": "airflow-config",
-  "version": "1.6.2",
+  "version": "1.6.3",
   "description": "Airflow utilities for configuration of many DAGs and DAG environments",
   "repository": "git@github.com:airflow-laminar/airflow-config.git",
   "author": "airflow-config <t.paine154@gmail.com>",
