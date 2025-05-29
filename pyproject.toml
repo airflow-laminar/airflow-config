@@ -33,7 +33,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "airflow-pydantic>=1.1,<1.2",
+    "airflow-pydantic>=1.1.1,<1.2",
     "apache-airflow>=2.9,<3",
     "colorlog",
     "hydra-core",
