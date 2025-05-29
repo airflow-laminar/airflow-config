@@ -31,15 +31,10 @@ jobs:
       matrix:
         airflow-version: ["2.9.2", "2.10.4"]
         os: [ubuntu-latest]
-        python-version: ["3.11"]
 
     steps:
     - uses: actions/checkout@v4
-
     - uses: actions-ext/python/setup@main
-      with:
-        version: ${{ matrix.python-version }}
-
     - uses: actions-ext/node/setup@main
 
     - name: Install dependencies
@@ -63,7 +58,7 @@ jobs:
     - name: Upload test results
       uses: actions/upload-artifact@v4
       with:
-        name: test-results-${{ matrix.os }}-${{ matrix.python-version }}
+        name: test-results-${{ matrix.os }}
         path: '**/junit.xml'
       if: matrix.airflow-version == '2.10.4'
 
