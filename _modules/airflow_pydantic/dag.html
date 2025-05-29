@@ -5,7 +5,7 @@
     <meta name="color-scheme" content="light dark"><link rel="index" title="Index" href="../../genindex.html" /><link rel="search" title="Search" href="../../search.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
-        <title>airflow_pydantic.dag - airflow-config v1.6.2</title>
+        <title>airflow_pydantic.dag - airflow-config v1.7.0</title>
       <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
     <link rel="stylesheet" type="text/css" href="../../_static/styles/furo.css?v=354aac6f" />
     <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
@@ -171,7 +171,7 @@
       </label>
     </div>
     <div class="header-center">
-      <a href="../../index.html"><div class="brand">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.6.2</code></div></a>
+      <a href="../../index.html"><div class="brand">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.7.0</code></div></a>
     </div>
     <div class="header-right">
       <div class="theme-toggle-container theme-toggle-header">
@@ -195,7 +195,7 @@
       <div class="sidebar-sticky"><a class="sidebar-brand" href="../../index.html">
   
   
-  <span class="sidebar-brand-text">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.6.2</code></span>
+  <span class="sidebar-brand-text">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.7.0</code></span>
   
 </a><form class="sidebar-search-container" method="get" action="../../search.html" role="search">
   <input class="sidebar-search" placeholder="Search" name="q" aria-label="Search">
@@ -252,6 +252,8 @@
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">.instantiate</span><span class="w"> </span><span class="kn">import</span> <span class="n">DagInstantiateMixin</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.render</span><span class="w"> </span><span class="kn">import</span> <span class="n">DagRenderMixin</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.task</span><span class="w"> </span><span class="kn">import</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TaskArgs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">DatetimeArg</span><span class="p">,</span> <span class="n">ScheduleArg</span>
 
@@ -321,7 +323,7 @@
 
 
 
-<span class="k">class</span><span class="w"> </span><span class="nc">Dag</span><span class="p">(</span><span class="n">DagArgs</span><span class="p">):</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">Dag</span><span class="p">(</span><span class="n">DagArgs</span><span class="p">,</span> <span class="n">DagRenderMixin</span><span class="p">,</span> <span class="n">DagInstantiateMixin</span><span class="p">):</span>
     <span class="n">dag_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span>
         <span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;The id of the DAG; must consist exclusively of alphanumeric characters, dashes, dots and underscores (all ASCII)&quot;</span>
     <span class="p">)</span>
@@ -359,7 +361,7 @@
       
     </aside>
   </div>
-</div><script src="../../_static/documentation_options.js?v=e15882dc"></script>
+</div><script src="../../_static/documentation_options.js?v=030dc6f6"></script>
     <script src="../../_static/doctools.js?v=9bcbadda"></script>
     <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/scripts/furo.js?v=5fa4622c"></script>
