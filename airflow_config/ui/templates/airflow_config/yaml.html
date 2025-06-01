@@ -8,7 +8,7 @@
 {% block head_js %}
 {{ super() }}
 <script>
-    window.__AIRFLOW_CONFIG__ = `{{ config|safe }}`;
+    window.__AIRFLOW_CONFIG__ = {{ config|safe|tojson }};
 </script>
 <script src="{{url_for('Airflow Config.static', filename='cdn/index.js')}}" nonce="{{baselib.get_nonce()}}"></script>
 {% endblock %}

@@ -28,11 +28,11 @@ dags:
       task_1:
         _target_: airflow_pydantic.BashOperator
         operator: "airflow.operators.bash_operator.BashOperator"
-        bash_command: "echo 1"
+        bash_command: "echo '1'"
       task_2:
         _target_: airflow_pydantic.BashOperator
         operator: "airflow.operators.bash_operator.BashOperator"
-        bash_command: "echo 2"
+        bash_command: "echo `pwd`"
         dependencies: [task_1]
       task_3:
         _target_: airflow_pydantic.PythonOperator
@@ -53,7 +53,7 @@ dags:
       task_1:
         _target_: airflow_pydantic.BashOperator
         operator: airflow.operators.bash_operator.BashOperator
-        bash_command: "echo 1"
+        bash_command: "echo \"1\""
       task_2:
         _target_: airflow_pydantic.BashOperator
         operator: airflow.operators.bash_operator.BashOperator
