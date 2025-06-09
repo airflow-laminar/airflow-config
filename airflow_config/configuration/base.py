@@ -181,5 +181,12 @@ class Configuration(BaseModel):
                     for dep in task_deps:
                         task_insts[dep] >> task_inst
 
+    def generate(self, dir):
+        dir_path = Path(dir)
+        dir_path.mkdir(parents=True, exist_ok=True)
+        for dag_id, dag in self.dags.items():
+            dag_path = dir_path / f"{dag_id}.py"
+            dag_path.write_text(dag.render())
+
 
 load_config = Configuration.load
