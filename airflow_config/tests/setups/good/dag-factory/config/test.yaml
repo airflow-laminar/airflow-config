@@ -26,79 +26,32 @@ dags:
     schedule: "0 3 * * *"
     tasks:
       task_1:
-        _target_: airflow_pydantic.BashOperator
-        operator: "airflow.operators.bash_operator.BashOperator"
-        bash_command: "echo '1'"
+        _target_: airflow_pydantic.SSHOperator
+        ssh_conn_id: test
+        ssh_hook: airflow_pydantic.tests.conftest.test_hook
+        command: test
+        do_xcom_push: true
+        cmd_timeout: 10
+        get_pty: true
+        environment: {"test": "test"}
       task_2:
-        _target_: airflow_pydantic.BashOperator
-        operator: "airflow.operators.bash_operator.BashOperator"
-        bash_command: "echo `pwd`"
+        _target_: airflow_pydantic.ShortCircuitOperator
+        python_callable: airflow_config.tests.conftest.should_short_circuit
         dependencies: [task_1]
       task_3:
+        _target_: airflow_pydantic.BashOperator
+        bash_command: "echo '1'"
+        dependencies: [task_2]
+      task_4:
+        _target_: airflow_pydantic.BashOperator
+        bash_command: "echo `pwd`"
+        dependencies: [task_3]
+      task_5:
         _target_: airflow_pydantic.PythonOperator
-        operator: "airflow.operators.python_operator.PythonOperator"
         python_callable: airflow_config.tests.setups.good.utils.print_hello.print_hello
         op_args: []
         op_kwargs: {}
         templates_dict: {}
         templates_exts: null
         show_return_value_in_logs: true
-        dependencies: [task_1]
-
-  example_dag2:
-    default_args:
-      owner: "custom_owner2"
-    schedule: "0 4 * * *"
-    tasks:
-      task_1:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
-        bash_command: "echo \"1\""
-      task_2:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
-        bash_command: "echo 2"
-        dependencies: [task_1]
-      task_3:
-        _target_: airflow_pydantic.BashOperator
-        operator: airflow.operators.bash_operator.BashOperator
-        bash_command: "echo 3"
-        dependencies: [task_1]
-
-#   example_dag3:
-#     tasks:
-#       task_1:
-#         operator: airflow.operators.bash_operator.BashOperator
-#         bash_command: "echo 1"
-#       task_2:
-#         operator: airflow.operators.bash_operator.BashOperator
-#         bash_command: "echo 2"
-#         dependencies: [task_1]
-#       task_3:
-#         operator: airflow.operators.bash_operator.BashOperator
-#         bash_command: "echo 3"
-#         dependencies: [task_1]
-#
-#   example_dag4:
-#     description: "this dag uses task groups"
-#     task_groups:
-#       task_group_1:
-#         tooltip: "this is a task group"
-#         dependencies: [task_1]
-#     tasks:
-#       task_1:
-#         operator: airflow.operators.bash_operator.BashOperator
-#         bash_command: "echo 1"
-#       task_2:
-#         operator: airflow.operators.bash_operator.BashOperator
-#         bash_command: "echo 2"
-#         task_group_name: task_group_1
-#       task_3:
-#         operator: airflow.operators.python_operator.PythonOperator
-#         python_callable: airflow_config.tests.setups.good.utils.print_hello.print_hello
-#         task_group_name: task_group_1
-#         dependencies: [task_2]
-#       task_4:
-#         operator: airflow.operators.bash_operator.BashOperator
-#         bash_command: "echo 1"
-#         dependencies: [task_group_1]
+        dependencies: [task_4]

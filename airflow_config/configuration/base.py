@@ -3,13 +3,13 @@ import sys
 from pathlib import Path
 from typing import Dict, Optional
 
-from airflow_pydantic import Dag, DagArgs, Task, TaskArgs
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import BaseModel, Field
 
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
+from airflow_pydantic import Dag, DagArgs, Task, TaskArgs
 
 __all__ = (
     "Configuration",
@@ -96,6 +96,14 @@ class Configuration(BaseModel):
 
             if not isinstance(config, Configuration):
                 config = Configuration(**config)
+
+            # Populate dag ids and task ids as a convenience
+            for dag_id, dag in config.dags.items():
+                if not dag.dag_id:
+                    dag.dag_id = dag_id
+                for task_id, task in dag.tasks.items():
+                    if not task.task_id:
+                        task.task_id = task_id
             return config
 
     def pre_apply(self, dag, dag_kwargs):
