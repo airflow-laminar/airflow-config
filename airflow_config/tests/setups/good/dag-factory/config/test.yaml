@@ -28,7 +28,7 @@ dags:
       task_1:
         _target_: airflow_pydantic.SSHOperator
         ssh_conn_id: test
-        ssh_hook: airflow_pydantic.tests.conftest.test_hook
+        ssh_hook: airflow_pydantic.tests.conftest.hook
         command: test
         do_xcom_push: true
         cmd_timeout: 10

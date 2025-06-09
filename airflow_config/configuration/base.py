@@ -3,13 +3,13 @@ import sys
 from pathlib import Path
 from typing import Dict, Optional
 
+from airflow_pydantic import Dag, DagArgs, Task, TaskArgs
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import BaseModel, Field
 
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
-from airflow_pydantic import Dag, DagArgs, Task, TaskArgs
 
 __all__ = (
     "Configuration",
