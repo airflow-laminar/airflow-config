@@ -8,6 +8,10 @@ from jinja2 import DictLoader, Environment
 from airflow_config import Configuration, DagArgs, TaskArgs
 
 
+def should_short_circuit(**kwargs):
+    return False
+
+
 @pytest.fixture(autouse=True)
 def airflow_config():
     config_template = (Path(__file__).parent / "airflow.cfg.jinja").read_text()

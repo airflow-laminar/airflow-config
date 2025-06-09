@@ -96,6 +96,14 @@ class Configuration(BaseModel):
 
             if not isinstance(config, Configuration):
                 config = Configuration(**config)
+
+            # Populate dag ids and task ids as a convenience
+            for dag_id, dag in config.dags.items():
+                if not dag.dag_id:
+                    dag.dag_id = dag_id
+                for task_id, task in dag.tasks.items():
+                    if not task.task_id:
+                        task.task_id = task_id
             return config
 
     def pre_apply(self, dag, dag_kwargs):
@@ -172,6 +180,13 @@ class Configuration(BaseModel):
                 if task_deps:
                     for dep in task_deps:
                         task_insts[dep] >> task_inst
+
+    def generate(self, dir):
+        dir_path = Path(dir)
+        dir_path.mkdir(parents=True, exist_ok=True)
+        for dag_id, dag in self.dags.items():
+            dag_path = dir_path / f"{dag_id}.py"
+            dag_path.write_text(dag.render())
 
 
 load_config = Configuration.load
