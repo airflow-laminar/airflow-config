@@ -1,0 +1,21 @@
+
+# @package _global_
+_target_: airflow_config.Configuration
+
+dags:
+  example_dag:
+    schedule: "0 3 * * *"
+    tasks:
+      task_1:
+        _target_: airflow_pydantic.SSHOperator
+        ssh_conn_id: test
+        ssh_hook: airflow_pydantic.tests.conftest.hook
+        command: test
+
+  example_dag2:
+    schedule: "0 4 * * *"
+    tasks:
+      task_1:
+        _target_: airflow_pydantic.BashOperator
+        operator: airflow.operators.bash_operator.BashOperator
+        bash_command: "echo \"1\""

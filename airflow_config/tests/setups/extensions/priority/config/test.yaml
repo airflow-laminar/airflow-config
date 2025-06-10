@@ -6,4 +6,4 @@ default_args:
 
 extensions:
   priority:
-    _target_: airflow_config.PriorityConfiguration
+    _target_: airflow_priority.PriorityConfiguration
