@@ -281,6 +281,26 @@
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tasks&quot;</span>
 <span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Priority&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;balancer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
+<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Balancer&quot;</span>
+<span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">{</span>
@@ -932,12 +952,14 @@
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">balancer</span> <span class="pre">(object</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dags</span> <span class="pre">(Dict[str,</span> <span class="pre">airflow_pydantic.dag.Dag]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_dag_args</span> <span class="pre">(airflow_pydantic.dag.DagArgs)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_task_args</span> <span class="pre">(airflow_pydantic.task.TaskArgs)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">env</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extensions</span> <span class="pre">(Dict[str,</span> <span class="pre">pydantic.main.BaseModel]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">priority</span> <span class="pre">(object</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span> <span class="pre">(pathlib.Path</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tags</span> <span class="pre">(Dict[str,</span> <span class="pre">str]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tasks</span> <span class="pre">(Dict[str,</span> <span class="pre">airflow_pydantic.task.Task]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
@@ -967,6 +989,16 @@
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tasks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.Configuration.tasks" title="Link to this definition">¶</a></dt>
 <dd><p>List of dags statically configured via Pydantic</p>
 </dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="airflow_config.Configuration.priority">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">priority</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#airflow_config.Configuration.priority" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="airflow_config.Configuration.balancer">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">balancer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#airflow_config.Configuration.balancer" title="Link to this definition">¶</a></dt>
+<dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="airflow_config.Configuration.extensions">
@@ -1088,6 +1120,8 @@
 <li><a class="reference internal" href="#airflow_config.Configuration.default_dag_args"><code class="docutils literal notranslate"><span class="pre">Configuration.default_dag_args</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.dags"><code class="docutils literal notranslate"><span class="pre">Configuration.dags</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.tasks"><code class="docutils literal notranslate"><span class="pre">Configuration.tasks</span></code></a></li>
+<li><a class="reference internal" href="#airflow_config.Configuration.priority"><code class="docutils literal notranslate"><span class="pre">Configuration.priority</span></code></a></li>
+<li><a class="reference internal" href="#airflow_config.Configuration.balancer"><code class="docutils literal notranslate"><span class="pre">Configuration.balancer</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.extensions"><code class="docutils literal notranslate"><span class="pre">Configuration.extensions</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.env"><code class="docutils literal notranslate"><span class="pre">Configuration.env</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.name"><code class="docutils literal notranslate"><span class="pre">Configuration.name</span></code></a></li>
