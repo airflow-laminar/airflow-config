@@ -55,7 +55,7 @@ develop = [
     "twine",
     "wheel",
     # Tests
-    "airflow-priority",
+    "airflow-priority>=1.5",
     "airflow-supervisor",
     "airflow-balancer",
     "airflow-common-operators",
