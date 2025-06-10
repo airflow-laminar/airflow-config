@@ -51,4 +51,4 @@ def get_yaml_files(dags_folder: str) -> list[Path]:
                         break
         len_yamls_last = len_yamls
         len_yamls = len(yamls)
-    return yamls
+    return sorted(yamls)
