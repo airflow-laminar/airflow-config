@@ -41,8 +41,12 @@ class Configuration(BaseModel):
     # Extensions
     if have_priority:
         priority: Optional[PriorityConfiguration] = Field(default=None, description="Priority configuration for tasks")
+    else:
+        priority: Optional[object] = None
     if have_balancer:
         balancer: Optional[BalancerConfiguration] = Field(default=None, description="Balancer configuration for tasks")
+    else:
+        balancer: Optional[object] = None
     extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
 
     # Generic options
