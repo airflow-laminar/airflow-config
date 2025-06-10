@@ -108,5 +108,5 @@ def test_generate():
     conf = load_config("config", "test")
     with TemporaryDirectory() as tmp_dir:
         conf.generate(tmp_dir)
-        assert listdir(tmp_dir) == ["example_dag.py"]
+        assert sorted(listdir(tmp_dir)) == ["example_dag.py", "example_dag2.py"]
         (Path(tmp_dir) / "example_dag.py").read_text() == RENDERED_DAG
