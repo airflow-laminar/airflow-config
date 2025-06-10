@@ -185,8 +185,12 @@ class Configuration(BaseModel):
         dir_path = Path(dir)
         dir_path.mkdir(parents=True, exist_ok=True)
         for dag_id, dag in self.dags.items():
-            dag_path = dir_path / f"{dag_id}.py"
-            dag_path.write_text(dag.render())
+            if dag.tasks:
+                dag_path = dir_path / f"{dag_id}.py"
+                rendered = dag.render()
+                if dag_path.exists() and dag_path.read_text() == rendered:
+                    continue
+                dag_path.write_text(rendered)
 
 
 load_config = Configuration.load
