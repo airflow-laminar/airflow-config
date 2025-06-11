@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="airflow_config.DagArgs" href="airflow_config.DagArgs.html" /><link rel="prev" title="API Reference" href="../API.html" />
+<link rel="index" title="Index" href="../../../genindex.html" /><link rel="search" title="Search" href="../../../search.html" /><link rel="next" title="airflow_config.DAG" href="airflow_config.DAG.html" /><link rel="prev" title="API Reference" href="../API.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>airflow_config.Configuration - airflow-config v1.8.2</title>
@@ -205,9 +205,9 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../examples.html">Examples</a></li>
 <li class="toctree-l1 current has-children"><a class="reference internal" href="../API.html">API Reference</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul class="current">
 <li class="toctree-l2 current current-page"><a class="current reference internal" href="#">airflow_config.Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="airflow_config.DagArgs.html">airflow_config.DagArgs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="airflow_config.DAG.html">airflow_config.DAG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="airflow_config.generate_dag_id.html">airflow_config.generate_dag_id</a></li>
 <li class="toctree-l2"><a class="reference internal" href="airflow_config.create_dag.html">airflow_config.create_dag</a></li>
@@ -280,26 +280,6 @@
 <span class="w">      </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tasks&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;priority&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="p">{},</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Priority&quot;</span>
-<span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;balancer&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
-<span class="w">            </span><span class="p">{},</span>
-<span class="w">            </span><span class="p">{</span>
-<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
-<span class="w">            </span><span class="p">}</span>
-<span class="w">         </span><span class="p">],</span>
-<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Balancer&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
@@ -952,14 +932,12 @@
 </details></p><dl class="field-list simple">
 <dt class="field-odd">Fields<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">balancer</span> <span class="pre">(object</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dags</span> <span class="pre">(Dict[str,</span> <span class="pre">airflow_pydantic.dag.Dag]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_dag_args</span> <span class="pre">(airflow_pydantic.dag.DagArgs)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_task_args</span> <span class="pre">(airflow_pydantic.task.TaskArgs)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">env</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extensions</span> <span class="pre">(Dict[str,</span> <span class="pre">pydantic.main.BaseModel]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">priority</span> <span class="pre">(object</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span> <span class="pre">(pathlib.Path</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tags</span> <span class="pre">(Dict[str,</span> <span class="pre">str]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tasks</span> <span class="pre">(Dict[str,</span> <span class="pre">airflow_pydantic.task.Task]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
@@ -974,7 +952,7 @@
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="airflow_config.Configuration.default_dag_args">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_dag_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="airflow_config.DagArgs.html#airflow_config.DagArgs" title="airflow_pydantic.dag.DagArgs"><span class="pre">DagArgs</span></a></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.Configuration.default_dag_args" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_dag_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DagArgs</span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.Configuration.default_dag_args" title="Link to this definition">¶</a></dt>
 <dd><p>Global default dag arguments</p>
 </dd></dl>
 
@@ -989,16 +967,6 @@
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tasks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.Configuration.tasks" title="Link to this definition">¶</a></dt>
 <dd><p>List of dags statically configured via Pydantic</p>
 </dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="airflow_config.Configuration.priority">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">priority</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#airflow_config.Configuration.priority" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="airflow_config.Configuration.balancer">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">balancer</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">object</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#airflow_config.Configuration.balancer" title="Link to this definition">¶</a></dt>
-<dd></dd></dl>
 
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="airflow_config.Configuration.extensions">
@@ -1064,12 +1032,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="airflow_config.DagArgs.html">
+          <a class="next-page" href="airflow_config.DAG.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">airflow_config.DagArgs</div>
+                <div class="title">airflow_config.DAG</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
@@ -1120,8 +1088,6 @@
 <li><a class="reference internal" href="#airflow_config.Configuration.default_dag_args"><code class="docutils literal notranslate"><span class="pre">Configuration.default_dag_args</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.dags"><code class="docutils literal notranslate"><span class="pre">Configuration.dags</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.tasks"><code class="docutils literal notranslate"><span class="pre">Configuration.tasks</span></code></a></li>
-<li><a class="reference internal" href="#airflow_config.Configuration.priority"><code class="docutils literal notranslate"><span class="pre">Configuration.priority</span></code></a></li>
-<li><a class="reference internal" href="#airflow_config.Configuration.balancer"><code class="docutils literal notranslate"><span class="pre">Configuration.balancer</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.extensions"><code class="docutils literal notranslate"><span class="pre">Configuration.extensions</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.env"><code class="docutils literal notranslate"><span class="pre">Configuration.env</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.name"><code class="docutils literal notranslate"><span class="pre">Configuration.name</span></code></a></li>

@@ -204,9 +204,9 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/src/examples.html">Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../../../docs/src/API.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.Configuration.html">airflow_config.Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.DagArgs.html">airflow_config.DagArgs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.DAG.html">airflow_config.DAG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.generate_dag_id.html">airflow_config.generate_dag_id</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../../docs/src/_build/airflow_config.create_dag.html">airflow_config.create_dag</a></li>
@@ -261,20 +261,6 @@
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigNotFoundError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_calling_dag</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_priority</span><span class="w"> </span><span class="kn">import</span> <span class="n">PriorityConfiguration</span>
-
-    <span class="n">have_priority</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">have_priority</span> <span class="o">=</span> <span class="kc">False</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_balancer</span><span class="w"> </span><span class="kn">import</span> <span class="n">BalancerConfiguration</span>
-
-    <span class="n">have_balancer</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">have_balancer</span> <span class="o">=</span> <span class="kc">False</span>
-
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
     <span class="s2">&quot;Configuration&quot;</span><span class="p">,</span>
     <span class="s2">&quot;load_config&quot;</span><span class="p">,</span>
@@ -291,14 +277,6 @@
     <span class="n">tasks</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Task</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of dags statically configured via Pydantic&quot;</span><span class="p">)</span>
 
     <span class="c1"># Extensions</span>
-    <span class="k">if</span> <span class="n">have_priority</span><span class="p">:</span>
-        <span class="n">priority</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">PriorityConfiguration</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Priority configuration for tasks&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">priority</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
-    <span class="k">if</span> <span class="n">have_balancer</span><span class="p">:</span>
-        <span class="n">balancer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">BalancerConfiguration</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Balancer configuration for tasks&quot;</span><span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">balancer</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">object</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="n">extensions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Any user-defined extensions&quot;</span><span class="p">)</span>
 
     <span class="c1"># Generic options</span>

@@ -3,7 +3,7 @@
   <head><meta charset="utf-8"/>
     <meta name="viewport" content="width=device-width,initial-scale=1"/>
     <meta name="color-scheme" content="light dark"><meta name="viewport" content="width=device-width, initial-scale=1" />
-<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="API Reference" href="docs/src/API.html" />
+<link rel="index" title="Index" href="genindex.html" /><link rel="search" title="Search" href="search.html" /><link rel="next" title="Examples" href="docs/src/examples.html" />
 
     <!-- Generated with Sphinx 8.2.3 and Furo 2024.08.06 -->
         <title>airflow-config v1.8.2</title>
@@ -205,9 +205,9 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/src/examples.html">Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="docs/src/API.html">API Reference</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><div class="visually-hidden">Toggle navigation of API Reference</div><i class="icon"><svg><use href="#svg-arrow-right"></use></svg></i></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_config.Configuration.html">airflow_config.Configuration</a></li>
-<li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_config.DagArgs.html">airflow_config.DagArgs</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_config.DAG.html">airflow_config.DAG</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_config.generate_dag_id.html">airflow_config.generate_dag_id</a></li>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_config.create_dag.html">airflow_config.create_dag</a></li>
@@ -265,7 +265,8 @@
 <a class="reference external" href="https://pypi.python.org/pypi/airflow-config"><img alt="PyPI" src="https://img.shields.io/pypi/v/airflow-config.svg" /></a></p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>This library allows for <code class="docutils literal notranslate"><span class="pre">YAML</span></code>-driven configuration of Airflow, including DAGs, Operators, and declaratively defined DAGs (à la <a class="reference external" href="https://github.com/astronomer/dag-factory">dag-factory</a>). It is built with <a class="reference external" href="https://pydantic.dev">Pydantic</a>, <a class="reference external" href="https://hydra.cc">Hydra</a>, and <a class="reference external" href="https://omegaconf.readthedocs.io/">OmegaConf</a>.</p>
+<p>This library allows for <code class="docutils literal notranslate"><span class="pre">YAML</span></code>-driven configuration of Airflow, including DAGs, Operators, and declaratively defined DAGs (à la <a class="reference external" href="https://github.com/astronomer/dag-factory">dag-factory</a>).
+It is built with <a class="reference external" href="https://pydantic.dev">Pydantic</a>, <a class="reference external" href="https://hydra.cc">Hydra</a>, and <a class="reference external" href="https://omegaconf.readthedocs.io/">OmegaConf</a>.</p>
 <p>Consider the following basic DAG:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.bash</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashOperator</span>
@@ -353,7 +354,14 @@
 <li><p>from multiple env-specific config files (e.g. <code class="docutils literal notranslate"><span class="pre">dev</span></code>, <code class="docutils literal notranslate"><span class="pre">uat</span></code>, <code class="docutils literal notranslate"><span class="pre">prod</span></code>)</p></li>
 <li><p>Specialize DAGs by <code class="docutils literal notranslate"><span class="pre">dag_id</span></code> from a single file (e.g. set each DAG’s <code class="docutils literal notranslate"><span class="pre">schedule</span></code> from a single shared file)</p></li>
 <li><p>Generate entire DAGs declaratively, like <a class="reference external" href="https://github.com/astronomer/dag-factory">astronomer/dag-factory</a></p></li>
-<li><p>Configure other extensions like <a class="reference external" href="https://github.com/airflow-laminar/airflow-priority">airflow-priority</a>, <a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a></p></li>
+<li><p>Configure other extensions like:</p>
+<ul>
+<li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-priority">airflow-priority</a></p></li>
+<li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-balancer">airflow-balancer</a></p></li>
+<li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a></p></li>
+<li><p>or write your own pydantic-based model and get yaml-based configuration for free</p></li>
+</ul>
+</li>
 </ul>
 </section>
 <section id="configuration">
@@ -378,72 +386,13 @@
     <span class="n">extensions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">]]</span>
 </pre></div>
 </div>
-<section id="examples-load-defaults-from-config">
-<h3>Examples - Load defaults from config<a class="headerlink" href="#examples-load-defaults-from-config" title="Link to this heading">¶</a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># config/test.yaml</span>
-<span class="c1"># @package _global_</span>
+<p>Here is an example configuration defined via yaml:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># @package _global_</span>
 <span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.Configuration</span>
-<span class="nt">default_args</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DefaultTaskArgs</span>
-<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">create_dag</span>
-
-<span class="n">conf</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="c1"># or d = DAG(dag_id=&quot;test-dag&quot;, config=conf)</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_args</span><span class="o">.</span><span class="n">owner</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span>
-</pre></div>
-</div>
-</section>
-<section id="examples-load-more-defaults-from-config">
-<h3>Examples - Load more defaults from config<a class="headerlink" href="#examples-load-more-defaults-from-config" title="Link to this heading">¶</a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># config/test.yaml</span>
-<span class="c1"># @package _global_</span>
-<span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.Configuration</span>
-<span class="nt">default_args</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DefaultTaskArgs</span>
-<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-<span class="w">  </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">myemail@myemail.com</span><span class="p p-Indicator">]</span>
-<span class="w">  </span><span class="nt">email_on_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">email_on_retry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
-<span class="w">  </span><span class="nt">depends_on_past</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="nt">default_dag_args</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DagArgs</span>
-<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;01:10&quot;</span>
-<span class="w">  </span><span class="nt">start_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-01-01&quot;</span>
-<span class="w">  </span><span class="nt">catchup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;utility&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p p-Indicator">]</span>
-</pre></div>
-</div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">create_dag</span>
-
-<span class="n">conf</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="c1"># or d = DAG(dag_id=&quot;test-dag&quot;, config=conf)</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_args</span><span class="o">.</span><span class="n">owner</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_args</span><span class="o">.</span><span class="n">email</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;myemail@myemail.com&quot;</span><span class="p">]</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_args</span><span class="o">.</span><span class="n">email_on_failure</span> <span class="ow">is</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_args</span><span class="o">.</span><span class="n">email_on_retry</span> <span class="ow">is</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_args</span><span class="o">.</span><span class="n">retries</span> <span class="o">==</span> <span class="mi">0</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_args</span><span class="o">.</span><span class="n">depends_on_past</span> <span class="ow">is</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_dag_args</span><span class="o">.</span><span class="n">start_date</span> <span class="o">==</span> <span class="n">datetime</span><span class="p">(</span><span class="mi">2024</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_dag_args</span><span class="o">.</span><span class="n">catchup</span> <span class="ow">is</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">conf</span><span class="o">.</span><span class="n">default_dag_args</span><span class="o">.</span><span class="n">tags</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;utility&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">]</span>
-</pre></div>
-</div>
-</section>
-<section id="examples-specialize-individual-dags">
-<h3>Examples - Specialize individual DAGs<a class="headerlink" href="#examples-specialize-individual-dags" title="Link to this heading">¶</a></h3>
-<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><span class="c1"># config/test.yaml</span>
-<span class="c1"># @package _global_</span>
-<span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.Configuration</span>
-<span class="nt">default_args</span><span class="p">:</span>
+<span class="nt">default_task_args</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.TaskArgs</span>
-<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">test</span>
-<span class="w">  </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="nv">myemail@myemail.com</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">blerg</span>
+<span class="w">  </span><span class="nt">email</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[]</span>
 <span class="w">  </span><span class="nt">email_on_failure</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">email_on_retry</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
 <span class="w">  </span><span class="nt">retries</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">0</span>
@@ -451,66 +400,32 @@
 
 <span class="nt">default_dag_args</span><span class="p">:</span>
 <span class="w">  </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.DagArgs</span>
-<span class="w">  </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;01:00&quot;</span>
-<span class="w">  </span><span class="nt">start_date</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;2024-01-01&quot;</span>
+<span class="w">  </span><span class="nt">start_date</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;2025-01-01&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;America/New_York&quot;</span><span class="p p-Indicator">]</span>
 <span class="w">  </span><span class="nt">catchup</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">false</span>
-<span class="w">  </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;utility&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;test&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">  </span><span class="nt">max_active_runs</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
 
 <span class="nt">dags</span><span class="p">:</span>
-<span class="w">  </span><span class="nt">example_dag</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">default_args</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;custom_owner&quot;</span>
-<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;this</span><span class="nv"> </span><span class="s">is</span><span class="nv"> </span><span class="s">an</span><span class="nv"> </span><span class="s">example</span><span class="nv"> </span><span class="s">dag&quot;</span>
-<span class="w">    </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">3</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
-
-<span class="w">  </span><span class="nt">example_dag2</span><span class="p">:</span>
-<span class="w">    </span><span class="nt">default_args</span><span class="p">:</span>
-<span class="w">      </span><span class="nt">owner</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;custom_owner2&quot;</span>
+<span class="w">  </span><span class="nt">reboot</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;reboot&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;utility&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Reboot</span><span class="nv"> </span><span class="s">machines&quot;</span>
+<span class="w">    </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">0</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
+<span class="w">    </span><span class="nt">max_active_tasks</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">1</span>
+<span class="w">  </span><span class="nt">clean-logs</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">tags</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">[</span><span class="s">&quot;celery&quot;</span><span class="p p-Indicator">,</span><span class="w"> </span><span class="s">&quot;utility&quot;</span><span class="p p-Indicator">]</span>
+<span class="w">    </span><span class="nt">description</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Clean</span><span class="nv"> </span><span class="s">worker</span><span class="nv"> </span><span class="s">logs&quot;</span>
 <span class="w">    </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">&quot;0</span><span class="nv"> </span><span class="s">4</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*</span><span class="nv"> </span><span class="s">*&quot;</span>
 </pre></div>
 </div>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span><span class="p">,</span> <span class="n">DAG</span><span class="p">,</span> <span class="n">create_dag</span>
-
-<span class="n">conf</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">)</span>
-<span class="c1"># or d = DAG(dag_id=&quot;test-dag&quot;, config=conf)</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;test&quot;</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;myemail@myemail.com&quot;</span><span class="p">]</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;email_on_failure&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;email_on_retry&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;retries&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="mi">0</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;depends_on_past&quot;</span><span class="p">]</span> <span class="ow">is</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">schedule_interval</span> <span class="o">==</span> <span class="n">timedelta</span><span class="p">(</span><span class="n">seconds</span><span class="o">=</span><span class="mi">3600</span><span class="p">)</span>
-<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">timetable</span><span class="p">,</span> <span class="n">DeltaDataIntervalTimetable</span><span class="p">)</span>
-<span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">d</span><span class="o">.</span><span class="n">timetable</span><span class="o">.</span><span class="n">_delta</span><span class="p">,</span> <span class="n">timedelta</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">start_date</span><span class="o">.</span><span class="n">year</span> <span class="o">==</span> <span class="mi">2024</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">start_date</span><span class="o">.</span><span class="n">month</span> <span class="o">==</span> <span class="mi">1</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">start_date</span><span class="o">.</span><span class="n">day</span> <span class="o">==</span> <span class="mi">1</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">catchup</span> <span class="ow">is</span> <span class="kc">False</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">tags</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;utility&quot;</span><span class="p">,</span> <span class="s2">&quot;test&quot;</span><span class="p">]</span>
-
-<span class="c1"># specialized by dag_id from shared config file</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;example_dag&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;custom_owner&quot;</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;myemail@myemail.com&quot;</span><span class="p">]</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">schedule_interval</span> <span class="o">==</span> <span class="s2">&quot;0 3 * * *&quot;</span>
-
-<span class="c1"># specialized by dag_id from shared config file</span>
-<span class="n">d</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="s2">&quot;example_dag2&quot;</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="n">conf</span><span class="p">)</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;owner&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;custom_owner2&quot;</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">default_args</span><span class="p">[</span><span class="s2">&quot;email&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="p">[</span><span class="s2">&quot;myemail@myemail.com&quot;</span><span class="p">]</span>
-<span class="k">assert</span> <span class="n">d</span><span class="o">.</span><span class="n">schedule_interval</span> <span class="o">==</span> <span class="s2">&quot;0 4 * * *&quot;</span>
-</pre></div>
-</div>
 </section>
-<section id="examples-dag-factory">
-<h3>Examples - DAG Factory<a class="headerlink" href="#examples-dag-factory" title="Link to this heading">¶</a></h3>
-<p>Coming soon!</p>
-</section>
-</section>
-<section id="integrations">
-<h2>Integrations<a class="headerlink" href="#integrations" title="Link to this heading">¶</a></h2>
-<p>Configuration can be arbitrarily extended by the key <code class="docutils literal notranslate"><span class="pre">extensions</span></code>. Support is built in for <a class="reference external" href="https://github.com/airflow-laminar/airflow-priority"><code class="docutils literal notranslate"><span class="pre">airflow-priority</span></code></a>, but can be extended to any aribitrary pydantic model as seen in the <a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">README of <code class="docutils literal notranslate"><span class="pre">airflow-supervisor</span></code></a>.</p>
+<section id="examples">
+<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference external" href="https://airflow-laminar.github.io/airflow-config/docs/src/examples.html">Basic 1</a></p></li>
+<li><p><a class="reference external" href="https://airflow-laminar.github.io/airflow-config/docs/src/examples.html">Basic 2</a></p></li>
+<li><p><a class="reference external" href="https://airflow-laminar.github.io/airflow-config/docs/src/examples.html">Specialize DAGs</a></p></li>
+<li><p><a class="reference external" href="https://airflow-laminar.github.io/airflow-config/docs/src/examples.html">Declarative DAGs (DAG Factory)</a></p></li>
+<li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-config/tree/main/airflow_config/tests/setups">Test Suite Setups</a></p></li>
+</ul>
 </section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Link to this heading">¶</a></h2>
@@ -523,12 +438,12 @@
       <footer>
         
         <div class="related-pages">
-          <a class="next-page" href="docs/src/API.html">
+          <a class="next-page" href="docs/src/examples.html">
               <div class="page-info">
                 <div class="context">
                   <span>Next</span>
                 </div>
-                <div class="title">API Reference</div>
+                <div class="title">Examples</div>
               </div>
               <svg class="furo-related-icon"><use href="#svg-arrow-right"></use></svg>
             </a>
