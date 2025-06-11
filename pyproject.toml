@@ -180,5 +180,8 @@ section-order = ["future", "standard-library", "third-party", "first-party", "lo
 [tool.yardang]
 title = "airflow-config"
 root = "README.md"
-pages = ["docs/src/API.md"]
+pages = [
+    "docs/src/examples.md",
+    "docs/src/API.md",
+]
 use-autoapi = false
