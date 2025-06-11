@@ -11,20 +11,6 @@ from pydantic import BaseModel, Field
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
 
-try:
-    from airflow_priority import PriorityConfiguration
-
-    have_priority = True
-except ImportError:
-    have_priority = False
-
-try:
-    from airflow_balancer import BalancerConfiguration
-
-    have_balancer = True
-except ImportError:
-    have_balancer = False
-
 __all__ = (
     "Configuration",
     "load_config",
@@ -39,14 +25,6 @@ class Configuration(BaseModel):
     tasks: Optional[Dict[str, Task]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
     # Extensions
-    if have_priority:
-        priority: Optional[PriorityConfiguration] = Field(default=None, description="Priority configuration for tasks")
-    else:
-        priority: Optional[object] = None
-    if have_balancer:
-        balancer: Optional[BalancerConfiguration] = Field(default=None, description="Balancer configuration for tasks")
-    else:
-        balancer: Optional[object] = None
     extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
 
     # Generic options
