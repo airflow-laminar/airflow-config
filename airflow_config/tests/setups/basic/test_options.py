@@ -42,6 +42,6 @@ def test_create_dag_from_config():
 
 def test_create_dag_from_config_create_dag():
     d = create_dag("config", "options")
-    assert d.dag_id == "tests-setups-good-basic-test-options"
+    assert d.dag_id == "tests-setups-basic-test-options"
     assert d.dag_id in globals()
     assert d.default_args["owner"] == "test"

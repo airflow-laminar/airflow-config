@@ -9,6 +9,6 @@ def test_config_and_empty_file():
 
 def test_config_and_empty_file_create_dag():
     d = create_dag("config", "basic")
-    assert d.dag_id == "tests-setups-good-basic-test-basic-empty"
+    assert d.dag_id == "tests-setups-basic-test-basic-empty"
     assert d.dag_id in globals()
     assert d.default_args["owner"] == "test"
