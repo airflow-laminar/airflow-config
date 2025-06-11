@@ -169,10 +169,10 @@ dags:
 
 ## Examples
 
-- [Basic 1](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html)
-- [Basic 2](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html)
-- [Specialize DAGs](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html)
-- [Declarative DAGs (DAG Factory)](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html)
+- [Basic 1](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#load-defaults-from-config)
+- [Basic 2](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#load-more-defaults-from-config)
+- [Specialize DAGs](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#specialize-individual-dags)
+- [Declarative DAGs (DAG Factory)](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#declarative-dags-dag-factory)
 - [Test Suite Setups](https://github.com/airflow-laminar/airflow-config/tree/main/airflow_config/tests/setups)
 
 
