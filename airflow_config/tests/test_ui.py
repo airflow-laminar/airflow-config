@@ -18,23 +18,23 @@ class TestPluginFunctions:
         root = Path(__file__).parent
         assert sorted(get_yaml_files(root)) == sorted(
             [
-                root / "setups/extensions/priority/config/test.yaml",
-                root / "setups/good/options/config/test.yaml",
-                root / "setups/good/complex/config/config.yaml",
-                root / "setups/good/dag-disable/config/test.yaml",
-                root / "setups/good/basic/config/test.yaml",
-                root / "setups/good/dag-factory/config/test.yaml",
-                root / "setups/good/dag-factory-edges/config/test.yaml",
-                root / "setups/good/dag-specialize/config/test.yaml",
-                root / "setups/good/dag-disable-perdag/config/test.yaml",
-                root / "setups/good/envs/config/dev.yaml",
-                root / "setups/good/envs/config/prod.yaml",
+                root / "setups" / "extensions" / "priority" / "config" / "test.yaml",
+                root / "setups" / "good" / "basic" / "config" / "basic.yaml",
+                root / "setups" / "good" / "basic" / "config" / "complex.yaml",
+                root / "setups" / "good" / "basic" / "config" / "options.yaml",
+                root / "setups" / "good" / "envs" / "config" / "dev.yaml",
+                root / "setups" / "good" / "envs" / "config" / "prod.yaml",
+                root / "setups" / "good" / "factory" / "config" / "factory.yaml",
+                root / "setups" / "good" / "factory" / "config" / "multi.yaml",
+                root / "setups" / "good" / "specialize" / "config" / "disable.yaml",
+                root / "setups" / "good" / "specialize" / "config" / "disable_perdag.yaml",
+                root / "setups" / "good" / "specialize" / "config" / "specialize.yaml",
             ]
         )
 
     def test_plugin_functions_get_configs(self):
         root = Path(__file__).parent
-        val = get_configs_from_yaml(Path(root) / "setups/good/basic/config/test.yaml", [])
+        val = get_configs_from_yaml(Path(root) / "setups/good/basic/config/basic.yaml", [])
         print("\n\n")
         print(val)
         print("\n\n")
@@ -45,7 +45,7 @@ class TestPluginFunctions:
 
     def test_plugin_functions_get_configs_backtick_bug(self):
         root = Path(__file__).parent
-        val = get_configs_from_yaml(Path(root) / "setups/good/dag-factory/config/test.yaml", [])
+        val = get_configs_from_yaml(Path(root) / "setups/good/factory/config/factory.yaml", [])
         print("\n\n")
         print(val)
         print("\n\n")

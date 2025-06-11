@@ -6,7 +6,7 @@ from airflow_config import DAG, create_dag, load_config
 
 
 def test_config_and_options():
-    conf = load_config("config", "test")
+    conf = load_config("config", "specialize")
     assert conf.default_args.owner == "test"
     assert conf.default_args.email == ["myemail@myemail.com"]
     assert conf.default_args.email_on_failure is False
@@ -24,7 +24,7 @@ def test_config_and_options():
 
 
 def test_create_dag_from_config():
-    conf = load_config("config", "test")
+    conf = load_config("config", "specialize")
     d = DAG(dag_id="testdag", config=conf)
     assert d.default_args["owner"] == "test"
     assert d.default_args["email"] == ["myemail@myemail.com"]
@@ -77,7 +77,7 @@ def test_create_dag_from_config():
 
 
 def test_create_dag():
-    d = create_dag("config", "test")
-    assert d.dag_id == "tests-setups-good-dag-specialize-test-dag-specialize"
+    d = create_dag("config", "specialize")
+    assert d.dag_id == "tests-setups-good-specialize-test-dag-specialize"
     assert d.dag_id in globals()
     assert d.default_args["owner"] == "test"
