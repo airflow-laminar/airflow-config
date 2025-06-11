@@ -3,8 +3,8 @@ from airflow_config import Configuration, create_dags
 
 def test_create_dag_from_multiple():
     dags = create_dags("config", ["dev", "prod"])
-    assert dags[0].dag_id == "tests-setups-good-envs-test-envs-dev"
-    assert dags[1].dag_id == "tests-setups-good-envs-test-envs-prod"
+    assert dags[0].dag_id == "tests-setups-envs-test-envs-dev"
+    assert dags[1].dag_id == "tests-setups-envs-test-envs-prod"
     assert dags[0].dag_id in globals()
     assert dags[1].dag_id in globals()
     assert dags[0].default_args["owner"] == "dev"

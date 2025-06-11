@@ -1,0 +1,18 @@
+# @package _global_
+_target_: airflow_config.Configuration
+
+defaults:
+  - extensions/balancer@extensions.balancer
+  - extensions/libraries@extensions.libraries
+  - extensions/supervisor@extensions.supervisor
+
+dags:
+  example_dag:
+    schedule: "0 3 * * *"
+    tasks:
+      task_1:
+        _target_: airflow_pydantic.SSHOperator
+        ssh_conn_id: test
+        ssh_hook: airflow_config.tests.setups.factory.utils.get_ssh_hook_from_config
+        command: test
+

@@ -48,7 +48,7 @@ dags:
         dependencies: [task_3]
       task_5:
         _target_: airflow_pydantic.PythonOperator
-        python_callable: airflow_config.tests.setups.good.utils.print_hello.print_hello
+        python_callable: airflow_config.tests.setups.utils.print_hello.print_hello
         op_args: []
         op_kwargs: {}
         templates_dict: {}
