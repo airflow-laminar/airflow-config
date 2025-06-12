@@ -33,7 +33,7 @@ classifiers = [
 ]
 
 dependencies = [
-    "airflow-pydantic>=1.1.2,<1.2",
+    "airflow-pydantic>=1.2,<1.3",
     "apache-airflow>=2.9,<3",
     "colorlog",
     "hydra-core",
@@ -57,7 +57,7 @@ develop = [
     # Tests
     "airflow-priority>=1.5",
     "airflow-supervisor",
-    "airflow-balancer",
+    "airflow-balancer>=0.6.0",
     "airflow-common-operators",
     # Standalone UI
     "email-validator>=2",

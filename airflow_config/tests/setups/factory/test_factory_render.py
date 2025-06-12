@@ -3,6 +3,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+from airflow_balancer.testing import pools
 from hydra.errors import InstantiationException
 
 from airflow_config import load_config
@@ -61,6 +62,17 @@ def test_generate_multi():
         conf.generate(tmp_dir)
         assert sorted(listdir(tmp_dir)) == ["example_dag.py", "example_dag2.py"]
         (Path(tmp_dir) / "example_dag.py").read_text() == RENDERED_DAG_MULTI
+
+
+def test_render_self_host():
+    cfg = load_config("config", "host")
+    assert cfg.dags["example_dag"].tasks["task_1"].ssh_hook.remote_host == "test_host.local"
+
+
+def test_render_self_balancer_query():
+    with pools():
+        cfg = load_config("config", "balancer")
+        assert cfg.dags["example_dag"].tasks["task_1"].ssh_hook.remote_host == "server2.local"
 
 
 def test_render_self_reference():
