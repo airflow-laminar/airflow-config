@@ -250,13 +250,17 @@
           <h1>Source code for airflow_config.configuration.base</h1><div class="highlight"><pre>
 <span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">currentframe</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span>
 
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.operators.bash</span><span class="w"> </span><span class="kn">import</span> <span class="n">BashOperator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">airflow.utils.session</span><span class="w"> </span><span class="kn">import</span> <span class="n">NEW_SESSION</span><span class="p">,</span> <span class="n">provide_session</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">Dag</span><span class="p">,</span> <span class="n">DagArgs</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="n">TaskArgs</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">hydra</span><span class="w"> </span><span class="kn">import</span> <span class="n">compose</span><span class="p">,</span> <span class="n">initialize_config_dir</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">hydra.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">instantiate</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">model_validator</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigNotFoundError</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">_get_calling_dag</span>
@@ -265,6 +269,8 @@
     <span class="s2">&quot;Configuration&quot;</span><span class="p">,</span>
     <span class="s2">&quot;load_config&quot;</span><span class="p">,</span>
 <span class="p">)</span>
+
+<span class="n">_log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="Configuration">
@@ -288,6 +294,13 @@
     <span class="nd">@property</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">default_args</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_task_args</span>
+
+    <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># TODO add more validation here</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dag_args</span><span class="o">.</span><span class="n">start_date</span><span class="p">:</span>
+            <span class="n">_log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No start_date set in default_dag_args, please set a start_date in the default_dag_args or in the dag itself.&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span>
 
     <span class="nd">@staticmethod</span>
     <span class="k">def</span><span class="w"> </span><span class="nf">_find_parent_config_folder</span><span class="p">(</span><span class="n">config_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">config_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">basepath</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">2</span><span class="p">):</span>
@@ -421,37 +434,97 @@
             <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dag_kwargs</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;enabled&quot;</span><span class="p">,):</span>
                 <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_dag_args</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dag_kwargs</span> <span class="ow">and</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">dag_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span></div>
+                    <span class="n">dag_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
+        <span class="n">doc_md</span> <span class="o">=</span> <span class="n">dag_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;doc_md&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">dag_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dag_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">[</span><span class="n">dag_kwargs</span><span class="p">[</span><span class="s2">&quot;dag_id&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">tasks</span><span class="p">:</span>
+            <span class="n">doc_md</span> <span class="o">+=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2"># Code Equivalent</span><span class="se">\n</span><span class="s2">```python</span><span class="se">\n</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">[</span><span class="n">dag_kwargs</span><span class="p">[</span><span class="s1">&#39;dag_id&#39;</span><span class="p">]]</span><span class="o">.</span><span class="n">render</span><span class="p">()</span><span class="si">}</span><span class="se">\n</span><span class="s2">```&quot;</span>
+            <span class="c1"># doc_md += f&quot;\n# DAG Config\n```json\n{self.dags[dag_kwargs[&#39;dag_id&#39;]].model_dump_json(indent=2, serialize_as_any=True)}\n```&quot;</span>
+        <span class="c1"># doc_md += f&quot;\n# Global Config\n```json\n{self.model_dump_json(indent=2, serialize_as_any=True)}\n```&quot;</span>
+        <span class="k">if</span> <span class="n">doc_md</span><span class="p">:</span>
+            <span class="n">dag_kwargs</span><span class="p">[</span><span class="s2">&quot;doc_md&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">doc_md</span></div>
 
 
 <div class="viewcode-block" id="Configuration.apply">
 <a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration.apply">[docs]</a>
     <span class="k">def</span><span class="w"> </span><span class="nf">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">,</span> <span class="n">dag_kwargs</span><span class="p">):</span>
-        <span class="c1"># update the options in the dag if necessary,</span>
-        <span class="c1"># instantiate tasks</span>
+        <span class="c1"># update the options in the dag if necessary, instantiate tasks</span>
         <span class="k">if</span> <span class="n">dag</span><span class="o">.</span><span class="n">dag_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">:</span>
-            <span class="n">tasks</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">[</span><span class="n">dag</span><span class="o">.</span><span class="n">dag_id</span><span class="p">]</span><span class="o">.</span><span class="n">tasks</span>
-            <span class="n">task_insts</span> <span class="o">=</span> <span class="p">{}</span>
-            <span class="k">if</span> <span class="n">tasks</span><span class="p">:</span>
-                <span class="k">for</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">task_inst</span> <span class="ow">in</span> <span class="n">tasks</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                    <span class="n">task_inst</span><span class="o">.</span><span class="n">task_id</span> <span class="o">=</span> <span class="n">task_id</span>
-                    <span class="n">task_insts</span><span class="p">[</span><span class="n">task_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">task_inst</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span>
-            <span class="k">for</span> <span class="n">task_id</span><span class="p">,</span> <span class="n">task_inst</span> <span class="ow">in</span> <span class="n">task_insts</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-                <span class="n">task_deps</span> <span class="o">=</span> <span class="n">tasks</span><span class="p">[</span><span class="n">task_id</span><span class="p">]</span><span class="o">.</span><span class="n">dependencies</span>
-                <span class="k">if</span> <span class="n">task_deps</span><span class="p">:</span>
-                    <span class="k">for</span> <span class="n">dep</span> <span class="ow">in</span> <span class="n">task_deps</span><span class="p">:</span>
-                        <span class="n">task_insts</span><span class="p">[</span><span class="n">dep</span><span class="p">]</span> <span class="o">&gt;&gt;</span> <span class="n">task_inst</span></div>
+            <span class="c1"># Instantiate self against the dag</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">[</span><span class="n">dag</span><span class="o">.</span><span class="n">dag_id</span><span class="p">]</span><span class="o">.</span><span class="n">instantiate</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dag</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Configuration.generate_in_mem">
+<a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration.generate_in_mem">[docs]</a>
+    <span class="nd">@provide_session</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate_in_mem</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">session</span><span class="o">=</span><span class="n">NEW_SESSION</span><span class="p">,</span> <span class="n">placeholder_dag_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;airflow-config-generate-dags&quot;</span><span class="p">):</span>
+        <span class="kn">from</span><span class="w"> </span><span class="nn">..dag</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
+
+        <span class="n">cur_frame</span> <span class="o">=</span> <span class="n">currentframe</span><span class="p">()</span><span class="o">.</span><span class="n">f_back</span>
+
+        <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&quot;Generating Placeholder DAG for in-memory generation&quot;</span><span class="p">)</span>
+        <span class="n">placeholder_dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="n">placeholder_dag_id</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="p">,</span> <span class="n">schedule</span><span class="o">=</span><span class="kc">None</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">placeholder_dag</span><span class="p">:</span>
+            <span class="n">BashOperator</span><span class="p">(</span><span class="n">task_id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">placeholder_dag_id</span><span class="si">}</span><span class="s2">-placeholder-task&quot;</span><span class="p">,</span> <span class="n">bash_command</span><span class="o">=</span><span class="s1">&#39;echo &quot;Placeholder task&quot;&#39;</span><span class="p">)</span>
+        <span class="n">cur_frame</span><span class="o">.</span><span class="n">f_globals</span><span class="p">[</span><span class="n">placeholder_dag_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">placeholder_dag</span>
+
+        <span class="nb">dir</span> <span class="o">=</span> <span class="nb">dir</span> <span class="ow">or</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
+        <span class="n">dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">dag_id</span><span class="p">,</span> <span class="n">dag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">dag</span><span class="o">.</span><span class="n">tasks</span><span class="p">:</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Generating DAG: </span><span class="si">{</span><span class="n">dag_id</span><span class="si">}</span><span class="s2"> in memory&quot;</span><span class="p">)</span>
+                <span class="c1"># rendered = dag.render()</span>
+                <span class="n">dag_path</span> <span class="o">=</span> <span class="n">dir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dag_id</span><span class="si">}</span><span class="s2">.py&quot;</span>
+
+                <span class="n">dag_instance</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">dag_id</span><span class="o">=</span><span class="n">dag_id</span><span class="p">,</span> <span class="n">config</span><span class="o">=</span><span class="bp">self</span><span class="p">)</span>
+                <span class="c1"># dag_instance.doc_md = f&quot;# Code\n```python\n{rendered}\n```&quot;</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Updating DAG fileloc from </span><span class="si">{</span><span class="n">dag_instance</span><span class="o">.</span><span class="n">fileloc</span><span class="si">}</span><span class="s2"> to </span><span class="si">{</span><span class="nb">str</span><span class="p">(</span><span class="n">dag_path</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">dag_instance</span><span class="o">.</span><span class="n">fileloc</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">dag_path</span><span class="p">)</span>
+                <span class="n">cur_frame</span><span class="o">.</span><span class="n">f_globals</span><span class="p">[</span><span class="n">dag_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">dag_instance</span>
+
+                <span class="c1"># Swap out DagCode</span>
+                <span class="c1"># First, grab DAG code</span>
+                <span class="c1"># _log.info(f&quot;Updating DagModel for {dag_id} in memory&quot;)</span>
+                <span class="c1"># query = select(DagModel).where(DagModel.dag_id == dag_id)</span>
+                <span class="c1"># query = with_row_locks(query, of=DagModel, session=session)</span>
+                <span class="c1"># orm_dag: DagModel = session.scalars(query).unique().first()</span>
+
+                <span class="c1"># if not orm_dag:</span>
+                <span class="c1">#     _log.info(f&quot;No existing DagModel found for {dag_id}, check logs!&quot;)</span>
+                <span class="c1">#     continue</span>
+                <span class="c1"># else:</span>
+                <span class="c1">#     orm_dag.fileloc = str(dag_path)</span>
+                <span class="c1">#     orm_dag.last_parsed_time = timezone.utcnow()</span>
+                <span class="c1">#     session.merge(orm_dag)</span>
+
+                <span class="c1"># _log.info(f&quot;Updating DagCode for {dag_id} in memory&quot;)</span>
+                <span class="c1"># dag_code = DagCode(full_filepath=str(dag_path), source_code=rendered)</span>
+                <span class="c1"># _log.info(f&quot;Querying DB for {dag_code.fileloc_hash}&quot;)</span>
+                <span class="c1"># existing_orm_dag_code = session.scalars(select(DagCode).where(DagCode.fileloc_hash == dag_code.fileloc_hash)).first()</span>
+                <span class="c1"># if existing_orm_dag_code:</span>
+                <span class="c1">#     _log.info(f&quot;Updating existing DagCode for {dag_id} in memory&quot;)</span>
+                <span class="c1">#     existing_orm_dag_code.last_updated = timezone.utcnow()</span>
+                <span class="c1">#     existing_orm_dag_code.source_code = rendered</span>
+                <span class="c1">#     session.merge(existing_orm_dag_code)</span>
+                <span class="c1"># else:</span>
+                <span class="c1">#     _log.info(f&quot;Adding new DagCode for {dag_id} in memory&quot;)</span>
+                <span class="c1">#     session.add(dag_code)</span>
+                <span class="n">_log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Adding DAG </span><span class="si">{</span><span class="n">dag_id</span><span class="si">}</span><span class="s2"> complete&quot;</span><span class="p">)</span>
+        <span class="n">session</span><span class="o">.</span><span class="n">commit</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="Configuration.generate">
 <a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration.generate">[docs]</a>
-    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">generate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="nb">dir</span><span class="p">:</span> <span class="n">Path</span> <span class="o">|</span> <span class="nb">str</span> <span class="o">=</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="nb">dir</span> <span class="o">=</span> <span class="nb">dir</span> <span class="ow">or</span> <span class="n">Path</span><span class="o">.</span><span class="n">cwd</span><span class="p">()</span>
         <span class="n">dir_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="nb">dir</span><span class="p">)</span>
         <span class="n">dir_path</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
         <span class="k">for</span> <span class="n">dag_id</span><span class="p">,</span> <span class="n">dag</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">if</span> <span class="n">dag</span><span class="o">.</span><span class="n">tasks</span><span class="p">:</span>
-                <span class="n">dag_path</span> <span class="o">=</span> <span class="n">dir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dag_id</span><span class="si">}</span><span class="s2">.py&quot;</span>
                 <span class="n">rendered</span> <span class="o">=</span> <span class="n">dag</span><span class="o">.</span><span class="n">render</span><span class="p">()</span>
+                <span class="n">dag_path</span> <span class="o">=</span> <span class="n">dir_path</span> <span class="o">/</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dag_id</span><span class="si">}</span><span class="s2">.py&quot;</span>
                 <span class="k">if</span> <span class="n">dag_path</span><span class="o">.</span><span class="n">exists</span><span class="p">()</span> <span class="ow">and</span> <span class="n">dag_path</span><span class="o">.</span><span class="n">read_text</span><span class="p">()</span> <span class="o">==</span> <span class="n">rendered</span><span class="p">:</span>
                     <span class="k">continue</span>
                 <span class="n">dag_path</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">rendered</span><span class="p">)</span></div>
