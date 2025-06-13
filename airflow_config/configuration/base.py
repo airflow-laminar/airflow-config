@@ -1,8 +1,11 @@
+import inspect
 import os
 import sys
 from pathlib import Path
+from types import ModuleType
 from typing import Dict, Optional
 
+from airflow.models import DagBag
 from airflow_pydantic import Dag, DagArgs, Task, TaskArgs
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
@@ -182,16 +185,37 @@ class Configuration(BaseModel):
                     for dep in task_deps:
                         task_insts[dep] >> task_inst
 
-    def generate(self, dir):
+    def generate(self, dir: Path | str = None, *, in_mem: bool = False):
+        dir = dir or Path.cwd()
         dir_path = Path(dir)
         dir_path.mkdir(parents=True, exist_ok=True)
+        # dag_bag = DagBag()
         for dag_id, dag in self.dags.items():
             if dag.tasks:
-                dag_path = dir_path / f"{dag_id}.py"
                 rendered = dag.render()
-                if dag_path.exists() and dag_path.read_text() == rendered:
-                    continue
-                dag_path.write_text(rendered)
+                dag_path = dir_path / f"{dag_id}.py"
+                if in_mem:
+                    # Create a module dynamically and inject it into globals
+                    # module = ModuleType(str(dag_path).replace("/", ".").replace("\\", ".").rstrip(".py"))
+                    # exec(rendered, module.__dict__)
+
+                    # Extract the DAG object
+                    # dag = getattr(module, "dag", None)
+                    # if dag is None:
+                    #     raise ValueError(f"DAG ID '{dag_id}' not found in code.")
+                    # globals()[dag.dag_id] = dag
+
+                    # # Manually register DAG into Airflow's DagBag
+                    # dag_bag.bag_dag(dag=dag, root_dag=dag)
+
+                    # # Swap out the caller with our module
+                    # calling_frame = inspect.stack()[1]
+                    # calling_module = inspect.getmodule(calling_frame[0])
+                    # sys.modules[calling_module.__name__] = module
+                else:
+                    if dag_path.exists() and dag_path.read_text() == rendered:
+                        continue
+                    dag_path.write_text(rendered)
 
 
 load_config = Configuration.load

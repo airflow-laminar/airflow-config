@@ -64,6 +64,11 @@ def test_generate_multi():
         (Path(tmp_dir) / "example_dag.py").read_text() == RENDERED_DAG_MULTI
 
 
+def test_render_dynamic_gen():
+    conf = load_config("config", "multi")
+    conf.generate(in_mem=True)
+
+
 def test_render_self_host():
     cfg = load_config("config", "host")
     assert cfg.dags["example_dag"].tasks["task_1"].ssh_hook.remote_host == "test_host.local"
