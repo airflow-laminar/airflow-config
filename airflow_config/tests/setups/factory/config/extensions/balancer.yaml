@@ -4,6 +4,6 @@ _target_: airflow_balancer.BalancerConfiguration
 hosts:
   - name: server2
     tags: [tag2]
-
-  - name: server1
-    tags: [tag1]
+    username: user1
+    password_variable: myvar
+    password_variable_key: password
