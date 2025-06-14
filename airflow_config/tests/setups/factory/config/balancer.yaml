@@ -16,4 +16,3 @@ dags:
           balancer: ${extensions.balancer}
           tag: tag2
         command: test
-
