@@ -16,8 +16,8 @@ importers:
         specifier: ^3.2.1
         version: 3.2.1
       '@prospective.co/procss':
-        specifier: ^0.1.16
-        version: 0.1.16
+        specifier: ^0.1.17
+        version: 0.1.17
       cpy:
         specifier: ^11.1.0
         version: 11.1.0
@@ -213,8 +213,8 @@ packages:
     resolution: {integrity: sha512-oGB+UxlgWcgQkgwo8GcEGwemoTFt3FIO9ababBmaGwXIoBKZ+GTy0pP185beGg7Llih/NSHSV2XAs1lnznocSg==}
     engines: {node: '>= 8'}
 
-  '@prospective.co/procss@0.1.16':
-    resolution: {integrity: sha512-Glfk6HVFVMAZL1rYsNicsODiFrikgyquYkqePWnAL+IyFDu6wfM4SHw8i/0mYuQmIxi0FR2IJJxJNiGAD86v4g==}
+  '@prospective.co/procss@0.1.17':
+    resolution: {integrity: sha512-jZCbEji9gTgJIJ41a0VQQV8GARUNKp9ils8/6347fbNkGBtA3cRwhQfRAxnqc0dhyo6pTSjMSflqop5ToIiSwQ==}
 
   '@sindresorhus/merge-streams@2.3.0':
     resolution: {integrity: sha512-LtoMMhxAlorcGhmFYI+LhPgbPZCkgP6ra1YL604EeF6U98pLlQ3iWIGMdWSC+vWmPBWBNgmDBAhnAobLROJmwg==}
@@ -1227,7 +1227,7 @@ snapshots:
       '@nodelib/fs.scandir': 2.1.5
       fastq: 1.19.1
 
-  '@prospective.co/procss@0.1.16': {}
+  '@prospective.co/procss@0.1.17': {}
 
   '@sindresorhus/merge-streams@2.3.0': {}
 
