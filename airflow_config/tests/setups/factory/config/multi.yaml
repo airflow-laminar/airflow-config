@@ -14,7 +14,7 @@ dags:
     schedule: "0 3 * * *"
     tasks:
       task_1:
-        _target_: airflow_pydantic.SSHOperator
+        _target_: airflow_config.SSHOperator
         ssh_conn_id: test
         ssh_hook: airflow_pydantic.tests.conftest.hook
         command: test
@@ -23,6 +23,6 @@ dags:
     schedule: "0 4 * * *"
     tasks:
       task_1:
-        _target_: airflow_pydantic.BashOperator
+        _target_: airflow_config.BashOperator
         operator: airflow.operators.bash.BashOperator
         bash_command: "echo \"1\""
