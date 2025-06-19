@@ -18,6 +18,12 @@ default_dag_args:
   catchup: false
   tags: ["utility", "test"]
 
+default_operator_args:
+  - operator:  airflow_config.BashOperator
+    cwd: /tmp
+  - operator:  airflow_pydantic.PythonOperator
+    show_return_value_in_logs: true
+
 dags:
   example_dag:
     default_args:
@@ -26,35 +32,11 @@ dags:
     schedule: "0 3 * * *"
     tasks:
       task_1:
-        _target_: airflow_config.SSHOperator
-        ssh_conn_id: test
-        ssh_hook: airflow_pydantic.tests.conftest.hook
-        command: test
-        do_xcom_push: true
-        cmd_timeout: 10
-        get_pty: true
-        environment: {"test": "test"}
-      task_2:
-        _target_: airflow_config.ShortCircuitOperator
-        python_callable: airflow_config.tests.conftest.should_short_circuit
-        dependencies: [task_1]
-      task_3:
-        _target_: airflow_config.BashOperator
-        bash_command: "echo '1'"
-        dependencies: [task_2]
-      task_4:
         _target_: airflow_config.BashOperator
         bash_command: "echo `pwd`"
-        dependencies: [task_3]
-      task_5:
+      task_2:
         _target_: airflow_config.PythonOperator
         python_callable: airflow_config.tests.setups.utils.print_hello.print_hello
-        op_args: []
-        op_kwargs: {}
-        templates_dict: {}
-        templates_exts: null
-        show_return_value_in_logs: true
-        dependencies: [task_4]
 
   example_dag2:
     default_args:
@@ -69,12 +51,7 @@ dags:
         _target_: airflow_config.BashOperator
         operator: airflow.operators.bash.BashOperator
         bash_command: "echo 2"
-        dependencies: [task_1]
       task_3:
         _target_: airflow_config.BashOperator
         operator: airflow.operators.bash.BashOperator
         bash_command: "echo 3"
-        dependencies: [task_1]
-
-  example_dag3:
-    schedule: "0 5 * * *"

@@ -161,7 +161,7 @@ dags:
     schedule: "0 3 * * *"
     tasks:
       task_1:
-        _target_: airflow_pydantic.SSHOperator
+        _target_: airflow_config.SSHOperator
         ssh_conn_id: test
         ssh_hook: airflow_pydantic.tests.conftest.hook
         command: test
@@ -170,19 +170,19 @@ dags:
         get_pty: true
         environment: {"test": "test"}
       task_2:
-        _target_: airflow_pydantic.ShortCircuitOperator
+        _target_: airflow_config.ShortCircuitOperator
         python_callable: airflow_config.tests.conftest.should_short_circuit
         dependencies: [task_1]
       task_3:
-        _target_: airflow_pydantic.BashOperator
+        _target_: airflow_config.BashOperator
         bash_command: "echo '1'"
         dependencies: [task_2]
       task_4:
-        _target_: airflow_pydantic.BashOperator
+        _target_: airflow_config.BashOperator
         bash_command: "echo `pwd`"
         dependencies: [task_3]
       task_5:
-        _target_: airflow_pydantic.PythonOperator
+        _target_: airflow_config.PythonOperator
         python_callable: airflow_config.tests.setups.utils.print_hello.print_hello
         op_args: []
         op_kwargs: {}
