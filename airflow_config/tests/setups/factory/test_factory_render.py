@@ -34,7 +34,14 @@ with DAG(description="this is an example dag", schedule="0 3 * * *", dag_id="exa
     task_3 = BashOperator(bash_command="echo '1'", task_id="task_3", dag=dag)
     task_4 = BashOperator(bash_command="echo `pwd`", task_id="task_4", dag=dag)
     task_5 = PythonOperator(
-        python_callable=print_hello, op_args=[], op_kwargs={}, templates_dict={}, show_return_value_in_logs=True, task_id="task_5", dag=dag
+        python_callable=print_hello,
+        op_args=[],
+        op_kwargs={},
+        templates_dict={},
+        templates_exts=None,
+        show_return_value_in_logs=True,
+        task_id="task_5",
+        dag=dag,
     )
     task_1 >> task_2
     task_2 >> task_3
