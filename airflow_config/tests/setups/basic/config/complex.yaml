@@ -25,6 +25,10 @@ dags:
     tags: ["celery", "utility"]
     description: "Clean worker logs"
     schedule: "0 4 * * *"
+  none-schedule:
+    tags: ["utility"]
+    description: "No schedule"
+    schedule: null
 
 defaults:
   - extensions/balancer@extensions.balancer
