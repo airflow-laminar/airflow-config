@@ -20,6 +20,7 @@ class TestPluginFunctions:
             [
                 root / "setups" / "priority" / "config" / "test.yaml",
                 root / "setups" / "basic" / "config" / "basic.yaml",
+                root / "setups" / "basic" / "config" / "basic2.yaml",
                 root / "setups" / "basic" / "config" / "complex.yaml",
                 root / "setups" / "basic" / "config" / "options.yaml",
                 root / "setups" / "envs" / "config" / "dev.yaml",

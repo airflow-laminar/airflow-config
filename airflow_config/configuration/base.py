@@ -10,7 +10,7 @@ from airflow.utils.session import NEW_SESSION, provide_session
 from airflow_pydantic import Dag, DagArgs, Task, TaskArgs
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
-from pydantic import BaseModel, Field, model_validator
+from pydantic import AliasChoices, BaseModel, Field, model_validator
 
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
@@ -24,7 +24,11 @@ _log = getLogger(__name__)
 
 
 class Configuration(BaseModel):
-    default_task_args: TaskArgs = Field(default_factory=TaskArgs, description="Global default default_args (task arguments)", alias="default_args")
+    default_task_args: TaskArgs = Field(
+        default_factory=TaskArgs,
+        description="Global default default_args (task arguments)",
+        validation_alias=AliasChoices("default_args", "default_task_args"),
+    )
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
     dags: Optional[Dict[str, Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
