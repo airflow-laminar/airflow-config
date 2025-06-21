@@ -1,5 +1,7 @@
 from unittest.mock import patch
 
+from airflow.timetables.simple import NullTimetable
+
 from airflow_config import load_config
 
 
@@ -19,3 +21,4 @@ def test_config_null_schedule():
 
         inst = conf.dags["none-schedule"].instantiate()
         assert inst.schedule_interval is None
+        assert isinstance(inst.timetable, NullTimetable)
