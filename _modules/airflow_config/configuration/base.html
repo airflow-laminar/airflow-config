@@ -380,7 +380,7 @@
     <span class="k">def</span><span class="w"> </span><span class="nf">pre_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">dag</span><span class="p">,</span> <span class="n">dag_kwargs</span><span class="p">):</span>
         <span class="c1"># update options in config based on hard-coded overrides</span>
         <span class="c1"># in the DAG file itself</span>
-        <span class="n">per_dag_default_args</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">per_dag_default_args</span> <span class="o">=</span> <span class="kc">None</span>
 
         <span class="c1"># look up per-dag options</span>
         <span class="k">if</span> <span class="n">dag_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dag_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">:</span>
@@ -393,19 +393,14 @@
             <span class="k">if</span> <span class="n">per_dag_kwargs</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">is</span> <span class="kc">False</span> <span class="ow">or</span> <span class="p">(</span><span class="n">per_dag_kwargs</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dag_args</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">):</span>
                 <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
 
-            <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">DagArgs</span><span class="o">.</span><span class="n">model_fields</span><span class="p">:</span>
-                <span class="k">if</span> <span class="n">attr</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;default_args&quot;</span><span class="p">,</span> <span class="s2">&quot;enabled&quot;</span><span class="p">):</span>
-                    <span class="c1"># skip</span>
-                    <span class="k">continue</span>
+            <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">per_dag_kwargs</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;default_args&quot;</span><span class="p">,</span> <span class="s2">&quot;enabled&quot;</span><span class="p">,</span> <span class="s2">&quot;tasks&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;dag_id&quot;</span><span class="p">:</span>
                     <span class="c1"># set</span>
                     <span class="n">per_dag_kwargs</span><span class="o">.</span><span class="n">dag_id</span> <span class="o">=</span> <span class="n">dag_kwargs</span><span class="p">[</span><span class="s2">&quot;dag_id&quot;</span><span class="p">]</span>
                     <span class="k">continue</span>
-
-                <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">per_dag_kwargs</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-
-                <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dag_kwargs</span> <span class="ow">and</span> <span class="n">val</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dag_kwargs</span><span class="p">:</span>
                     <span class="n">dag_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+
         <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dag_args</span><span class="o">.</span><span class="n">enabled</span> <span class="ow">is</span> <span class="kc">False</span><span class="p">:</span>
             <span class="c1"># if dag has no per-dag-config, but default dag args is disabled, quit right away</span>
             <span class="n">sys</span><span class="o">.</span><span class="n">exit</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
@@ -414,14 +409,13 @@
         <span class="n">default_args</span> <span class="o">=</span> <span class="p">{}</span>
 
         <span class="c1"># First, override with global defaults specified in config</span>
-        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">TaskArgs</span><span class="o">.</span><span class="n">model_fields</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_args</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">default_args</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_args</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_args</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">default_args</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
 
         <span class="c1"># Next, update with per-dag defaults specified in config</span>
-        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">TaskArgs</span><span class="o">.</span><span class="n">model_fields</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">per_dag_default_args</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">default_args</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">per_dag_default_args</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">per_dag_default_args</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">per_dag_default_args</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">default_args</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
 
         <span class="c1"># Finally, override with args hardcoded in the DAG file</span>
         <span class="k">if</span> <span class="s2">&quot;default_args&quot;</span> <span class="ow">in</span> <span class="n">dag_kwargs</span><span class="p">:</span>
@@ -430,11 +424,9 @@
         <span class="c1"># update the dag_kwargs with the final default_args</span>
         <span class="n">dag_kwargs</span><span class="p">[</span><span class="s2">&quot;default_args&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">default_args</span>
 
-        <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="n">DagArgs</span><span class="o">.</span><span class="n">model_fields</span><span class="p">:</span>
-            <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dag_kwargs</span> <span class="ow">and</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;enabled&quot;</span><span class="p">,):</span>
-                <span class="n">val</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">default_dag_args</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dag_kwargs</span> <span class="ow">and</span> <span class="n">val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">dag_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
+        <span class="k">for</span> <span class="n">attr</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dag_args</span><span class="o">.</span><span class="n">model_dump</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;enabled&quot;</span><span class="p">})</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dag_kwargs</span><span class="p">:</span>
+                <span class="n">dag_kwargs</span><span class="p">[</span><span class="n">attr</span><span class="p">]</span> <span class="o">=</span> <span class="n">val</span>
 
         <span class="n">doc_md</span> <span class="o">=</span> <span class="n">dag_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;doc_md&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">dag_kwargs</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;dag_id&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">dags</span><span class="p">[</span><span class="n">dag_kwargs</span><span class="p">[</span><span class="s2">&quot;dag_id&quot;</span><span class="p">]]</span><span class="o">.</span><span class="n">tasks</span><span class="p">:</span>
