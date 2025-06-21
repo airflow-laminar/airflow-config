@@ -20,6 +20,7 @@ class DAG(BaseDag):
     def __init__(self, config: Configuration = None, **kwargs):
         if config:
             config.pre_apply(self, kwargs)
+        # import pdb; pdb.set_trace()
         super().__init__(**kwargs)
         if config:
             config.apply(self, kwargs)

@@ -123,7 +123,7 @@ class Configuration(BaseModel):
     def pre_apply(self, dag, dag_kwargs):
         # update options in config based on hard-coded overrides
         # in the DAG file itself
-        per_dag_default_args = {}
+        per_dag_default_args = None
 
         # look up per-dag options
         if dag_kwargs.get("dag_id", None) in self.dags:
@@ -136,19 +136,14 @@ class Configuration(BaseModel):
             if per_dag_kwargs.enabled is False or (per_dag_kwargs.enabled is None and self.default_dag_args.enabled is False):
                 sys.exit(0)
 
-            for attr in DagArgs.model_fields:
-                if attr in ("default_args", "enabled"):
-                    # skip
-                    continue
+            for attr, val in per_dag_kwargs.model_dump(exclude_unset=True, exclude={"default_args", "enabled", "tasks"}).items():
                 if attr == "dag_id":
                     # set
                     per_dag_kwargs.dag_id = dag_kwargs["dag_id"]
                     continue
-
-                val = getattr(per_dag_kwargs, attr, None)
-
-                if attr not in dag_kwargs and val:
+                if attr not in dag_kwargs:
                     dag_kwargs[attr] = val
+
         elif self.default_dag_args.enabled is False:
             # if dag has no per-dag-config, but default dag args is disabled, quit right away
             sys.exit(0)
@@ -157,14 +152,13 @@ class Configuration(BaseModel):
         default_args = {}
 
         # First, override with global defaults specified in config
-        for attr in TaskArgs.model_fields:
-            if getattr(self.default_args, attr, None) is not None:
-                default_args[attr] = getattr(self.default_args, attr)
+        for attr, val in self.default_args.model_dump(exclude_unset=True).items():
+            default_args[attr] = val
 
         # Next, update with per-dag defaults specified in config
-        for attr in TaskArgs.model_fields:
-            if getattr(per_dag_default_args, attr, None) is not None:
-                default_args[attr] = getattr(per_dag_default_args, attr)
+        if per_dag_default_args is not None:
+            for attr, val in per_dag_default_args.model_dump(exclude_unset=True).items():
+                default_args[attr] = val
 
         # Finally, override with args hardcoded in the DAG file
         if "default_args" in dag_kwargs:
@@ -173,11 +167,9 @@ class Configuration(BaseModel):
         # update the dag_kwargs with the final default_args
         dag_kwargs["default_args"] = default_args
 
-        for attr in DagArgs.model_fields:
-            if attr not in dag_kwargs and attr not in ("enabled",):
-                val = getattr(self.default_dag_args, attr, None)
-                if attr not in dag_kwargs and val is not None:
-                    dag_kwargs[attr] = val
+        for attr, val in self.default_dag_args.model_dump(exclude_unset=True, exclude={"enabled"}).items():
+            if attr not in dag_kwargs:
+                dag_kwargs[attr] = val
 
         doc_md = dag_kwargs.get("doc_md", "")
         if dag_kwargs.get("dag_id", None) in self.dags and self.dags[dag_kwargs["dag_id"]].tasks:
