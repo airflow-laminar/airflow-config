@@ -32,7 +32,7 @@ class Configuration(BaseModel):
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
     dags: Optional[Dict[str, Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
-    tasks: Optional[Dict[str, Task]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+    tasks: Optional[Dict[str, Task]] = Field(default_factory=dict, description="List of tasks statically configured via Pydantic")
 
     # Extensions
     extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")

@@ -15,4 +15,3 @@ dags:
         ssh_conn_id: test
         ssh_hook: airflow_config.tests.setups.factory.utils.get_ssh_hook_from_config
         command: test
-
