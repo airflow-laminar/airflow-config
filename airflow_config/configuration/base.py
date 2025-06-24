@@ -8,7 +8,7 @@ from typing import Dict, Optional
 
 from airflow.operators.bash import BashOperator
 from airflow.utils.session import NEW_SESSION, provide_session
-from airflow_pydantic import Dag, DagArgs, Task, TaskArgs
+from airflow_pydantic import Dag, DagArgs, TaskArgs
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import AliasChoices, BaseModel, Field, model_validator
@@ -33,7 +33,6 @@ class Configuration(BaseModel):
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
     dags: Optional[Dict[str, Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
-    tasks: Optional[Dict[str, Task]] = Field(default_factory=dict, description="List of tasks statically configured via Pydantic")
 
     # Extensions
     extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
