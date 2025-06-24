@@ -284,10 +284,6 @@
 <span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Dags&quot;</span>
 <span class="w">      </span><span class="p">},</span>
-<span class="w">      </span><span class="nt">&quot;tasks&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;default&quot;</span><span class="p">:</span><span class="w"> </span><span class="kc">null</span><span class="p">,</span>
-<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Tasks&quot;</span>
-<span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;extensions&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
 <span class="w">            </span><span class="p">{</span>
@@ -1091,7 +1087,6 @@
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">root</span> <span class="pre">(pathlib.Path</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tags</span> <span class="pre">(Dict[str,</span> <span class="pre">str]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">tasks</span> <span class="pre">(Dict[str,</span> <span class="pre">airflow_pydantic.task.Task]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 </ul>
 </dd>
 </dl>
@@ -1111,12 +1106,6 @@
 <dt class="sig sig-object py" id="airflow_config.Configuration.dags">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">dags</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dag</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.Configuration.dags" title="Link to this definition">¶</a></dt>
 <dd><p>List of dags statically configured via Pydantic</p>
-</dd></dl>
-
-<dl class="py attribute pydantic_field">
-<dt class="sig sig-object py" id="airflow_config.Configuration.tasks">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">tasks</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Task</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.Configuration.tasks" title="Link to this definition">¶</a></dt>
-<dd><p>List of tasks statically configured via Pydantic</p>
 </dd></dl>
 
 <dl class="py attribute pydantic_field">
@@ -1243,7 +1232,6 @@
 <li><a class="reference internal" href="#airflow_config.Configuration.default_task_args"><code class="docutils literal notranslate"><span class="pre">Configuration.default_task_args</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.default_dag_args"><code class="docutils literal notranslate"><span class="pre">Configuration.default_dag_args</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.dags"><code class="docutils literal notranslate"><span class="pre">Configuration.dags</span></code></a></li>
-<li><a class="reference internal" href="#airflow_config.Configuration.tasks"><code class="docutils literal notranslate"><span class="pre">Configuration.tasks</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.extensions"><code class="docutils literal notranslate"><span class="pre">Configuration.extensions</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.env"><code class="docutils literal notranslate"><span class="pre">Configuration.env</span></code></a></li>
 <li><a class="reference internal" href="#airflow_config.Configuration.name"><code class="docutils literal notranslate"><span class="pre">Configuration.name</span></code></a></li>
