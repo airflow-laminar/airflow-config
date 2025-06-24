@@ -17,7 +17,23 @@ def test_create_dag_from_config_disable_perdag():
         conf = load_config("config", "disable_perdag")
         DAG(dag_id="testdag", config=conf)
         assert sys_exit.call_count == 1
+
         DAG(dag_id="example_dag", config=conf)
         assert sys_exit.call_count == 1
+
         DAG(dag_id="example_da2", config=conf)
+        assert sys_exit.call_count == 2
+
+
+def test_create_dag_from_config_disable_omegaconf():
+    with patch("sys.exit") as sys_exit:
+        conf = load_config("config", "disable_env")
+
+        DAG(dag_id="testdag", config=conf)
+        assert sys_exit.call_count == 1
+
+        DAG(dag_id="prod_dag", config=conf)
+        assert sys_exit.call_count == 1
+
+        DAG(dag_id="nonprod_dag", config=conf)
         assert sys_exit.call_count == 2

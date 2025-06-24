@@ -1,0 +1,36 @@
+# @package _global_
+_target_: airflow_config.Configuration
+default_args:
+  _target_: airflow_config.TaskArgs
+  owner: test
+  email: [myemail@myemail.com]
+  email_on_failure: false
+  email_on_retry: false
+  retries: 0
+  depends_on_past: false
+
+default_dag_args:
+  _target_: airflow_config.DagArgs
+  schedule: "01:00"
+  start_date: "2024-01-01"
+  catchup: false
+  tags: ["utility", "test"]
+  enabled: false
+
+env: prod
+
+dags:
+  prod_dag:
+    enabled: ${eq:${env},"prod"}
+    default_args:
+      owner: "custom_owner"
+    description: "this is an example dag"
+    schedule: "0 3 * * *"
+    max_active_tasks: 1
+    max_active_runs: 1
+
+  nonprod_dag:
+    enabled: ${neq:${env},"prod"}
+    default_args:
+      owner: "custom_owner2"
+    schedule: "0 4 * * *"
