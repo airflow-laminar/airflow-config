@@ -266,7 +266,14 @@
 <span class="w">   </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span><span class="p">,</span>
 <span class="w">   </span><span class="nt">&quot;properties&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
 <span class="w">      </span><span class="nt">&quot;default_args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
-<span class="w">         </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/TaskArgs&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;anyOf&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/TaskArgs&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;null&quot;</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">         </span><span class="p">],</span>
 <span class="w">         </span><span class="nt">&quot;description&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Global default default_args (task arguments)&quot;</span>
 <span class="w">      </span><span class="p">},</span>
 <span class="w">      </span><span class="nt">&quot;default_dag_args&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -1078,7 +1085,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">dags</span> <span class="pre">(Dict[str,</span> <span class="pre">airflow_pydantic.dag.Dag]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_dag_args</span> <span class="pre">(airflow_pydantic.dag.DagArgs)</span></code></p></li>
-<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_task_args</span> <span class="pre">(airflow_pydantic.task.TaskArgs)</span></code></p></li>
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">default_task_args</span> <span class="pre">(airflow_pydantic.task.TaskArgs</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">env</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">extensions</span> <span class="pre">(Dict[str,</span> <span class="pre">pydantic.main.BaseModel]</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
 <li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">name</span> <span class="pre">(str</span> <span class="pre">|</span> <span class="pre">None)</span></code></p></li>
@@ -1090,7 +1097,7 @@
 </dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="airflow_config.Configuration.default_task_args">
-<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_task_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TaskArgs</span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.Configuration.default_task_args" title="Link to this definition">¶</a></dt>
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_task_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TaskArgs</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.Configuration.default_task_args" title="Link to this definition">¶</a></dt>
 <dd><p>Global default default_args (task arguments)</p>
 </dd></dl>
 
