@@ -32,6 +32,7 @@ class TestPluginFunctions:
                 root / "setups" / "factory" / "config" / "self_reference.yaml",
                 root / "setups" / "factory" / "config" / "type_override.yaml",
                 root / "setups" / "specialize" / "config" / "disable.yaml",
+                root / "setups" / "specialize" / "config" / "disable_env.yaml",
                 root / "setups" / "specialize" / "config" / "disable_perdag.yaml",
                 root / "setups" / "specialize" / "config" / "specialize.yaml",
             ]
