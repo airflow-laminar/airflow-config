@@ -24,6 +24,11 @@ __all__ = (
 _log = getLogger(__name__)
 
 
+class _Templates(BaseModel):
+    dag: Optional[Dict[str, DagArgs]] = Field(default=None, description="Template for DAGs")
+    task: Optional[Dict[str, TaskArgs]] = Field(default=None, description="Template for Tasks")
+
+
 class Configuration(BaseModel):
     default_task_args: Optional[TaskArgs] = Field(
         default_factory=TaskArgs,
@@ -33,6 +38,9 @@ class Configuration(BaseModel):
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
     dags: Optional[Dict[str, Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+
+    # Templates:
+    templates: Optional[_Templates] = Field(default_factory=_Templates, description="Templates for DAGs and Tasks")
 
     # Extensions
     extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
@@ -48,7 +56,7 @@ class Configuration(BaseModel):
         return self.default_task_args
 
     @model_validator(mode="after")
-    def _validate(self):
+    def _validate_after(self):
         # TODO add more validation here
         if not self.default_dag_args.start_date:
             _log.warning("No start_date set in default_dag_args, please set a start_date in the default_dag_args or in the dag itself.")
@@ -70,7 +78,6 @@ class Configuration(BaseModel):
                 # If `key` is not set in `dag`, set it to the value from `default_dag_args`
                 if key not in dag.model_fields_set:
                     setattr(dag, key, deepcopy(value))
-
         return self
 
     @staticmethod
