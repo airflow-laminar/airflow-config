@@ -274,6 +274,11 @@
 <span class="n">_log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 
 
+<span class="k">class</span><span class="w"> </span><span class="nc">_Templates</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">dag</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">DagArgs</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Template for DAGs&quot;</span><span class="p">)</span>
+    <span class="n">task</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">TaskArgs</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Template for Tasks&quot;</span><span class="p">)</span>
+
+
 <div class="viewcode-block" id="Configuration">
 <a class="viewcode-back" href="../../../docs/src/_build/airflow_config.Configuration.html#airflow_config.Configuration">[docs]</a>
 <span class="k">class</span><span class="w"> </span><span class="nc">Configuration</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
@@ -285,6 +290,9 @@
     <span class="n">default_dag_args</span><span class="p">:</span> <span class="n">DagArgs</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">DagArgs</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Global default dag arguments&quot;</span><span class="p">)</span>
 
     <span class="n">dags</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dag</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;List of dags statically configured via Pydantic&quot;</span><span class="p">)</span>
+
+    <span class="c1"># Templates:</span>
+    <span class="n">templates</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">_Templates</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="n">_Templates</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Templates for DAGs and Tasks&quot;</span><span class="p">)</span>
 
     <span class="c1"># Extensions</span>
     <span class="n">extensions</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">]]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">,</span> <span class="n">description</span><span class="o">=</span><span class="s2">&quot;Any user-defined extensions&quot;</span><span class="p">)</span>
@@ -300,7 +308,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_task_args</span>
 
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;after&quot;</span><span class="p">)</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_after</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="c1"># TODO add more validation here</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">default_dag_args</span><span class="o">.</span><span class="n">start_date</span><span class="p">:</span>
             <span class="n">_log</span><span class="o">.</span><span class="n">warning</span><span class="p">(</span><span class="s2">&quot;No start_date set in default_dag_args, please set a start_date in the default_dag_args or in the dag itself.&quot;</span><span class="p">)</span>
@@ -322,7 +330,6 @@
                 <span class="c1"># If `key` is not set in `dag`, set it to the value from `default_dag_args`</span>
                 <span class="k">if</span> <span class="n">key</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">dag</span><span class="o">.</span><span class="n">model_fields_set</span><span class="p">:</span>
                     <span class="nb">setattr</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">value</span><span class="p">))</span>
-
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="nd">@staticmethod</span>
