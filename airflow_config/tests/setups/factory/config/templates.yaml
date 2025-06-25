@@ -1,0 +1,56 @@
+
+# @package _global_
+_target_: airflow_config.Configuration
+
+templates:
+  dag:
+    dag_template:
+      _target_: airflow_config.DagArgs
+      default_args:
+        _target_: airflow_config.TaskArgs
+        owner: test
+        email: [myemail@myemail.com]
+        email_on_failure: false
+        email_on_retry: false
+        retries: 0
+        depends_on_past: false
+      schedule: "01:00"
+      start_date: "2024-01-01"
+      catchup: false
+      tags: ["utility", "test"]
+  tasks:
+    task_template:
+      _target_: airflow_config.PythonTaskArgs
+      python_callable: airflow_config.tests.setups.utils.print_hello.print_hello
+      op_args: []
+      op_kwargs: {}
+      templates_dict: {}
+      templates_exts: null
+      show_return_value_in_logs: true
+      dependencies: [task_4]
+    ssh_task_template:
+      _target_: airflow_config.SSHTaskArgs
+      ssh_conn_id: test
+      ssh_hook: airflow_pydantic.tests.conftest.hook
+      command: test
+      do_xcom_push: true
+      cmd_timeout: 10
+      get_pty: true
+      environment: {"test": "test"}
+
+dags:
+  example_dag:
+    template: ${templates.dag.dag_template}
+    default_args:
+      owner: "custom_owner"
+    description: "this is an example dag"
+    schedule: "0 3 * * *"
+    tasks:
+      task_1:
+        _target_: airflow_config.PythonOperator
+        template: ${templates.tasks.task_template}
+      task_2:
+        _target_: airflow_config.SSHOperator
+        template: ${templates.tasks.ssh_task_template}
+        dependencies: [task_1]
+        environment: {"blerg": "blerg"}
