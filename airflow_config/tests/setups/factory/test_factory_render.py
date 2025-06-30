@@ -157,7 +157,7 @@ from airflow.providers.ssh.operators.ssh import SSHOperator
 with DAG(schedule="0 3 * * *", dag_id="example_dag", default_args={}) as dag:
     task_1 = SSHOperator(
         pool="server2",
-        ssh_hook=SSHHook(remote_host="server2.local", username="user1", password=Variable.get("myvar")["password"]),
+        ssh_hook=SSHHook(remote_host="server2.local", username="user1", password=Variable.get("myvar", deserialize_json=True)["password"]),
         ssh_conn_id="test",
         command="test",
         task_id="task_1",

@@ -1,4 +1,5 @@
 import os
+import sys
 from pathlib import Path
 
 from fastapi import FastAPI
@@ -82,10 +83,13 @@ def build_app() -> FastAPI:
 
     @app.get("/")
     async def home():
-        dags_folder = os.environ.get("AIRFLOW__CORE__DAGS_FOLDER", os.environ.get("AIRFLOW_HOME", Path(__file__).parent.parent.parent / "tests"))
-        if not dags_folder:
-            return templates.TemplateResponse("404.html", fab_common_mock)
+        dags_folder = os.environ.get("AIRFLOW__CORE__DAGS_FOLDER", os.environ.get("AIRFLOW_HOME", os.getcwd()))
         yamls = get_yaml_files(dags_folder=dags_folder)
+        if not yamls:
+            dags_folder = Path(__file__).parent.parent.parent / "tests"
+            yamls = get_yaml_files(dags_folder=dags_folder)
+            if not yamls:
+                return templates.TemplateResponse("404.html", fab_common_mock)
         return templates.TemplateResponse("home.html", {"yamls": yamls, **fab_common_mock})
 
     @app.get("/yaml")
@@ -99,6 +103,10 @@ def build_app() -> FastAPI:
 
 
 def main():
+    # Append local dir
+    sys.path.append(os.getcwd())
+
+    # Build the FastAPI application
     app = build_app()
 
     # Run the application using Uvicorn
