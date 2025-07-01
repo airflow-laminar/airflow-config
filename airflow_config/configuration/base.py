@@ -4,17 +4,21 @@ from copy import deepcopy
 from inspect import currentframe
 from logging import getLogger
 from pathlib import Path
-from typing import Dict, Optional
+from typing import Any, Dict, Optional
 
-from airflow.operators.bash import BashOperator
-from airflow.utils.session import NEW_SESSION, provide_session
-from airflow_pydantic import Dag, DagArgs, TaskArgs
+from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
-from pydantic import AliasChoices, BaseModel, Field, model_validator
+from pydantic import AliasChoices, BaseModel as PydanticBaseModel, Field, model_validator
 
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
+
+try:
+    from airflow.utils.session import NEW_SESSION, provide_session
+except ImportError:
+    NEW_SESSION = Any
+    provide_session = lambda f: f  # noqa: E731
 
 __all__ = (
     "Configuration",
@@ -43,7 +47,7 @@ class Configuration(BaseModel):
     templates: Optional[_Templates] = Field(default_factory=_Templates, description="Templates for DAGs and Tasks")
 
     # Extensions
-    extensions: Optional[Dict[str, BaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
+    extensions: Optional[Dict[str, PydanticBaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
 
     # Generic options
     env: Optional[str] = Field(default="", description="Environment to use for this configuration")
@@ -208,6 +212,8 @@ class Configuration(BaseModel):
 
     @provide_session
     def generate_in_mem(self, dir: Path | str = None, session=NEW_SESSION, placeholder_dag_id: str = "airflow-config-generate-dags"):
+        from airflow.operators.empty import EmptyOperator
+
         from ..dag import DAG
 
         cur_frame = currentframe().f_back
@@ -215,7 +221,7 @@ class Configuration(BaseModel):
         _log.info("Generating Placeholder DAG for in-memory generation")
         placeholder_dag = DAG(dag_id=placeholder_dag_id, config=self, schedule=None)
         with placeholder_dag:
-            BashOperator(task_id=f"{placeholder_dag_id}-placeholder-task", bash_command='echo "Placeholder task"')
+            EmptyOperator(task_id=f"{placeholder_dag_id}-placeholder-task")
         cur_frame.f_globals[placeholder_dag_id] = placeholder_dag
 
         dir = dir or Path.cwd()

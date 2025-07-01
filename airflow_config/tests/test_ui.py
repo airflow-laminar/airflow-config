@@ -1,13 +1,18 @@
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
+
 from airflow_config.ui.functions import get_configs_from_yaml, get_yaml_files
 from airflow_config.ui.standalone import build_app, main
 
 
 class TestAirflowPlugin:
     def test_plugin(self):
-        from airflow_config.ui.viewer import AirflowConfigViewerPlugin, AirflowConfigViewerPluginView
+        try:
+            from airflow_config.ui.airflow import AirflowConfigViewerPlugin, AirflowConfigViewerPluginView
+        except ImportError:
+            pytest.skip("Airflow is not installed, skipping UI tests")
 
         AirflowConfigViewerPluginView()
         AirflowConfigViewerPlugin()

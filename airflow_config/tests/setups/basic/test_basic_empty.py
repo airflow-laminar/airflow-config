@@ -1,4 +1,6 @@
-from airflow_config import create_dag, load_config
+import pytest
+
+from airflow_config import load_config
 
 
 def test_config_and_empty_file():
@@ -8,6 +10,11 @@ def test_config_and_empty_file():
 
 
 def test_config_and_empty_file_create_dag():
+    try:
+        from airflow_config import create_dag
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping DAG tests")
+
     d = create_dag("config", "basic")
     assert d.dag_id == "tests-setups-basic-test-basic-empty"
     assert d.dag_id in globals()
@@ -15,6 +22,11 @@ def test_config_and_empty_file_create_dag():
 
 
 def test_config_and_empty_file_create_dag2():
+    try:
+        from airflow_config import create_dag
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping DAG tests")
+
     d = create_dag("config", "basic2")
     assert d.dag_id == "tests-setups-basic-test-basic-empty"
     assert d.dag_id in globals()

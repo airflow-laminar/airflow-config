@@ -69,7 +69,7 @@ develop = [
 ]
 
 [project.entry-points."airflow.plugins"]
-airflow-config-viewer = "airflow_config.ui:AirflowConfigViewerPlugin"
+airflow-config-viewer = "airflow_config.ui.airflow:AirflowConfigViewerPlugin"
 
 [project.scripts]
 airflow-config-viewer = "airflow_config.ui.standalone:main"
