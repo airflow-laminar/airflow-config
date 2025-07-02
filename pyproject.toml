@@ -34,7 +34,7 @@ classifiers = [
 
 dependencies = [
     "airflow-pydantic>=1.2,<1.4",
-    "apache-airflow>=2.9,<3",
+    "apache-airflow>=2.9,<3.1",
     "colorlog",
     "hydra-core",
     "jinja2",
@@ -60,6 +60,8 @@ develop = [
     "airflow-supervisor>=1.7",
     "airflow-balancer>=0.6.0",
     "airflow-common-operators",
+    "apache-airflow-providers-ssh",
+    "apache-airflow-providers-standard",
     # Standalone UI
     "email-validator>=2",
     "flask_appbuilder",

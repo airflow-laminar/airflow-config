@@ -3,18 +3,13 @@
 defaults: []
 _target_: airflow_supervisor.SupervisorSSHAirflowConfiguration
 
-airflow:
-  _target_: airflow_supervisor.AirflowConfiguration
-  runtime: 360
-  check_interval: 10
-  check_timeout: 60
-  endtime: 23:00:00
-  maxretrigger: 5
+runtime: 360
+check_interval: 10
+check_timeout: 60
+endtime: 23:00:00
+maxretrigger: 5
 
-convenience:
-  _target_: airflow_supervisor.ConvenienceConfiguration
-  local_or_remote: remote
-  command_timeout: 60
+command_timeout: 60
 
 program:
   test:

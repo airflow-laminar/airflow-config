@@ -16,7 +16,7 @@ Consider the following basic DAG:
 
 ```python
 from airflow import DAG
-from airflow.operators.bash import BashOperator
+from airflow.providers.standard.operators.bash import BashOperator
 from datetime import datetime, timedelta
 
 with DAG(
@@ -75,7 +75,7 @@ default_dag_args:
 ```
 
 ```python
-from airflow.operators.bash import BashOperator
+from airflow.providers.standard.operators.bash import BashOperator
 from airflow_config import DAG, load_config
 
 config = load_config(config_name="dev")

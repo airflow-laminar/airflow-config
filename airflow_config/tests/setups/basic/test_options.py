@@ -1,6 +1,7 @@
 from datetime import datetime, timedelta
 
 import pytest
+from airflow_pydantic.utils import _airflow_3
 from pytz import timezone
 
 from airflow_config import load_config
@@ -36,7 +37,10 @@ def test_create_dag_from_config():
     assert d.default_args["retries"] == 0
     assert d.default_args["depends_on_past"] is False
 
-    assert d.schedule_interval == timedelta(hours=1, minutes=10)
+    if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert d.schedule == timedelta(hours=1, minutes=10)
+    else:
+        assert d.schedule_interval == timedelta(hours=1, minutes=10)
     assert isinstance(d.timetable, DeltaDataIntervalTimetable)
     assert isinstance(d.timetable._delta, timedelta)
     assert d.timetable._delta.total_seconds() == 4200
@@ -44,7 +48,7 @@ def test_create_dag_from_config():
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
-    assert d.tags == ["utility", "test"]
+    assert set(d.tags) == set(["utility", "test"])
 
 
 def test_create_dag_from_config_create_dag():
