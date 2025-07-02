@@ -124,9 +124,14 @@ dmypy.json
 .pyre/
 
 # Documentation
+<<<<<<< before updating
 docs/_build/
 docs/src/_build/
+=======
+>>>>>>> after updating
 /site
+index.md
+docs/_build/
 docs/api
 docs/index.md
 docs/html
