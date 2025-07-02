@@ -24,14 +24,18 @@ def airflow_config():
         (Path(td) / "airflow.cfg").write_text(tmpl)
         os.environ["AIRFLOW_HOME"] = str(Path(td))
         os.environ["AIRFLOW_CONFIG"] = str((Path(td) / "airflow.cfg"))
-        import airflow.configuration
+        try:
+            import airflow.configuration
 
-        airflow.configuration.AIRFLOW_HOME = os.environ["AIRFLOW_HOME"]
-        airflow.configuration.AIRFLOW_CONFIG = os.environ["AIRFLOW_CONFIG"]
-        airflow_config_parser = airflow.configuration.AirflowConfigParser()
-        airflow.configuration.load_standard_airflow_configuration(airflow_config_parser)
-        airflow_config_parser.validate()
-        airflow.configuration.conf = airflow_config_parser
+            airflow.configuration.AIRFLOW_HOME = os.environ["AIRFLOW_HOME"]
+            airflow.configuration.AIRFLOW_CONFIG = os.environ["AIRFLOW_CONFIG"]
+            airflow_config_parser = airflow.configuration.AirflowConfigParser()
+            airflow.configuration.load_standard_airflow_configuration(airflow_config_parser)
+            airflow_config_parser.validate()
+            airflow.configuration.conf = airflow_config_parser
+        except ImportError:
+            # Ignore
+            ...
         yield
 
 

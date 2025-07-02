@@ -45,13 +45,13 @@ dags:
     tasks:
       task_1:
         _target_: airflow_config.BashOperator
-        operator: airflow.operators.bash.BashOperator
+        operator: airflow.providers.standard.operators.bash.BashOperator
         bash_command: "echo \"1\""
       task_2:
         _target_: airflow_config.BashOperator
-        operator: airflow.operators.bash.BashOperator
+        operator: airflow.providers.standard.operators.bash.BashOperator
         bash_command: "echo 2"
       task_3:
         _target_: airflow_config.BashOperator
-        operator: airflow.operators.bash.BashOperator
+        operator: airflow.providers.standard.operators.bash.BashOperator
         bash_command: "echo 3"

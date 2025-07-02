@@ -1,8 +1,9 @@
 from datetime import datetime, timedelta
 
-from airflow.timetables.interval import DeltaDataIntervalTimetable
+import pytest
+from airflow_pydantic.utils import _airflow_3
 
-from airflow_config import DAG, create_dag, load_config
+from airflow_config import load_config
 
 
 def test_config_and_options():
@@ -24,6 +25,13 @@ def test_config_and_options():
 
 
 def test_create_dag_from_config():
+    try:
+        from airflow.timetables.interval import DeltaDataIntervalTimetable
+
+        from airflow_config import DAG, load_config
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping timetable tests")
+
     conf = load_config("config", "specialize")
     d = DAG(dag_id="testdag", config=conf)
     assert d.default_args["owner"] == "test"
@@ -34,14 +42,17 @@ def test_create_dag_from_config():
     assert d.default_args["depends_on_past"] is False
     assert d.max_active_tasks == 16
     assert d.max_active_runs == 16
-    assert d.schedule_interval == timedelta(seconds=3600)
+    if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert d.schedule == timedelta(seconds=3600)
+    else:
+        assert d.schedule_interval == timedelta(seconds=3600)
     assert isinstance(d.timetable, DeltaDataIntervalTimetable)
     assert isinstance(d.timetable._delta, timedelta)
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
-    assert d.tags == ["utility", "test"]
+    assert set(d.tags) == set(["utility", "test"])
 
     d = DAG(dag_id="example_dag", config=conf)
     assert d.default_args["owner"] == "custom_owner"
@@ -52,12 +63,15 @@ def test_create_dag_from_config():
     assert d.default_args["depends_on_past"] is False
     assert d.max_active_tasks == 1
     assert d.max_active_runs == 1
-    assert d.schedule_interval == "0 3 * * *"
+    if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert d.schedule == "0 3 * * *"
+    else:
+        assert d.schedule_interval == "0 3 * * *"
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
-    assert d.tags == ["utility", "test"]
+    assert set(d.tags) == set(["utility", "test"])
 
     d = DAG(dag_id="example_dag2", config=conf)
     assert d.default_args["owner"] == "custom_owner2"
@@ -68,15 +82,23 @@ def test_create_dag_from_config():
     assert d.default_args["depends_on_past"] is False
     assert d.max_active_tasks == 16
     assert d.max_active_runs == 16
-    assert d.schedule_interval == "0 4 * * *"
+    if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert d.schedule == "0 4 * * *"
+    else:
+        assert d.schedule_interval == "0 4 * * *"
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
-    assert d.tags == ["utility", "test"]
+    assert set(d.tags) == set(["utility", "test"])
 
 
 def test_create_dag():
+    try:
+        from airflow_config import create_dag
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping timetable tests")
+
     d = create_dag("config", "specialize")
     assert d.dag_id == "tests-setups-specialize-test-dag-specialize"
     assert d.dag_id in globals()

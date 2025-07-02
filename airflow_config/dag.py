@@ -1,12 +1,11 @@
 from functools import singledispatch
 from inspect import currentframe
-from typing import Any, Optional, cast
-from uuid import uuid4
+from typing import Any, Optional
 
 from airflow.models.dag import DAG as BaseDag
 
 from .configuration.base import Configuration
-from .utils import _get_calling_dag, _get_dag_root
+from .utils import generate_dag_id
 
 __all__ = (
     "generate_dag_id",
@@ -23,24 +22,6 @@ class DAG(BaseDag):
         super().__init__(**kwargs)
         if config:
             config.apply(self, kwargs)
-
-
-def generate_dag_id(name: str = "", dag_root: str = "", offset: int = 2) -> str:
-    if not name:
-        try:
-            # get file of calling python file, can't use the module name as one might
-            # have the same module in multiple folders
-            caller = _get_calling_dag(offset=offset)
-            # remove python suffix, replace path with dash
-            name = caller.replace(".py", "").replace("/", "-").replace("_", "-")
-            # remove root folder
-            dag_root = dag_root or _get_dag_root()
-            name = name.replace(dag_root.replace("/", "-").replace("_", "-"), "")
-            while name.startswith("-"):
-                name = name[1:]
-        except Exception:
-            name = cast(str, uuid4())
-    return name
 
 
 @singledispatch

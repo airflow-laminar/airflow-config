@@ -1,6 +1,10 @@
 from configparser import ConfigParser
 from inspect import currentframe
 from os import environ, getcwd, path
+from typing import cast
+from uuid import uuid4
+
+__all__ = ("generate_dag_id",)
 
 
 def _get_calling_dag(offset: int = 2) -> str:
@@ -24,3 +28,21 @@ def _get_dag_root() -> str:
         config.read(file)
         return config["core"]["dags_folder"]
     return ""
+
+
+def generate_dag_id(name: str = "", dag_root: str = "", offset: int = 2) -> str:
+    if not name:
+        try:
+            # get file of calling python file, can't use the module name as one might
+            # have the same module in multiple folders
+            caller = _get_calling_dag(offset=offset)
+            # remove python suffix, replace path with dash
+            name = caller.replace(".py", "").replace("/", "-").replace("_", "-")
+            # remove root folder
+            dag_root = dag_root or _get_dag_root()
+            name = name.replace(dag_root.replace("/", "-").replace("_", "-"), "")
+            while name.startswith("-"):
+                name = name[1:]
+        except Exception:
+            name = cast(str, uuid4())
+    return name

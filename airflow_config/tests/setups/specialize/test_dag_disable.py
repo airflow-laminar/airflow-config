@@ -1,9 +1,16 @@
 from unittest.mock import patch
 
-from airflow_config import DAG, load_config
+import pytest
+
+from airflow_config import load_config
 
 
 def test_create_dag_from_config():
+    try:
+        from airflow_config import DAG
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping timetable tests")
+
     with patch("sys.exit") as sys_exit:
         conf = load_config("config", "disable")
         DAG(dag_id="testdag", config=conf)
@@ -13,6 +20,11 @@ def test_create_dag_from_config():
 
 
 def test_create_dag_from_config_disable_perdag():
+    try:
+        from airflow_config import DAG
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping timetable tests")
+
     with patch("sys.exit") as sys_exit:
         conf = load_config("config", "disable_perdag")
         DAG(dag_id="testdag", config=conf)
@@ -26,6 +38,11 @@ def test_create_dag_from_config_disable_perdag():
 
 
 def test_create_dag_from_config_disable_omegaconf():
+    try:
+        from airflow_config import DAG
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping timetable tests")
+
     with patch("sys.exit") as sys_exit:
         conf = load_config("config", "disable_env")
 
