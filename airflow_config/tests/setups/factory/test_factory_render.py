@@ -163,7 +163,7 @@ from airflow.providers.ssh.operators.ssh import SSHOperator
 
 with DAG(schedule="0 3 * * *", dag_id="example_dag", default_args={}) as dag:
     task_1 = SSHOperator(
-        pool=Pool.create_or_update_pool(pool="server2", slots=8, description="Balancer pool for host(server2)", include_deferred=False).pool,
+        pool=Pool.create_or_update_pool(name="server2", slots=8, description="Balancer pool for host(server2)", include_deferred=False).pool,
         ssh_hook=SSHHook(remote_host="server2.local", username="user1", password=Variable.get("myvar", deserialize_json=True)["password"]),
         ssh_conn_id="test",
         command="test",
