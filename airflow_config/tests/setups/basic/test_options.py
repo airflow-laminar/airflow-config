@@ -1,7 +1,7 @@
 from datetime import datetime, timedelta
 
 import pytest
-from airflow_pydantic.utils import _airflow_3
+from airflow_pydantic.migration import _airflow_3
 from pytz import timezone
 
 from airflow_config import load_config
