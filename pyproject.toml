@@ -183,6 +183,7 @@ section-order = ["future", "standard-library", "third-party", "first-party", "lo
 
 [tool.ruff.lint.per-file-ignores]
 "__init__.py" = ["F401", "F403"]
+<<<<<<< before updating
 
 [tool.yardang]
 title = "airflow-config"
@@ -192,3 +193,5 @@ pages = [
     "docs/src/API.md",
 ]
 use-autoapi = false
+=======
+>>>>>>> after updating
