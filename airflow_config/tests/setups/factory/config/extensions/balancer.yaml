@@ -1,9 +1,11 @@
 # @package extensions.balancer
 
-_target_: airflow_balancer.BalancerConfiguration
+_target_: airflow_pydantic.BalancerConfiguration
 hosts:
   - name: server2
     tags: [tag2]
     username: user1
-    password_variable: myvar
-    password_variable_key: password
+    password:
+      _target_: airflow_pydantic.Variable
+      key: myvar
+      deserialize_json: true
