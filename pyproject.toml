@@ -11,7 +11,7 @@ authors = [{name = "the airflow-config authors", email = "t.paine154@gmail.com"}
 description = "Airflow utilities for configuration of many DAGs and DAG environments"
 readme = "README.md"
 license = { text = "Apache-2.0" }
-version = "1.10.9"
+version = "1.10.10"
 requires-python = ">=3.9"
 keywords = [
     "airflow",
@@ -83,7 +83,7 @@ Repository = "https://github.com/airflow-laminar/airflow-config"
 Homepage = "https://github.com/airflow-laminar/airflow-config"
 
 [tool.bumpversion]
-current_version = "1.10.9"
+current_version = "1.10.10"
 commit = true
 tag = true
 
