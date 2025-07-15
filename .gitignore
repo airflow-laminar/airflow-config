@@ -6,13 +6,10 @@ __pycache__/
 # C extensions
 *.a
 *.so
-<<<<<<< before updating
-=======
 *.obj
 *.dll
 *.exp
 *.lib
->>>>>>> after updating
 
 # Distribution / packaging
 .Python
@@ -145,12 +142,8 @@ index.md
 _template/labextension
 
 # JS
-<<<<<<< before updating
 js/*.tgz
-js/node_modules
-=======
 js/coverage
->>>>>>> after updating
 js/dist
 js/lib
 js/node_modules
