@@ -1,8 +1,8 @@
-from datetime import datetime, timedelta
+from datetime import timedelta
 
 import pytest
 from airflow_pydantic.migration import _airflow_3
-from pytz import timezone
+from pendulum import Timezone
 
 from airflow_config import load_config
 
@@ -15,7 +15,13 @@ def test_config_and_options():
     assert conf.default_args.email_on_retry is False
     assert conf.default_args.retries == 0
     assert conf.default_args.depends_on_past is False
-    assert conf.default_dag_args.start_date == datetime(2024, 1, 1, tzinfo=timezone("America/New_York"))
+    assert conf.default_dag_args.start_date.year == 2024
+    assert conf.default_dag_args.start_date.month == 1
+    assert conf.default_dag_args.start_date.day == 1
+    assert conf.default_dag_args.start_date.hour == 0
+    assert conf.default_dag_args.start_date.minute == 0
+    assert conf.default_dag_args.start_date.second == 0
+    assert conf.default_dag_args.start_date.tz == Timezone("America/New_York")
     assert conf.default_dag_args.catchup is False
     assert conf.default_dag_args.tags == ["utility", "test"]
 

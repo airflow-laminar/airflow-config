@@ -4,7 +4,12 @@ __pycache__/
 *$py.class
 
 # C extensions
+*.a
 *.so
+*.obj
+*.dll
+*.exp
+*.lib
 
 # Distribution / packaging
 .Python
@@ -138,14 +143,18 @@ _template/labextension
 
 # JS
 js/*.tgz
-js/node_modules
+js/coverage
 js/dist
+js/lib
+js/node_modules
 airflow_config/extension
 airflow_config/ui/static/
 
 # Jupyter
 .ipynb_checkpoints
 .autoversion
+airflow_config/nbextension
+airflow_config/labextension
 
 # Mac
 .DS_Store
