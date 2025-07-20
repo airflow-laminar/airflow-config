@@ -140,11 +140,6 @@ js/coverage
 js/dist
 js/lib
 js/node_modules
-<<<<<<< before updating
-airflow_config/extension
-airflow_config/ui/static/
-=======
->>>>>>> after updating
 
 # Jupyter
 .ipynb_checkpoints
@@ -157,3 +152,5 @@ airflow_config/labextension
 
 # Rust
 target
+
+airflow_config/ui/static/
