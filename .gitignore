@@ -140,6 +140,7 @@ js/coverage
 js/dist
 js/lib
 js/node_modules
+js/*.tgz
 
 # Jupyter
 .ipynb_checkpoints
