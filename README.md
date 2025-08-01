@@ -9,6 +9,7 @@
 
 ## Overview
 
+<<<<<<< before updating
 This library allows for `YAML`-driven configuration of Airflow, including DAGs, Operators, and declaratively defined DAGs (à la [dag-factory](https://github.com/astronomer/dag-factory)).
 It is built with [Pydantic](https://pydantic.dev), [Hydra](https://hydra.cc), and [OmegaConf](https://omegaconf.readthedocs.io/).
 
@@ -179,3 +180,7 @@ dags:
 ## License
 
 This software is licensed under the Apache 2.0 license. See the [LICENSE](LICENSE) file for details.
+=======
+> [!NOTE]
+> This library was generated using [copier](https://copier.readthedocs.io/en/stable/) from the [Base Python Project Template repository](https://github.com/python-project-templates/base).
+>>>>>>> after updating
