@@ -37,7 +37,7 @@
     "watch": "nodemon --watch src -e ts,less --exec \"pnpm build:debug\""
   },
   "dependencies": {
-    "@andypf/json-viewer": "^2.1.10"
+    "@andypf/json-viewer": "^2.2.0"
   },
   "devDependencies": {
     "@finos/perspective-esbuild-plugin": "^3.2.1",
