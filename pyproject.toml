@@ -49,8 +49,11 @@ develop = [
     "build",
     "bump-my-version",
     "check-manifest",
+    "codespell>=2.4,<2.5",
     "hatch-jupyter-builder",
     "hatchling",
+    "mdformat>=0.7.22,<0.8",
+    "mdformat-tables>=1",
     "pytest",
     "pytest-cov",
     "ruff",
@@ -86,6 +89,7 @@ Homepage = "https://github.com/airflow-laminar/airflow-config"
 current_version = "1.10.10"
 commit = true
 tag = true
+commit_args = "-s"
 
 [[tool.bumpversion.files]]
 filename = "airflow_config/__init__.py"
@@ -107,6 +111,7 @@ ignore = [
     ".copier-answers.yaml",
     "js/pnpm-lock.yaml",
     "Makefile",
+    ".vscode/*",
     "airflow_config/ui/static/**/*",
     "docs/**/*",
     "js/dist/**/*",
