@@ -96,7 +96,7 @@ This has a number of benefits:
 
 - Make changes without code changes, with static type validation
 - Make changes across any number of DAGs without having to copy-paste
-- Organize collections of DAGs into groups, e.g. via enviroment like `dev`, `prod`, etc
+- Organize collections of DAGs into groups, e.g. via environment like `dev`, `prod`, etc
 
 ## Features
 
@@ -109,7 +109,6 @@ This has a number of benefits:
   - [airflow-balancer](https://github.com/airflow-laminar/airflow-balancer)
   - [airflow-supervisor](https://github.com/airflow-laminar/airflow-supervisor)
   - or write your own pydantic-based model and get yaml-based configuration for free
-
 
 ## Configuration
 
@@ -166,7 +165,6 @@ dags:
     schedule: "0 4 * * *"
 ```
 
-
 ## Examples
 
 - [Basic 1](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#load-defaults-from-config)
@@ -174,7 +172,6 @@ dags:
 - [Specialize DAGs](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#specialize-individual-dags)
 - [Declarative DAGs (DAG Factory)](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#declarative-dags-dag-factory)
 - [Test Suite Setups](https://github.com/airflow-laminar/airflow-config/tree/main/airflow_config/tests/setups)
-
 
 ## License
 

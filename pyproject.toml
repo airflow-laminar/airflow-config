@@ -111,12 +111,8 @@ ignore = [
     ".copier-answers.yaml",
     "js/pnpm-lock.yaml",
     "Makefile",
-<<<<<<< before updating
-    "airflow_config/ui/static/**/*",
-=======
     ".vscode/*",
-    "airflow_config/extension/**/*",
->>>>>>> after updating
+    "airflow_config/ui/static/**/*",
     "docs/**/*",
     "js/dist/**/*",
 ]
