@@ -1,8 +1,5 @@
 [build-system]
-requires = [
-    "hatchling",
-    "hatch-jupyter-builder",
-]
+requires = ["hatchling", "hatch-js"]
 build-backend="hatchling.build"
 
 [project]
@@ -50,7 +47,7 @@ develop = [
     "bump-my-version",
     "check-manifest",
     "codespell>=2.4,<2.5",
-    "hatch-jupyter-builder",
+    "hatch-js",
     "hatchling",
     "mdformat>=0.7.22,<0.8",
     "mdformat-tables>=1",
@@ -153,22 +150,12 @@ exclude = [
     "/js"
 ]
 
-[tool.hatch.build.hooks.jupyter-builder]
-build-function = "hatch_jupyter_builder.npm_builder"
-ensured-targets = [
-    "airflow_config/ui/static/cdn/index.js",
-]
-skip-if-exists = [
-    "airflow_config/ui/static/cdn/index.js",
-]
-dependencies = [
-    "hatch-jupyter-builder",
-]
-
-[tool.hatch.build.hooks.jupyter-builder.build-kwargs]
+[tool.hatch.build.hooks.hatch-js]
 path = "js"
+install_cmd = "install"
 build_cmd = "build"
-npm = "pnpm"
+tool = "pnpm"
+targets = ["airflow_config/ui/static/cdn/index.js"]
 
 [tool.pytest.ini_options]
 addopts = ["-vvv", "--junitxml=junit.xml"]

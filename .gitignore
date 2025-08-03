@@ -141,10 +141,13 @@ js/dist
 js/lib
 js/node_modules
 js/*.tgz
+airflow_config/extension
 
 # Jupyter
 .ipynb_checkpoints
 .autoversion
+!airflow_config/extension/airflow_config.json
+!airflow_config/extension/install.json
 airflow_config/nbextension
 airflow_config/labextension
 
