@@ -64,6 +64,7 @@ develop = [
     "airflow-common-operators",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
+    "paramiko<4",
     # Standalone UI
     "email-validator>=2",
     "flask_appbuilder",
@@ -152,7 +153,6 @@ exclude = [
 
 [tool.hatch.build.hooks.hatch-js]
 path = "js"
-install_cmd = "install"
 build_cmd = "build"
 tool = "pnpm"
 targets = ["airflow_config/ui/static/cdn/index.js"]
