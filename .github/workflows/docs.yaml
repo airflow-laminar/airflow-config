@@ -13,7 +13,7 @@ jobs:
       - uses: actions-ext/python/setup@main
       - uses: actions-ext/node/setup@main
       - run: pip install .
-      - run: pip install .[develop]
+      - run: pip install "paramiko<4"
       - run: pip install yardang
       - run: yardang build
       - name: Deploy
