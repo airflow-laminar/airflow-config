@@ -64,6 +64,7 @@ develop = [
     "airflow-common-operators",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
+    "paramiko<4",
     # Standalone UI
     "email-validator>=2",
     "flask_appbuilder",
