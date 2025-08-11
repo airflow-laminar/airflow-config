@@ -28,9 +28,9 @@
   "scripts": {
     "build:debug": "node build.mjs --debug",
     "build": "node build.mjs",
-    "clean": "rm -rf dist ../airflow_config/ui/static",
-    "lint": "prettier --check \"src/**/*\" \"tests/**/*\" \"*.mjs\" \"*.json\"",
-    "fix": "prettier  --write \"src/**/*\" \"tests/**/*\" \"*.mjs\" \"*.json\"",
+    "clean": "rm -rf dist playwright-report ../airflow_config/ui/static",
+    "lint": "prettier --check \"src/**/*.{js,ts,jsx,tsx,less,css}\" \"tests/**/*\" \"*.mjs\" \"*.json\"",
+    "fix": "prettier  --write \"src/**/*.{js,ts,jsx,tsx,less,css}\" \"tests/**/*\" \"*.mjs\" \"*.json\"",
     "preinstall": "npx only-allow pnpm",
     "prepack": "npm run build",
     "test": "echo TODO",
