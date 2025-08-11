@@ -140,6 +140,8 @@ js/coverage
 js/dist
 js/lib
 js/node_modules
+js/test-results
+js/playwright-report
 js/*.tgz
 airflow_config/extension
 
