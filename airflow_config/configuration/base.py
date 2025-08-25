@@ -4,21 +4,16 @@ from copy import deepcopy
 from inspect import currentframe
 from logging import getLogger
 from pathlib import Path
-from typing import Any, Dict, Optional
+from typing import Dict, Optional
 
 from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
+from airflow_pydantic.airflow import NEW_SESSION, EmptyOperator, provide_session
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import AliasChoices, BaseModel as PydanticBaseModel, Field, model_validator
 
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
-
-try:
-    from airflow.utils.session import NEW_SESSION, provide_session
-except ImportError:
-    NEW_SESSION = Any
-    provide_session = lambda f: f  # noqa: E731
 
 __all__ = (
     "Configuration",
@@ -212,8 +207,6 @@ class Configuration(BaseModel):
 
     @provide_session
     def generate_in_mem(self, dir: Path | str = None, session=NEW_SESSION, placeholder_dag_id: str = "airflow-config-generate-dags"):
-        from airflow.operators.empty import EmptyOperator
-
         from ..dag import DAG
 
         cur_frame = currentframe().f_back

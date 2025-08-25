@@ -60,7 +60,7 @@ def test_create_dag_from_config():
         assert d.schedule_interval == "0 3 * * *"
 
 
-def test_create_dag_tasks_from_config():
+def test_create_dag_tasks_from_config(has_airflow):
     conf = load_config("config", "factory")
     try:
         from airflow_config import DAG
@@ -96,4 +96,4 @@ def test_create_dag_from_config_create_dag():
 def test_serialize_with_airflow_extras():
     conf = load_config("config", "factory")
     print(conf.model_dump_json(serialize_as_any=True))
-    assert '"operator":"airflow.providers.standard.operators.bash.BashOperator"' in conf.model_dump_json()
+    assert '"operator":"airflow_pydantic.airflow.BashOperator"' in conf.model_dump_json()

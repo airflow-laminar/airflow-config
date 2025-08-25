@@ -32,9 +32,6 @@ classifiers = [
 
 dependencies = [
     "airflow-pydantic>=1.2,<1.6",
-    "apache-airflow>=2.9,<3.1",
-    "apache-airflow-providers-ssh",
-    "apache-airflow-providers-standard",
     "colorlog",
     "hydra-core",
     "jinja2",
@@ -63,6 +60,8 @@ develop = [
     "airflow-supervisor>=1.7",
     "airflow-balancer>=0.6.0",
     "airflow-common-operators",
+    # Airflow
+    "apache-airflow>=2.9,<3.1",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
     "paramiko<4",
@@ -72,6 +71,12 @@ develop = [
     "flask",
     "fastapi",
     "uvicorn",
+]
+airflow = [
+    "apache-airflow>=2.9,<3.1",
+    "apache-airflow-providers-ssh",
+    "apache-airflow-providers-standard",
+    "paramiko<4",
 ]
 
 [project.entry-points."airflow.plugins"]

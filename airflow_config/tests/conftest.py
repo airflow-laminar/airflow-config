@@ -39,6 +39,14 @@ def airflow_config():
         yield
 
 
+@pytest.fixture()
+def has_airflow():
+    try:
+        from airflow.configuration import conf  # noqa: F401
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping tests")
+
+
 @pytest.fixture(scope="function", autouse=True)
 def configuration() -> Configuration:
     config = Configuration(

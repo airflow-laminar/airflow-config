@@ -31,9 +31,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.11"]
-        airflow: ["<3", ">=3"]
-        # TODO finish
-        # airflow: ["<3", ">=3", ""]
+        airflow: ["<3", ">=3", ""]
 
     steps:
     - uses: actions/checkout@v5

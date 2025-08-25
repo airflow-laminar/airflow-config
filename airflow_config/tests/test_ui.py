@@ -1,25 +1,20 @@
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
 from airflow_config.ui.functions import get_configs_from_yaml, get_yaml_files
 from airflow_config.ui.standalone import build_app, main
 
 
 class TestAirflowPlugin:
-    def test_plugin(self):
-        try:
-            from airflow_config.ui.airflow import AirflowConfigViewerPlugin, AirflowConfigViewerPluginView
-        except ImportError:
-            pytest.skip("Airflow is not installed, skipping UI tests")
+    def test_plugin(self, has_airflow):
+        from airflow_config.ui.airflow import AirflowConfigViewerPlugin, AirflowConfigViewerPluginView
 
         AirflowConfigViewerPluginView()
         AirflowConfigViewerPlugin()
 
 
 class TestPluginFunctions:
-    def test_plugin_functions_get_yamls(self):
+    def test_plugin_functions_get_yamls(self, has_airflow):
         root = Path(__file__).parent
         assert sorted(get_yaml_files(root)) == sorted(
             [
@@ -44,7 +39,7 @@ class TestPluginFunctions:
             ]
         )
 
-    def test_plugin_functions_get_configs(self):
+    def test_plugin_functions_get_configs(self, has_airflow):
         root = Path(__file__).parent
         val = get_configs_from_yaml(Path(root) / "setups/basic/config/basic.yaml", [])
         print("\n\n")
@@ -52,7 +47,7 @@ class TestPluginFunctions:
         print("\n\n")
         assert val == '{\n  "default_task_args": {\n    "owner": "test"\n  },\n  "default_dag_args": {},\n  "dags": {}\n}'
 
-    def test_plugin_functions_get_configs_backtick_bug(self):
+    def test_plugin_functions_get_configs_backtick_bug(self, has_airflow):
         root = Path(__file__).parent
         val = get_configs_from_yaml(Path(root) / "setups/factory/config/factory.yaml", [])
         print("\n\n")
@@ -66,16 +61,16 @@ class TestPluginFunctions:
 
 
 class TestStandaloneUI:
-    def test_standalone_ui(self):
+    def test_standalone_ui(self, has_airflow):
         # Test the build_app function
         app = build_app()
         assert app is not None
 
-    def test_launch(self):
+    def test_launch(self, has_airflow):
         # Test the main function
         with patch("airflow_config.ui.standalone.run") as mock_run:
             main()
             mock_run.assert_called_once()
 
-    def test_main(self):
+    def test_main(self, has_airflow):
         import airflow_config.ui.standalone.__main__  # noqa: F401

@@ -2,7 +2,7 @@ from functools import singledispatch
 from inspect import currentframe
 from typing import Any, Optional
 
-from airflow.models.dag import DAG as BaseDag
+from airflow_pydantic.airflow import DAG as BaseDag
 
 from .configuration.base import Configuration
 from .utils import generate_dag_id
