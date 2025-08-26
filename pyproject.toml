@@ -59,7 +59,7 @@ develop = [
     "airflow-priority>=1.5",
     "airflow-supervisor>=1.7",
     "airflow-balancer>=0.6.0",
-    "airflow-common-operators",
+    "airflow-common",
     # Airflow
     "apache-airflow>=2.9,<3.1",
     "apache-airflow-providers-ssh",
