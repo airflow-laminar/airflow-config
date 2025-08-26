@@ -23,6 +23,5 @@ dags:
     schedule: "0 4 * * *"
     tasks:
       task_1:
-        _target_: airflow_config.BashOperator
-        operator: airflow.providers.standard.operators.bash.BashOperator
+        _target_: airflow_config.BashTask
         bash_command: "echo \"1\""

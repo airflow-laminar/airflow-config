@@ -3,6 +3,7 @@ from pathlib import Path
 from tempfile import TemporaryDirectory
 
 import pytest
+from airflow_pydantic.migration import _airflow_3
 from jinja2 import DictLoader, Environment
 
 from airflow_config import Configuration, DagArgs, TaskArgs
@@ -37,6 +38,20 @@ def airflow_config():
             # Ignore
             ...
         yield
+
+
+@pytest.fixture()
+def has_airflow():
+    try:
+        from airflow.configuration import conf  # noqa: F401
+    except ImportError:
+        pytest.skip("Airflow is not installed, skipping tests")
+
+
+@pytest.fixture()
+def has_airflow_2():
+    if _airflow_3() is not False:
+        pytest.skip("Airflow 2 is not installed, skipping tests")
 
 
 @pytest.fixture(scope="function", autouse=True)

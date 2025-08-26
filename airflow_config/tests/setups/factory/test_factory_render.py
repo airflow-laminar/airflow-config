@@ -269,7 +269,7 @@ def test_generate_type_override():
         assert (Path(tmp_dir) / "example_dag2.py").read_text() == RENDERED_DAG_TYPE_OVERRIDE2
 
 
-def test_render_dynamic_gen():
+def test_render_dynamic_gen(has_airflow):
     conf = load_config("config", "factory")
     assert conf.default_dag_args.start_date is not None
     conf.generate_in_mem()

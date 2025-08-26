@@ -19,7 +19,7 @@ default_dag_args:
   tags: ["utility", "test"]
 
 default_operator_args:
-  - operator:  airflow_config.BashOperator
+  - operator:  airflow_config.BashTask
     cwd: /tmp
   - operator:  airflow_pydantic.PythonOperator
     show_return_value_in_logs: true
@@ -32,7 +32,7 @@ dags:
     schedule: "0 3 * * *"
     tasks:
       task_1:
-        _target_: airflow_config.BashOperator
+        _target_: airflow_config.BashTask
         bash_command: "echo `pwd`"
       task_2:
         _target_: airflow_config.PythonOperator
@@ -44,14 +44,11 @@ dags:
     schedule: "0 4 * * *"
     tasks:
       task_1:
-        _target_: airflow_config.BashOperator
-        operator: airflow.providers.standard.operators.bash.BashOperator
+        _target_: airflow_config.BashTask
         bash_command: "echo \"1\""
       task_2:
-        _target_: airflow_config.BashOperator
-        operator: airflow.providers.standard.operators.bash.BashOperator
+        _target_: airflow_config.BashTask
         bash_command: "echo 2"
       task_3:
-        _target_: airflow_config.BashOperator
-        operator: airflow.providers.standard.operators.bash.BashOperator
+        _target_: airflow_config.BashTask
         bash_command: "echo 3"

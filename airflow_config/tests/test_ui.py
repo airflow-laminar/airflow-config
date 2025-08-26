@@ -1,25 +1,19 @@
 from pathlib import Path
 from unittest.mock import patch
 
-import pytest
-
-from airflow_config.ui.functions import get_configs_from_yaml, get_yaml_files
-from airflow_config.ui.standalone import build_app, main
-
 
 class TestAirflowPlugin:
-    def test_plugin(self):
-        try:
-            from airflow_config.ui.airflow import AirflowConfigViewerPlugin, AirflowConfigViewerPluginView
-        except ImportError:
-            pytest.skip("Airflow is not installed, skipping UI tests")
+    def test_plugin(self, has_airflow_2):
+        from airflow_config.ui.airflow import AirflowConfigViewerPlugin, AirflowConfigViewerPluginView
 
         AirflowConfigViewerPluginView()
         AirflowConfigViewerPlugin()
 
 
 class TestPluginFunctions:
-    def test_plugin_functions_get_yamls(self):
+    def test_plugin_functions_get_yamls(self, has_airflow):
+        from airflow_config.ui.functions import get_yaml_files
+
         root = Path(__file__).parent
         assert sorted(get_yaml_files(root)) == sorted(
             [
@@ -44,7 +38,9 @@ class TestPluginFunctions:
             ]
         )
 
-    def test_plugin_functions_get_configs(self):
+    def test_plugin_functions_get_configs(self, has_airflow):
+        from airflow_config.ui.functions import get_configs_from_yaml
+
         root = Path(__file__).parent
         val = get_configs_from_yaml(Path(root) / "setups/basic/config/basic.yaml", [])
         print("\n\n")
@@ -52,7 +48,9 @@ class TestPluginFunctions:
         print("\n\n")
         assert val == '{\n  "default_task_args": {\n    "owner": "test"\n  },\n  "default_dag_args": {},\n  "dags": {}\n}'
 
-    def test_plugin_functions_get_configs_backtick_bug(self):
+    def test_plugin_functions_get_configs_backtick_bug(self, has_airflow):
+        from airflow_config.ui.functions import get_configs_from_yaml
+
         root = Path(__file__).parent
         val = get_configs_from_yaml(Path(root) / "setups/factory/config/factory.yaml", [])
         print("\n\n")
@@ -61,21 +59,25 @@ class TestPluginFunctions:
 
         assert (
             val
-            == '{\n  "default_task_args": {\n    "owner": "test",\n    "email": [\n      "myemail@myemail.com"\n    ],\n    "email_on_failure": false,\n    "email_on_retry": false,\n    "retries": 0,\n    "depends_on_past": false\n  },\n  "default_dag_args": {\n    "schedule": "PT1H",\n    "start_date": "2024-01-01T00:00:00",\n    "catchup": false,\n    "tags": [\n      "utility",\n      "test"\n    ]\n  },\n  "dags": {\n    "example_dag": {\n      "description": "this is an example dag",\n      "schedule": "0 3 * * *",\n      "start_date": "2024-01-01T00:00:00",\n      "default_args": {\n        "owner": "custom_owner",\n        "email": [\n          "myemail@myemail.com"\n        ],\n        "email_on_failure": false,\n        "email_on_retry": false,\n        "retries": 0,\n        "depends_on_past": false\n      },\n      "catchup": false,\n      "tags": [\n        "utility",\n        "test"\n      ],\n      "dag_id": "example_dag",\n      "tasks": {\n        "task_1": {\n          "do_xcom_push": true,\n          "ssh_hook": {\n            "remote_host": "test",\n            "username": "test",\n            "port": 22,\n            "cmd_timeout": 10,\n            "keepalive_interval": 30,\n            "banner_timeout": 30.0\n          },\n          "ssh_conn_id": "test",\n          "command": "test",\n          "cmd_timeout": 10,\n          "environment": {\n            "test": "test"\n          },\n          "get_pty": true,\n          "task_id": "task_1"\n        },\n        "task_2": {\n          "python_callable": "airflow_config.tests.conftest.should_short_circuit",\n          "task_id": "task_2",\n          "dependencies": [\n            "task_1"\n          ]\n        },\n        "task_3": {\n          "bash_command": "echo \'1\'",\n          "task_id": "task_3",\n          "dependencies": [\n            "task_2"\n          ]\n        },\n        "task_4": {\n          "bash_command": "echo `pwd`",\n          "task_id": "task_4",\n          "dependencies": [\n            "task_3"\n          ]\n        },\n        "task_5": {\n          "python_callable": "airflow_config.tests.setups.utils.print_hello.print_hello",\n          "op_args": [],\n          "op_kwargs": {},\n          "templates_dict": {},\n          "templates_exts": null,\n          "show_return_value_in_logs": true,\n          "task_id": "task_5",\n          "dependencies": [\n            "task_4"\n          ]\n        }\n      }\n    },\n    "example_dag2": {\n      "schedule": "0 4 * * *",\n      "start_date": "2024-01-01T00:00:00",\n      "default_args": {\n        "owner": "custom_owner2",\n        "email": [\n          "myemail@myemail.com"\n        ],\n        "email_on_failure": false,\n        "email_on_retry": false,\n        "retries": 0,\n        "depends_on_past": false\n      },\n      "catchup": false,\n      "tags": [\n        "utility",\n        "test"\n      ],\n      "dag_id": "example_dag2",\n      "tasks": {\n        "task_1": {\n          "bash_command": "echo \\"1\\"",\n          "task_id": "task_1",\n          "operator": "airflow.providers.standard.operators.bash.BashOperator"\n        },\n        "task_2": {\n          "bash_command": "echo 2",\n          "task_id": "task_2",\n          "operator": "airflow.providers.standard.operators.bash.BashOperator",\n          "dependencies": [\n            "task_1"\n          ]\n        },\n        "task_3": {\n          "bash_command": "echo 3",\n          "task_id": "task_3",\n          "operator": "airflow.providers.standard.operators.bash.BashOperator",\n          "dependencies": [\n            "task_1"\n          ]\n        }\n      }\n    },\n    "example_dag3": {\n      "schedule": "0 5 * * *",\n      "start_date": "2024-01-01T00:00:00",\n      "default_args": {\n        "owner": "test",\n        "email": [\n          "myemail@myemail.com"\n        ],\n        "email_on_failure": false,\n        "email_on_retry": false,\n        "retries": 0,\n        "depends_on_past": false\n      },\n      "catchup": false,\n      "tags": [\n        "utility",\n        "test"\n      ],\n      "dag_id": "example_dag3"\n    }\n  }\n}'
+            == '{\n  "default_task_args": {\n    "owner": "test",\n    "email": [\n      "myemail@myemail.com"\n    ],\n    "email_on_failure": false,\n    "email_on_retry": false,\n    "retries": 0,\n    "depends_on_past": false\n  },\n  "default_dag_args": {\n    "schedule": "PT1H",\n    "start_date": "2024-01-01T00:00:00",\n    "catchup": false,\n    "tags": [\n      "utility",\n      "test"\n    ]\n  },\n  "dags": {\n    "example_dag": {\n      "description": "this is an example dag",\n      "schedule": "0 3 * * *",\n      "start_date": "2024-01-01T00:00:00",\n      "default_args": {\n        "owner": "custom_owner",\n        "email": [\n          "myemail@myemail.com"\n        ],\n        "email_on_failure": false,\n        "email_on_retry": false,\n        "retries": 0,\n        "depends_on_past": false\n      },\n      "catchup": false,\n      "tags": [\n        "utility",\n        "test"\n      ],\n      "dag_id": "example_dag",\n      "tasks": {\n        "task_1": {\n          "do_xcom_push": true,\n          "ssh_hook": {\n            "remote_host": "test",\n            "username": "test",\n            "port": 22,\n            "cmd_timeout": 10,\n            "keepalive_interval": 30,\n            "banner_timeout": 30.0\n          },\n          "ssh_conn_id": "test",\n          "command": "test",\n          "cmd_timeout": 10,\n          "environment": {\n            "test": "test"\n          },\n          "get_pty": true,\n          "task_id": "task_1"\n        },\n        "task_2": {\n          "python_callable": "airflow_config.tests.conftest.should_short_circuit",\n          "task_id": "task_2",\n          "dependencies": [\n            "task_1"\n          ]\n        },\n        "task_3": {\n          "bash_command": "echo \'1\'",\n          "task_id": "task_3",\n          "dependencies": [\n            "task_2"\n          ]\n        },\n        "task_4": {\n          "bash_command": "echo `pwd`",\n          "task_id": "task_4",\n          "dependencies": [\n            "task_3"\n          ]\n        },\n        "task_5": {\n          "python_callable": "airflow_config.tests.setups.utils.print_hello.print_hello",\n          "op_args": [],\n          "op_kwargs": {},\n          "templates_dict": {},\n          "templates_exts": null,\n          "show_return_value_in_logs": true,\n          "task_id": "task_5",\n          "dependencies": [\n            "task_4"\n          ]\n        }\n      }\n    },\n    "example_dag2": {\n      "schedule": "0 4 * * *",\n      "start_date": "2024-01-01T00:00:00",\n      "default_args": {\n        "owner": "custom_owner2",\n        "email": [\n          "myemail@myemail.com"\n        ],\n        "email_on_failure": false,\n        "email_on_retry": false,\n        "retries": 0,\n        "depends_on_past": false\n      },\n      "catchup": false,\n      "tags": [\n        "utility",\n        "test"\n      ],\n      "dag_id": "example_dag2",\n      "tasks": {\n        "task_1": {\n          "bash_command": "echo \\"1\\"",\n          "task_id": "task_1"\n        },\n        "task_2": {\n          "bash_command": "echo 2",\n          "task_id": "task_2",\n          "dependencies": [\n            "task_1"\n          ]\n        },\n        "task_3": {\n          "bash_command": "echo 3",\n          "task_id": "task_3",\n          "dependencies": [\n            "task_1"\n          ]\n        }\n      }\n    },\n    "example_dag3": {\n      "schedule": "0 5 * * *",\n      "start_date": "2024-01-01T00:00:00",\n      "default_args": {\n        "owner": "test",\n        "email": [\n          "myemail@myemail.com"\n        ],\n        "email_on_failure": false,\n        "email_on_retry": false,\n        "retries": 0,\n        "depends_on_past": false\n      },\n      "catchup": false,\n      "tags": [\n        "utility",\n        "test"\n      ],\n      "dag_id": "example_dag3"\n    }\n  }\n}'
         )
 
 
 class TestStandaloneUI:
-    def test_standalone_ui(self):
+    def test_standalone_ui(self, has_airflow_2):
+        from airflow_config.ui.standalone import build_app
+
         # Test the build_app function
         app = build_app()
         assert app is not None
 
-    def test_launch(self):
+    def test_launch(self, has_airflow_2):
+        from airflow_config.ui.standalone import main
+
         # Test the main function
         with patch("airflow_config.ui.standalone.run") as mock_run:
             main()
             mock_run.assert_called_once()
 
-    def test_main(self):
+    def test_main(self, has_airflow_2):
         import airflow_config.ui.standalone.__main__  # noqa: F401
