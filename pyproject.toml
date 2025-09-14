@@ -67,7 +67,7 @@ develop = [
     "paramiko<4",
     # Standalone UI
     "email-validator>=2",
-    "flask_appbuilder",
+    "flask_appbuilder<5",
     "flask",
     "fastapi",
     "uvicorn",
