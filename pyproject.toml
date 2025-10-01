@@ -64,7 +64,7 @@ develop = [
     "apache-airflow>=2.9,<3.1",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
-    "paramiko<4",
+    "paramiko<5",
     # Standalone UI
     "email-validator>=2",
     "flask_appbuilder",
@@ -76,7 +76,7 @@ airflow = [
     "apache-airflow>=2.9,<3.1",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
-    "paramiko<4",
+    "paramiko<5",
 ]
 
 [project.entry-points."airflow.plugins"]
