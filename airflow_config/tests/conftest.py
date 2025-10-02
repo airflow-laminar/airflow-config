@@ -42,9 +42,7 @@ def airflow_config():
 
 @pytest.fixture()
 def has_airflow():
-    try:
-        from airflow.configuration import conf  # noqa: F401
-    except ImportError:
+    if _airflow_3() is None:
         pytest.skip("Airflow is not installed, skipping tests")
 
 
