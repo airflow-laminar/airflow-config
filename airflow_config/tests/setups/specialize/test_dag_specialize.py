@@ -1,6 +1,5 @@
 from datetime import datetime, timedelta
 
-import pytest
 from airflow_pydantic.migration import _airflow_3
 
 from airflow_config import load_config
@@ -24,13 +23,10 @@ def test_config_and_options():
     assert str(conf.model_dump_json(indent=2, serialize_as_any=True))
 
 
-def test_create_dag_from_config():
-    try:
-        from airflow.timetables.interval import DeltaDataIntervalTimetable
+def test_create_dag_from_config(has_airflow):
+    from airflow.timetables.interval import DeltaDataIntervalTimetable
 
-        from airflow_config import DAG, load_config
-    except ImportError:
-        pytest.skip("Airflow is not installed, skipping timetable tests")
+    from airflow_config import DAG, load_config
 
     conf = load_config("config", "specialize")
     d = DAG(dag_id="testdag", config=conf)
@@ -93,11 +89,8 @@ def test_create_dag_from_config():
     assert set(d.tags) == set(["utility", "test"])
 
 
-def test_create_dag():
-    try:
-        from airflow_config import create_dag
-    except ImportError:
-        pytest.skip("Airflow is not installed, skipping timetable tests")
+def test_create_dag(has_airflow):
+    from airflow_config import create_dag
 
     d = create_dag("config", "specialize")
     assert d.dag_id == "tests-setups-specialize-test-dag-specialize"

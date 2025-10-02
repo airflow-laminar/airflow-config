@@ -1,10 +1,9 @@
 from datetime import timedelta
 
-import pytest
 from airflow_pydantic.migration import _airflow_3
 from pendulum import Timezone
 
-from airflow_config import load_config
+from airflow_config import DAG, load_config
 
 
 def test_config_and_options():
@@ -26,14 +25,9 @@ def test_config_and_options():
     assert conf.default_dag_args.tags == ["utility", "test"]
 
 
-def test_create_dag_from_config():
+def test_create_dag_from_config(has_airflow):
     conf = load_config("config", "options")
-    try:
-        from airflow.timetables.interval import DeltaDataIntervalTimetable
-
-        from airflow_config import DAG
-    except ImportError:
-        pytest.skip("Airflow is not installed, skipping timetable tests")
+    from airflow.timetables.interval import DeltaDataIntervalTimetable
 
     d = DAG(dag_id="testdag", config=conf)
     assert d.default_args["owner"] == "test"
@@ -57,11 +51,8 @@ def test_create_dag_from_config():
     assert set(d.tags) == set(["utility", "test"])
 
 
-def test_create_dag_from_config_create_dag():
-    try:
-        from airflow_config import create_dag
-    except ImportError:
-        pytest.skip("Airflow is not installed, skipping timetable tests")
+def test_create_dag_from_config_create_dag(has_airflow):
+    from airflow_config import create_dag
 
     d = create_dag("config", "options")
     assert d.dag_id == "tests-setups-basic-test-options"

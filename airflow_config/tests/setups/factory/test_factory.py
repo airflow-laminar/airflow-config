@@ -22,15 +22,12 @@ def test_config_and_options():
     assert conf.dags["example_dag"].default_args.owner == "custom_owner"
 
 
-def test_create_dag_from_config():
+def test_create_dag_from_config(has_airflow):
     conf = load_config("config", "factory")
 
-    try:
-        from airflow.timetables.interval import DeltaDataIntervalTimetable
+    from airflow.timetables.interval import DeltaDataIntervalTimetable
 
-        from airflow_config import DAG
-    except ImportError:
-        pytest.skip("Airflow is not installed, skipping timetable tests")
+    from airflow_config import DAG
 
     d = DAG(dag_id="testdag", config=conf)
     assert d.default_args["owner"] == "test"
