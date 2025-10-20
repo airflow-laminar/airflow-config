@@ -8,8 +8,7 @@ from airflow_config import load_config
 def test_config_and_options():
     with pools():
         conf = load_config("config", "complex")
-
-        assert str(conf.model_dump_json(exclude_unset=True, indent=2, serialize_as_any=True))
+        assert str(conf.model_dump_json(exclude_unset=True, indent=2))
 
 
 def test_config_null_schedule():

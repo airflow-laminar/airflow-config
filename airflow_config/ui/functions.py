@@ -25,7 +25,7 @@ def get_configs_from_yaml(yaml: str, overrides: list[str]) -> list[str]:
         return ""
     if not cfg:
         return ""
-    return str(cfg.model_dump_json(exclude_unset=True, indent=2, serialize_as_any=True))
+    return str(cfg.model_dump_json(exclude_unset=True, indent=2))
 
 
 def get_yaml_files(dags_folder: str) -> list[Path]:
