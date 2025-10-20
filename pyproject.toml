@@ -36,7 +36,7 @@ dependencies = [
     "hydra-core",
     "jinja2",
     "omegaconf",
-    "pydantic>=2",
+    "pydantic>=2,<2.12",
 ]
 
 [project.optional-dependencies]
@@ -60,11 +60,6 @@ develop = [
     "airflow-supervisor>=1.7",
     "airflow-balancer>=0.6.0",
     "airflow-common",
-    # Airflow
-    "apache-airflow>=2.9,<3.1",
-    "apache-airflow-providers-ssh",
-    "apache-airflow-providers-standard",
-    "paramiko<4",
     # Standalone UI
     "email-validator>=2",
     "flask_appbuilder",
@@ -73,7 +68,13 @@ develop = [
     "uvicorn",
 ]
 airflow = [
-    "apache-airflow>=2.9,<3.1",
+    "apache-airflow>=2.9,<3",
+    "apache-airflow-providers-ssh",
+    "apache-airflow-providers-standard",
+    "paramiko<4",
+]
+airflow3 = [
+    "apache-airflow>=3,<3.2",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
     "paramiko<4",

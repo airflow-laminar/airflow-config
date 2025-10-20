@@ -194,8 +194,6 @@ class Configuration(BaseModel):
         doc_md = dag_kwargs.get("doc_md", "")
         if dag_kwargs.get("dag_id", None) in self.dags and self.dags[dag_kwargs["dag_id"]].tasks:
             doc_md += f"\n# Code Equivalent\n```python\n{self.dags[dag_kwargs['dag_id']].render()}\n```"
-            # doc_md += f"\n# DAG Config\n```json\n{self.dags[dag_kwargs['dag_id']].model_dump_json(indent=2, serialize_as_any=True)}\n```"
-        # doc_md += f"\n# Global Config\n```json\n{self.model_dump_json(indent=2, serialize_as_any=True)}\n```"
         if doc_md:
             dag_kwargs["doc_md"] = doc_md
 
