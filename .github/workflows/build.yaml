@@ -75,28 +75,28 @@ jobs:
       with:
         name: test-results-${{ matrix.os }}-${{ matrix.python-version }}
         path: '**/junit.xml'
-      if: matrix.airflow == '<3'
+      if: matrix.airflow == '2'
 
     - name: Publish Unit Test Results
       uses: EnricoMi/publish-unit-test-result-action@v2
       with:
         files: '**/junit.xml'
-      if: matrix.airflow == '<3'
+      if: matrix.airflow == '2'
 
     - name: Upload coverage
       uses: codecov/codecov-action@v5
       with:
         token: ${{ secrets.CODECOV_TOKEN }}
-      if: matrix.airflow == '<3'
+      if: matrix.airflow == '2'
 
     - name: Make dist
       run: make dist
-      if: matrix.airflow == '<3'
+      if: matrix.airflow == '2'
 
     - uses: actions/upload-artifact@v4
       with:
         name: dist-${{matrix.os}}
         path: dist
-      if: matrix.airflow == '<3'
+      if: matrix.airflow == '2'
 
 

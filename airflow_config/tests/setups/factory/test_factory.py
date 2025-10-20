@@ -92,5 +92,7 @@ def test_create_dag_from_config_create_dag():
 
 def test_serialize_with_airflow_extras():
     conf = load_config("config", "factory")
-    print(conf.model_dump_json(serialize_as_any=True))
+    ssh_task = conf.dags["example_dag"].tasks["task_1"]
+    print(ssh_task.model_dump_json())
+    print(conf.model_dump_json())
     assert 'BashOperator"' in conf.model_dump_json()

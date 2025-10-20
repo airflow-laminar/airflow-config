@@ -10,7 +10,7 @@ from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
 from airflow_pydantic.airflow import NEW_SESSION, EmptyOperator, provide_session
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
-from pydantic import AliasChoices, BaseModel as PydanticBaseModel, Field, model_validator
+from pydantic import AliasChoices, BaseModel as PydanticBaseModel, Field, SerializeAsAny, model_validator
 
 from airflow_config.exceptions import ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
@@ -36,7 +36,7 @@ class Configuration(BaseModel):
     )
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
-    dags: Optional[Dict[str, Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+    dags: Optional[Dict[str, SerializeAsAny[Dag]]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
     # Templates:
     templates: Optional[_Templates] = Field(default_factory=_Templates, description="Templates for DAGs and Tasks")
@@ -194,8 +194,6 @@ class Configuration(BaseModel):
         doc_md = dag_kwargs.get("doc_md", "")
         if dag_kwargs.get("dag_id", None) in self.dags and self.dags[dag_kwargs["dag_id"]].tasks:
             doc_md += f"\n# Code Equivalent\n```python\n{self.dags[dag_kwargs['dag_id']].render()}\n```"
-            # doc_md += f"\n# DAG Config\n```json\n{self.dags[dag_kwargs['dag_id']].model_dump_json(indent=2, serialize_as_any=True)}\n```"
-        # doc_md += f"\n# Global Config\n```json\n{self.model_dump_json(indent=2, serialize_as_any=True)}\n```"
         if doc_md:
             dag_kwargs["doc_md"] = doc_md
 
