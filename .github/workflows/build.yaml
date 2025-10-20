@@ -31,7 +31,7 @@ jobs:
       matrix:
         os: [ubuntu-latest]
         python-version: ["3.11"]
-        airflow: ["<3", ">=3", ""]
+        airflow: ["2", "3", ""]
 
     steps:
     - uses: actions/checkout@v5
@@ -47,13 +47,13 @@ jobs:
     - name: Install dependencies
       run: make develop
 
-    - name: Install Airflow
-      run: uv pip install "apache-airflow${{ matrix.airflow }}"
-      if: ${{ matrix.airflow != '' }}
+    - name: Install Airflow 2.x
+      run: uv pip install -e .[airflow]
+      if: ${{ matrix.airflow == '2' }}
 
-    - name: Uninstall Airflow
-      run: uv pip uninstall apache-airflow
-      if: ${{ matrix.airflow == '' }}
+    - name: Install Airflow 3.x
+      run: uv pip install -e .[airflow3]
+      if: ${{ matrix.airflow == '3' }}
 
     - name: Lint
       run: make lint
