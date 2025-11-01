@@ -69,7 +69,7 @@ develop = [
     "uvicorn",
 ]
 airflow = [
-    "apache-airflow>=2.9,<3",
+    "apache-airflow>=2.9,<4",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
     "paramiko<4",
