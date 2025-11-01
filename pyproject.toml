@@ -60,7 +60,7 @@ develop = [
     "airflow-supervisor>=1.7",
     "airflow-balancer>=0.6.0",
     "airflow-common",
-    "structlog<25.5.0",
+    "structlog<25.6.0",
     # Standalone UI
     "email-validator>=2",
     "flask_appbuilder",
