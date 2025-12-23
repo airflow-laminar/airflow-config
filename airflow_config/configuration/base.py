@@ -7,7 +7,7 @@ from pathlib import Path
 from typing import Dict, Optional
 
 from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
-from airflow_pydantic.airflow import NEW_SESSION, EmptyOperator, provide_session
+from airflow_pydantic.airflow import EmptyOperator
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import AliasChoices, BaseModel as PydanticBaseModel, Field, SerializeAsAny, model_validator
@@ -203,8 +203,7 @@ class Configuration(BaseModel):
             # Instantiate self against the dag
             self.dags[dag.dag_id].instantiate(dag=dag)
 
-    @provide_session
-    def generate_in_mem(self, dir: Path | str = None, session=NEW_SESSION, placeholder_dag_id: str = "airflow-config-generate-dags"):
+    def generate_in_mem(self, dir: Path | str = None, placeholder_dag_id: str = "airflow-config-generate-dags"):
         from ..dag import DAG
 
         cur_frame = currentframe().f_back
@@ -229,36 +228,7 @@ class Configuration(BaseModel):
                 _log.info(f"Updating DAG fileloc from {dag_instance.fileloc} to {str(dag_path)}")
                 dag_instance.fileloc = str(dag_path)
                 cur_frame.f_globals[dag_id] = dag_instance
-
-                # Swap out DagCode
-                # First, grab DAG code
-                # _log.info(f"Updating DagModel for {dag_id} in memory")
-                # query = select(DagModel).where(DagModel.dag_id == dag_id)
-                # query = with_row_locks(query, of=DagModel, session=session)
-                # orm_dag: DagModel = session.scalars(query).unique().first()
-
-                # if not orm_dag:
-                #     _log.info(f"No existing DagModel found for {dag_id}, check logs!")
-                #     continue
-                # else:
-                #     orm_dag.fileloc = str(dag_path)
-                #     orm_dag.last_parsed_time = timezone.utcnow()
-                #     session.merge(orm_dag)
-
-                # _log.info(f"Updating DagCode for {dag_id} in memory")
-                # dag_code = DagCode(full_filepath=str(dag_path), source_code=rendered)
-                # _log.info(f"Querying DB for {dag_code.fileloc_hash}")
-                # existing_orm_dag_code = session.scalars(select(DagCode).where(DagCode.fileloc_hash == dag_code.fileloc_hash)).first()
-                # if existing_orm_dag_code:
-                #     _log.info(f"Updating existing DagCode for {dag_id} in memory")
-                #     existing_orm_dag_code.last_updated = timezone.utcnow()
-                #     existing_orm_dag_code.source_code = rendered
-                #     session.merge(existing_orm_dag_code)
-                # else:
-                #     _log.info(f"Adding new DagCode for {dag_id} in memory")
-                #     session.add(dag_code)
                 _log.info(f"Adding DAG {dag_id} complete")
-        session.commit()
 
     def generate(self, dir: Path | str = None):
         dir = dir or Path.cwd()
