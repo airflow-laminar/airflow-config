@@ -255,7 +255,7 @@
 <a class="reference external" href="https://pypi.python.org/pypi/airflow-config"><img alt="PyPI" src="https://img.shields.io/pypi/v/airflow-config.svg" /></a></p>
 <section id="overview">
 <h2>Overview<a class="headerlink" href="#overview" title="Link to this heading">¶</a></h2>
-<p>This library allows for <code class="docutils literal notranslate"><span class="pre">YAML</span></code>-driven configuration of Airflow, including DAGs, Operators, and declaratively defined DAGs (à la <a class="reference external" href="https://github.com/astronomer/dag-factory">dag-factory</a>).
+<p>This library allows for <code class="docutils literal notranslate"><span class="pre">YAML</span></code>-driven configuration of Airflow, including DAGs, Operators, and declaratively defined DAGs.
 It is built with <a class="reference external" href="https://pydantic.dev">Pydantic</a>, <a class="reference external" href="https://hydra.cc">Hydra</a>, and <a class="reference external" href="https://omegaconf.readthedocs.io/">OmegaConf</a>.</p>
 <p>Consider the following basic DAG:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span>
@@ -415,6 +415,15 @@ It is built with <a class="reference external" href="https://pydantic.dev">Pydan
 <li><p><a class="reference external" href="https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#specialize-individual-dags">Specialize DAGs</a></p></li>
 <li><p><a class="reference external" href="https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#declarative-dags-dag-factory">Declarative DAGs (DAG Factory)</a></p></li>
 <li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-config/tree/main/airflow_config/tests/setups">Test Suite Setups</a></p></li>
+</ul>
+</section>
+<section id="ecosystem">
+<h2>Ecosystem<a class="headerlink" href="#ecosystem" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">airflow-config</span></code> is very similar to <a class="reference external" href="https://github.com/astronomer/dag-factory">dag-factory</a>, but with the following benefits:</p>
+<ul class="simple">
+<li><p>Generation of Python files containing DAG code, not just the DAG objects themselves</p></li>
+<li><p>Hydra/OmegaConf for composition/interpolation of YAMLs</p></li>
+<li><p>Pydantic-based type validation</p></li>
 </ul>
 </section>
 <section id="license">
