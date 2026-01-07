@@ -9,7 +9,7 @@
 
 ## Overview
 
-This library allows for `YAML`-driven configuration of Airflow, including DAGs, Operators, and declaratively defined DAGs (à la [dag-factory](https://github.com/astronomer/dag-factory)).
+This library allows for `YAML`-driven configuration of Airflow, including DAGs, Operators, and declaratively defined DAGs.
 It is built with [Pydantic](https://pydantic.dev), [Hydra](https://hydra.cc), and [OmegaConf](https://omegaconf.readthedocs.io/).
 
 Consider the following basic DAG:
@@ -172,6 +172,14 @@ dags:
 - [Specialize DAGs](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#specialize-individual-dags)
 - [Declarative DAGs (DAG Factory)](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#declarative-dags-dag-factory)
 - [Test Suite Setups](https://github.com/airflow-laminar/airflow-config/tree/main/airflow_config/tests/setups)
+
+## Ecosystem
+
+`airflow-config` is very similar to [dag-factory](https://github.com/astronomer/dag-factory), but with the following benefits:
+
+- Generation of Python files containing DAG code, not just the DAG objects themselves
+- Hydra/OmegaConf for composition/interpolation of YAMLs
+- Pydantic-based type validation
 
 ## License
 
