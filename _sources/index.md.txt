@@ -6,6 +6,8 @@ hidden: true
 ---
 
 
+docs/src/getting-started.md
+
 docs/src/examples.md
 
 docs/src/API.md
@@ -123,7 +125,20 @@ This has a number of benefits:
   - [airflow-priority](https://github.com/airflow-laminar/airflow-priority)
   - [airflow-balancer](https://github.com/airflow-laminar/airflow-balancer)
   - [airflow-supervisor](https://github.com/airflow-laminar/airflow-supervisor)
+  - [airflow-common](https://github.com/airflow-laminar/airflow-common)
   - or write your own pydantic-based model and get yaml-based configuration for free
+
+## The airflow-laminar Ecosystem
+
+`airflow-config` is the configuration backbone of the [airflow-laminar](https://github.com/airflow-laminar) ecosystem:
+
+| Library                                                                     | Description                                                                                                                                        |
+| --------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------- |
+| [airflow-pydantic](https://github.com/airflow-laminar/airflow-pydantic)     | **Foundation library** - Pydantic models for all Airflow constructs (DAGs, Operators, Sensors). Powers the `_target_` declarations in YAML configs |
+| [airflow-balancer](https://github.com/airflow-laminar/airflow-balancer)     | Host and port management - Track infrastructure, create pools automatically, select hosts by queue/OS/tags                                         |
+| [airflow-supervisor](https://github.com/airflow-laminar/airflow-supervisor) | Long-running jobs - Run always-on processes with supervisord, integrated with airflow-balancer for host selection                                  |
+| [airflow-common](https://github.com/airflow-laminar/airflow-common)         | Common operators - Skip/Fail/Pass operators, topology helpers, library management tasks                                                            |
+| [airflow-priority](https://github.com/airflow-laminar/airflow-priority)     | Priority tracking - Track and manage DAG priorities across your Airflow deployment                                                                 |
 
 ## Configuration
 
@@ -188,13 +203,14 @@ dags:
 - [Declarative DAGs (DAG Factory)](https://airflow-laminar.github.io/airflow-config/docs/src/examples.html#declarative-dags-dag-factory)
 - [Test Suite Setups](https://github.com/airflow-laminar/airflow-config/tree/main/airflow_config/tests/setups)
 
-## Ecosystem
+## Comparison with dag-factory
 
-`airflow-config` is very similar to [dag-factory](https://github.com/astronomer/dag-factory), but with the following benefits:
+`airflow-config` is similar to [dag-factory](https://github.com/astronomer/dag-factory), but with additional benefits:
 
-- Generation of Python files containing DAG code, not just the DAG objects themselves
-- Hydra/OmegaConf for composition/interpolation of YAMLs
-- Pydantic-based type validation
+- **Code Generation**: Generate Python files containing DAG code, not just runtime DAG objects
+- **Hydra/OmegaConf**: Powerful composition and interpolation of YAML configurations
+- **Pydantic Validation**: Type-safe validation via [airflow-pydantic](https://github.com/airflow-laminar/airflow-pydantic)
+- **Ecosystem Integration**: Seamless integration with airflow-balancer, airflow-supervisor, and more
 
 ## License
 

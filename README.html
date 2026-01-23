@@ -197,6 +197,7 @@
 </form>
 <div id="searchbox"></div><div class="sidebar-scroll"><div class="sidebar-tree">
   <ul>
+<li class="toctree-l1"><a class="reference internal" href="docs/src/getting-started.html">Getting Started</a></li>
 <li class="toctree-l1"><a class="reference internal" href="docs/src/examples.html">Examples</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="docs/src/API.html">API Reference</a><input aria-label="Toggle navigation of API Reference" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" role="switch" type="checkbox"/><label for="toctree-checkbox-1"><span class="icon"><svg><use href="#svg-arrow-right"></use></svg></span></label><ul>
 <li class="toctree-l2"><a class="reference internal" href="docs/src/_build/airflow_config.Configuration.html">airflow_config.Configuration</a></li>
@@ -347,10 +348,41 @@ It is built with <a class="reference external" href="https://pydantic.dev">Pydan
 <li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-priority">airflow-priority</a></p></li>
 <li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-balancer">airflow-balancer</a></p></li>
 <li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a></p></li>
+<li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-common">airflow-common</a></p></li>
 <li><p>or write your own pydantic-based model and get yaml-based configuration for free</p></li>
 </ul>
 </li>
 </ul>
+</section>
+<section id="the-airflow-laminar-ecosystem">
+<h2>The airflow-laminar Ecosystem<a class="headerlink" href="#the-airflow-laminar-ecosystem" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">airflow-config</span></code> is the configuration backbone of the <a class="reference external" href="https://github.com/airflow-laminar">airflow-laminar</a> ecosystem:</p>
+<div class="table-wrapper colwidths-auto docutils container">
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Library</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-pydantic">airflow-pydantic</a></p></td>
+<td><p><strong>Foundation library</strong> - Pydantic models for all Airflow constructs (DAGs, Operators, Sensors). Powers the <code class="docutils literal notranslate"><span class="pre">_target_</span></code> declarations in YAML configs</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-balancer">airflow-balancer</a></p></td>
+<td><p>Host and port management - Track infrastructure, create pools automatically, select hosts by queue/OS/tags</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-supervisor">airflow-supervisor</a></p></td>
+<td><p>Long-running jobs - Run always-on processes with supervisord, integrated with airflow-balancer for host selection</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-common">airflow-common</a></p></td>
+<td><p>Common operators - Skip/Fail/Pass operators, topology helpers, library management tasks</p></td>
+</tr>
+<tr class="row-even"><td><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-priority">airflow-priority</a></p></td>
+<td><p>Priority tracking - Track and manage DAG priorities across your Airflow deployment</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
 <section id="configuration">
 <h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading">¶</a></h2>
@@ -415,13 +447,14 @@ It is built with <a class="reference external" href="https://pydantic.dev">Pydan
 <li><p><a class="reference external" href="https://github.com/airflow-laminar/airflow-config/tree/main/airflow_config/tests/setups">Test Suite Setups</a></p></li>
 </ul>
 </section>
-<section id="ecosystem">
-<h2>Ecosystem<a class="headerlink" href="#ecosystem" title="Link to this heading">¶</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">airflow-config</span></code> is very similar to <a class="reference external" href="https://github.com/astronomer/dag-factory">dag-factory</a>, but with the following benefits:</p>
+<section id="comparison-with-dag-factory">
+<h2>Comparison with dag-factory<a class="headerlink" href="#comparison-with-dag-factory" title="Link to this heading">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">airflow-config</span></code> is similar to <a class="reference external" href="https://github.com/astronomer/dag-factory">dag-factory</a>, but with additional benefits:</p>
 <ul class="simple">
-<li><p>Generation of Python files containing DAG code, not just the DAG objects themselves</p></li>
-<li><p>Hydra/OmegaConf for composition/interpolation of YAMLs</p></li>
-<li><p>Pydantic-based type validation</p></li>
+<li><p><strong>Code Generation</strong>: Generate Python files containing DAG code, not just runtime DAG objects</p></li>
+<li><p><strong>Hydra/OmegaConf</strong>: Powerful composition and interpolation of YAML configurations</p></li>
+<li><p><strong>Pydantic Validation</strong>: Type-safe validation via <a class="reference external" href="https://github.com/airflow-laminar/airflow-pydantic">airflow-pydantic</a></p></li>
+<li><p><strong>Ecosystem Integration</strong>: Seamless integration with airflow-balancer, airflow-supervisor, and more</p></li>
 </ul>
 </section>
 <section id="license">
@@ -474,9 +507,10 @@ It is built with <a class="reference external" href="https://pydantic.dev">Pydan
 <li><a class="reference internal" href="#">airflow-config</a><ul>
 <li><a class="reference internal" href="#overview">Overview</a></li>
 <li><a class="reference internal" href="#features">Features</a></li>
+<li><a class="reference internal" href="#the-airflow-laminar-ecosystem">The airflow-laminar Ecosystem</a></li>
 <li><a class="reference internal" href="#configuration">Configuration</a></li>
 <li><a class="reference internal" href="#examples">Examples</a></li>
-<li><a class="reference internal" href="#ecosystem">Ecosystem</a></li>
+<li><a class="reference internal" href="#comparison-with-dag-factory">Comparison with dag-factory</a></li>
 <li><a class="reference internal" href="#license">License</a></li>
 </ul>
 </li>
