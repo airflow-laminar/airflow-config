@@ -185,6 +185,7 @@ section-order = ["future", "standard-library", "third-party", "first-party", "lo
 title = "airflow-config"
 root = "README.md"
 pages = [
+    "docs/src/getting-started.md",
     "docs/src/examples.md",
     "docs/src/API.md",
 ]
