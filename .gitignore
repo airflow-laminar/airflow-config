@@ -158,10 +158,8 @@ airflow_config/labextension
 # Rust
 target
 
-<<<<<<< before updating
-airflow_config/ui/static/
-=======
 # Hydra
 outputs/
 multirun/
->>>>>>> after updating
+
+airflow_config/ui/static/
