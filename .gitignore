@@ -148,4 +148,11 @@ target
 outputs/
 multirun/
 
+<<<<<<< before updating
 airflow_config/ui/static/
+=======
+# AI
+ROADMAP.md
+AGENTS.md
+.github/hooks/sdlc.json
+>>>>>>> after updating
