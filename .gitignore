@@ -155,5 +155,9 @@ multirun/
 ROADMAP.md
 AGENTS.md
 .github/hooks/sdlc.json
+<<<<<<< before updating
 
 airflow_config/ui/static/
+=======
+.superpowers
+>>>>>>> after updating
