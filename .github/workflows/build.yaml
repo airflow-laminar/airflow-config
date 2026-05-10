@@ -93,6 +93,16 @@ jobs:
       run: make dist
       if: matrix.airflow == '2'
 
+    - uses: actions-ext/python/test-wheel@main
+      with:
+        module: airflow_config
+      if: matrix.os == 'ubuntu-latest'
+
+    - uses: actions-ext/python/test-sdist@main
+      with:
+        module: airflow_config
+      if: matrix.os == 'ubuntu-latest'
+
     - uses: actions/upload-artifact@v7
       with:
         name: dist-${{matrix.os}}
