@@ -40,8 +40,13 @@
     "@andypf/json-viewer": "^2.4.0"
   },
   "devDependencies": {
+<<<<<<< before updating
     "@finos/perspective-esbuild-plugin": "^3.2.1",
     "cpy": "^13.2.1",
+=======
+    "@playwright/test": "^1.60.0",
+    "cpy": "^13.2.2",
+>>>>>>> after updating
     "esbuild": "^0.28.0",
     "lightningcss": "^1.29.3",
     "http-server": "^14.1.1",
