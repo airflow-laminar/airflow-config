@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@andypf/json-viewer':
-        specifier: ^2.4.0
-        version: 2.4.0
+        specifier: ^2.8.0
+        version: 2.8.0
     devDependencies:
       '@finos/perspective-esbuild-plugin':
         specifier: ^3.2.1
@@ -42,8 +42,8 @@ importers:
 
 packages:
 
-  '@andypf/json-viewer@2.4.0':
-    resolution: {integrity: sha512-OboXJRX7Vyt5eT2hBqm5qdIOHDhbbTvXdxvbCTzAX+qlMfkdeoh1abbFUD/Vs7tuex2rYEjK8ZPAbWi9yQLNXg==}
+  '@andypf/json-viewer@2.8.0':
+    resolution: {integrity: sha512-3wE6+LgVw73elsnGJVdxQpj0d7z3AygB3vRy6yDGkpbfjbePanqMbb6je2NTx3i97A/UKIWKk0Ao9U77Ulcc+g==}
 
   '@esbuild/aix-ppc64@0.28.0':
     resolution: {integrity: sha512-lhRUCeuOyJQURhTxl4WkpFTjIsbDayJHih5kZC1giwE+MhIzAb7mEsQMqMf18rHLsrb5qI1tafG20mLxEWcWlA==}
@@ -1173,7 +1173,7 @@ packages:
 
 snapshots:
 
-  '@andypf/json-viewer@2.4.0': {}
+  '@andypf/json-viewer@2.8.0': {}
 
   '@esbuild/aix-ppc64@0.28.0':
     optional: true
