@@ -201,9 +201,18 @@ section-order = [
 [tool.yardang]
 title = "airflow-config"
 root = "README.md"
+theme = "sphinxawesome_theme"
 pages = [
-    "docs/src/getting-started.md",
-    "docs/src/examples.md",
-    "docs/src/API.md",
+    "docs/src/tutorial.md",
+    "docs/src/how-to.md",
+    "docs/src/explanation.md",
+    "docs/src/api.md",
 ]
 use-autoapi = false
+
+[tool.yardang.llms]
+enabled = true
+description = "Hydra and Pydantic configuration for declarative Apache Airflow DAGs"
+build-parallel = true
+suffix-mode = "auto"
+full-build = true
