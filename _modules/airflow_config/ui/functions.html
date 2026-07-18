@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" data-content_root="../../"
+<html lang="en" data-content_root="../../../"
   x-data="{ darkMode: $persist(window.matchMedia('(prefers-color-scheme: dark)').matches), activeSection: ''}"
   :class="{ 'dark' : darkMode === true }">
 
@@ -23,21 +23,21 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030711" />
   
-  <title>airflow_config.dag | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;</title>
-  <meta property="og:title" content="airflow_config.dag | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;" />
-  <meta name="twitter:title" content="airflow_config.dag | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;" />
-  <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
-  <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=d6d7c91b" />
-  <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
-  <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css?v=76b2166b" />
-  <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-  <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
-  <link rel="stylesheet" type="text/css" href="../../_static/sphinx-design.min.css?v=95c83b7e" />
-  <link rel="stylesheet" type="text/css" href="../../_static/styles/custom.css?v=8c8396fe" />
-  <link rel="stylesheet" type="text/css" href="../../_static/awesome-sphinx-design.css?v=a81faafa" />
-  <link rel="stylesheet" type="text/css" href="../../_static/awesome-myst-nb.css?v=7c7ea10c" />
-  <link rel="search" title="Search" href="../../search.html" />
-  <link rel="index" title="Index" href="../../genindex.html" />
+  <title>airflow_config.ui.functions | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;</title>
+  <meta property="og:title" content="airflow_config.ui.functions | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;" />
+  <meta name="twitter:title" content="airflow_config.ui.functions | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=03e43079" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/theme.css?v=d6d7c91b" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/copybutton.css?v=76b2166b" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/autodoc_pydantic.css" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/sphinx-design.min.css?v=95c83b7e" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/styles/custom.css?v=8c8396fe" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/awesome-sphinx-design.css?v=a81faafa" />
+  <link rel="stylesheet" type="text/css" href="../../../_static/awesome-myst-nb.css?v=7c7ea10c" />
+  <link rel="search" title="Search" href="../../../search.html" />
+  <link rel="index" title="Index" href="../../../genindex.html" />
 </head>
 
 <body x-data="{ showSidebar: false, showScrollTop: false }"
@@ -49,7 +49,7 @@
       Skip to content
     </a><header class="sticky top-0 z-40 w-full border-b shadow-xs border-border bg-background/90 backdrop-blur"><div class="container flex items-center h-14">
     <div class="hidden mr-4 md:flex">
-      <a href="../../index.html" class="flex items-center mr-6"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.11.1</code></span>
+      <a href="../../../index.html" class="flex items-center mr-6"><span class="hidden font-bold sm:inline-block text-clip whitespace-nowrap">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.11.1</code></span>
       </a></div><button
       class="inline-flex items-center justify-center h-10 px-0 py-2 mr-2 text-base font-medium transition-colors rounded-md hover:text-accent-foreground hover:bg-transparent md:hidden"
       type="button" @click="showSidebar = true">
@@ -62,7 +62,7 @@
     </button>
     <div class="flex items-center justify-between flex-1 gap-2 sm:gap-4 md:justify-end">
       <div class="flex-1 w-full md:w-auto md:flex-none"><form id="searchbox"
-      action="../../search.html"
+      action="../../../search.html"
       method="get"
       class="relative flex items-center group"
       @keydown.k.window.meta="$refs.search.focus()">
@@ -105,16 +105,16 @@
   class="fixed inset-y-0 left-0 md:top-14 z-50 md:z-30 bg-background md:bg-transparent transition-all duration-100 -translate-x-full md:translate-x-0 ml-0 p-6 md:p-0 md:-ml-2 md:h-[calc(100vh-3.5rem)] w-5/6 md:w-full overflow-y-auto border-r border-border md:sticky"
   :aria-hidden="!showSidebar" :class="{ 'translate-x-0': showSidebar }">
 
-    <a href="../../index.html" class="justify-start text-sm md:!hidden bg-background"><span class="font-bold text-clip whitespace-nowrap">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.11.1</code></span>
+    <a href="../../../index.html" class="justify-start text-sm md:!hidden bg-background"><span class="font-bold text-clip whitespace-nowrap">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.11.1</code></span>
     </a>
 
     <div class="relative overflow-hidden md:overflow-auto my-4 md:my-0">
       <div class="overflow-y-auto h-full w-full relative pr-6"><nav class="table w-full min-w-full my-6 lg:my-8">
   <ul>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/src/tutorial.html">Tutorial: generate a DAG from YAML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/src/how-to.html">How-to guides</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/src/explanation.html">Why configuration and DAG models are separate</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../../docs/src/api.html">API reference</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/src/tutorial.html">Tutorial: generate a DAG from YAML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/src/how-to.html">How-to guides</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/src/explanation.html">Why configuration and DAG models are separate</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../../docs/src/api.html">API reference</a></li>
 </ul>
 
 </nav>
@@ -134,7 +134,7 @@
 <nav aria-label="breadcrumbs"
      class="flex items-center mb-4 space-x-1 text-sm text-muted-foreground">
   <a class="overflow-hidden text-ellipsis whitespace-nowrap hover:text-foreground"
-     href="../../index.html">
+     href="../../../index.html">
     <span class="hidden md:inline">airflow-config <code style='font-size: var(--font-size--small--4);color: var(--sd-color-primary);'>v1.11.1</code></span>
     <svg xmlns="http://www.w3.org/2000/svg"
          height="18"
@@ -149,107 +149,74 @@
   </a>
   
 <div class="mr-1">/</div><a class="hover:text-foreground overflow-hidden text-ellipsis whitespace-nowrap"
-       href="../index.html">Module code</a>
+       href="../../index.html">Module code</a>
     
 <div class="mr-1">/</div><span aria-current="page"
-        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">airflow_config.dag</span>
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">airflow_config.ui.functions</span>
 </nav>
 
     <div id="content" role="main">
-      <h1>Source code for airflow_config.dag</h1><div class="highlight"><pre>
-<span></span><code><span id="line-1"><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">singledispatch</span>
-</span><span id="line-2"><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">currentframe</span>
-</span><span id="line-3"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
-</span><span id="line-4">
-</span><span id="line-5"><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_pydantic.airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span> <span class="k">as</span> <span class="n">BaseDag</span>
-</span><span id="line-6">
-</span><span id="line-7"><span class="kn">from</span><span class="w"> </span><span class="nn">.configuration.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
-</span><span id="line-8"><span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_dag_id</span>
+      <h1>Source code for airflow_config.ui.functions</h1><div class="highlight"><pre>
+<span></span><code><span id="line-1"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
+</span><span id="line-2">
+</span><span id="line-3"><span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
+</span><span id="line-4"><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="line-5">
+</span><span id="line-6"><span class="kn">from</span><span class="w"> </span><span class="nn">hydra.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstantiationException</span>
+</span><span id="line-7">
+</span><span id="line-8"><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigNotFoundError</span><span class="p">,</span> <span class="n">load_config</span>
 </span><span id="line-9">
 </span><span id="line-10"><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="line-11">    <span class="s2">&quot;generate_dag_id&quot;</span><span class="p">,</span>
-</span><span id="line-12">    <span class="s2">&quot;create_dag&quot;</span><span class="p">,</span>
-</span><span id="line-13">    <span class="s2">&quot;create_dags&quot;</span><span class="p">,</span>
-</span><span id="line-14">    <span class="s2">&quot;DAG&quot;</span><span class="p">,</span>
-</span><span id="line-15"><span class="p">)</span>
+</span><span id="line-11">    <span class="s2">&quot;get_configs_from_yaml&quot;</span><span class="p">,</span>
+</span><span id="line-12">    <span class="s2">&quot;get_yaml_files&quot;</span><span class="p">,</span>
+</span><span id="line-13"><span class="p">)</span>
+</span><span id="line-14">
+</span><span id="line-15"><span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
 </span><span id="line-16">
 </span><span id="line-17">
-<div class="viewcode-block" id="DAG">
-<a class="viewcode-back" href="../../docs/src/api.html#airflow_config.dag.DAG">[docs]</a>
-</span><span id="line-18"><span class="k">class</span><span class="w"> </span><span class="nc">DAG</span><span class="p">(</span><span class="n">BaseDag</span><span class="p">):</span>
-</span><span id="line-19">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="line-20">        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
-</span><span id="line-21">            <span class="n">config</span><span class="o">.</span><span class="n">pre_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-</span><span id="line-22">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="line-23">        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
-</span><span id="line-24">            <span class="n">config</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span></div>
+<div class="viewcode-block" id="get_configs_from_yaml">
+<a class="viewcode-back" href="../../../docs/src/api.html#airflow_config.ui.functions.get_configs_from_yaml">[docs]</a>
+</span><span id="line-18"><span class="k">def</span><span class="w"> </span><span class="nf">get_configs_from_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overrides</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="line-19">    <span class="c1"># Process the yaml</span>
+</span><span id="line-20">    <span class="n">yaml_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+</span><span id="line-21">    <span class="k">try</span><span class="p">:</span>
+</span><span id="line-22">        <span class="n">cfg</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">yaml_file</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">yaml_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">basepath</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">))</span>
+</span><span id="line-23">    <span class="k">except</span> <span class="p">(</span><span class="n">ConfigNotFoundError</span><span class="p">,</span> <span class="n">InstantiationException</span><span class="p">):</span>
+</span><span id="line-24">        <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Error loading YAML file </span><span class="si">{</span><span class="n">yaml</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</span><span id="line-25">        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</span><span id="line-26">    <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="p">:</span>
+</span><span id="line-27">        <span class="k">return</span> <span class="s2">&quot;&quot;</span>
+</span><span id="line-28">    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span></div>
 
-</span><span id="line-25">
-</span><span id="line-26">
-<div class="viewcode-block" id="create_dag">
-<a class="viewcode-back" href="../../docs/src/api.html#airflow_config.dag.create_dag">[docs]</a>
-</span><span id="line-27"><span class="nd">@singledispatch</span>
-</span><span id="line-28"><span class="k">def</span><span class="w"> </span><span class="nf">create_dag</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-</span><span id="line-29">    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-
+</span><span id="line-29">
 </span><span id="line-30">
-</span><span id="line-31">
-<div class="viewcode-block" id="create_dags">
-<a class="viewcode-back" href="../../docs/src/api.html#airflow_config.dag.create_dags">[docs]</a>
-</span><span id="line-32"><span class="nd">@singledispatch</span>
-</span><span id="line-33"><span class="k">def</span><span class="w"> </span><span class="nf">create_dags</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-</span><span id="line-34">    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-
+<div class="viewcode-block" id="get_yaml_files">
+<a class="viewcode-back" href="../../../docs/src/api.html#airflow_config.ui.functions.get_yaml_files">[docs]</a>
+</span><span id="line-31"><span class="k">def</span><span class="w"> </span><span class="nf">get_yaml_files</span><span class="p">(</span><span class="n">dags_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+</span><span id="line-32">    <span class="c1"># Look for yamls inside the dags folder</span>
+</span><span id="line-33">    <span class="n">yamls</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-34">    <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dags_folder</span><span class="p">)</span>
 </span><span id="line-35">
-</span><span id="line-36">
-</span><span id="line-37"><span class="nd">@create_dag</span><span class="o">.</span><span class="n">register</span>
-</span><span id="line-38"><span class="k">def</span><span class="w"> </span><span class="nf">_create_dag_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">dag_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-</span><span id="line-39">    <span class="n">dag_id</span> <span class="o">=</span> <span class="n">dag_id</span> <span class="ow">or</span> <span class="n">generate_dag_id</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">_offset</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-</span><span id="line-40">    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dag_id</span><span class="o">=</span><span class="n">dag_id</span><span class="p">)</span>
-</span><span id="line-41">    <span class="n">cur_frame</span> <span class="o">=</span> <span class="n">currentframe</span><span class="p">()</span>
-</span><span id="line-42">    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_offset</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="line-43">        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cur_frame</span><span class="p">,</span> <span class="s2">&quot;f_back&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cur_frame</span><span class="o">.</span><span class="n">f_back</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cur_frame</span><span class="o">.</span><span class="n">f_back</span><span class="p">,</span> <span class="s2">&quot;f_globals&quot;</span><span class="p">):</span>
-</span><span id="line-44">            <span class="n">cur_frame</span> <span class="o">=</span> <span class="n">cur_frame</span><span class="o">.</span><span class="n">f_back</span>
-</span><span id="line-45">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-46">            <span class="k">break</span>
-</span><span id="line-47">    <span class="n">cur_frame</span><span class="o">.</span><span class="n">f_globals</span><span class="p">[</span><span class="n">dag_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">dag</span>
-</span><span id="line-48">    <span class="k">return</span> <span class="n">dag</span>
-</span><span id="line-49">
-</span><span id="line-50">
-</span><span id="line-51"><span class="nd">@create_dag</span><span class="o">.</span><span class="n">register</span>
-</span><span id="line-52"><span class="k">def</span><span class="w"> </span><span class="nf">_create_dag_dir</span><span class="p">(</span><span class="n">config_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">config_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dag_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-</span><span id="line-53">    <span class="n">dag_id</span> <span class="o">=</span> <span class="n">dag_id</span> <span class="ow">or</span> <span class="n">generate_dag_id</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</span><span id="line-54">    <span class="n">config</span> <span class="o">=</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">config_dir</span><span class="o">=</span><span class="n">config_dir</span><span class="p">,</span> <span class="n">config_name</span><span class="o">=</span><span class="n">config_name</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</span><span id="line-55">    <span class="k">return</span> <span class="n">create_dag</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dag_id</span><span class="o">=</span><span class="n">dag_id</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="line-56">
-</span><span id="line-57">
-</span><span id="line-58"><span class="nd">@create_dags</span><span class="o">.</span><span class="n">register</span>
-</span><span id="line-59"><span class="k">def</span><span class="w"> </span><span class="nf">_create_dags_config</span><span class="p">(</span><span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dag_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DAG</span><span class="p">]:</span>
-</span><span id="line-60">    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-61">    <span class="n">dag_ids</span> <span class="o">=</span> <span class="n">dag_ids</span> <span class="ow">or</span> <span class="p">[]</span>
-</span><span id="line-62">    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">configs</span><span class="p">):</span>
-</span><span id="line-63">        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">dag_ids</span><span class="p">):</span>
-</span><span id="line-64">            <span class="n">dag_id</span> <span class="o">=</span> <span class="n">dag_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-</span><span id="line-65">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-66">            <span class="n">dag_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span id="line-67">        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">create_dag</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dag_id</span><span class="o">=</span><span class="n">dag_id</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-</span><span id="line-68">    <span class="k">return</span> <span class="n">ret</span>
-</span><span id="line-69">
-</span><span id="line-70">
-</span><span id="line-71"><span class="nd">@create_dags</span><span class="o">.</span><span class="n">register</span>
-</span><span id="line-72"><span class="k">def</span><span class="w"> </span><span class="nf">_create_dags_dirs</span><span class="p">(</span>
-</span><span id="line-73">    <span class="n">config_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span>
-</span><span id="line-74">    <span class="n">config_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-75">    <span class="n">overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-76">    <span class="n">dag_id_base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="line-77">    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="line-78"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DAG</span><span class="p">]:</span>
-</span><span id="line-79">    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-80">    <span class="n">dag_id_base</span> <span class="o">=</span> <span class="n">dag_id_base</span> <span class="ow">or</span> <span class="n">generate_dag_id</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</span><span id="line-81">    <span class="k">for</span> <span class="n">config_name</span> <span class="ow">in</span> <span class="n">config_names</span><span class="p">:</span>
-</span><span id="line-82">        <span class="n">config</span> <span class="o">=</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">config_dir</span><span class="o">=</span><span class="n">config_dir</span><span class="p">,</span> <span class="n">config_name</span><span class="o">=</span><span class="n">config_name</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</span><span id="line-83">        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">create_dag</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dag_id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dag_id_base</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">config_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-</span><span id="line-84">    <span class="k">return</span> <span class="n">ret</span>
+</span><span id="line-36">    <span class="c1"># Look if the file directly instantiates a BalancerConfiguration</span>
+</span><span id="line-37">    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;**/*.yaml&quot;</span><span class="p">):</span>
+</span><span id="line-38">        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
+</span><span id="line-39">            <span class="k">if</span> <span class="s2">&quot;_target_: airflow_config.Configuration&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">():</span>
+</span><span id="line-40">                <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span id="line-41">    <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
+</span><span id="line-42">    <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-43">    <span class="c1"># If we have yamls, look for any that reference them</span>
+</span><span id="line-44">    <span class="k">while</span> <span class="n">len_yamls</span> <span class="o">!=</span> <span class="n">len_yamls_last</span><span class="p">:</span>
+</span><span id="line-45">        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;**/*.yaml&quot;</span><span class="p">):</span>
+</span><span id="line-46">            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
+</span><span id="line-47">                <span class="c1"># Check and see if this references any existing yamls</span>
+</span><span id="line-48">                <span class="k">for</span> <span class="n">yaml</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
+</span><span id="line-49">                    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">yaml</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">yaml</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">@&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">():</span>
+</span><span id="line-50">                        <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span id="line-51">                        <span class="k">break</span>
+</span><span id="line-52">        <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="n">len_yamls</span>
+</span><span id="line-53">        <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
+</span><span id="line-54">    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span></div>
+
 </span></code></pre></div>
     </div></div>
           </main>
@@ -265,13 +232,13 @@
 </footer>
     </div>
     
-    <script src="../../_static/documentation_options.js?v=c8897f99"></script>
-    <script src="../../_static/doctools.js?v=9bcbadda"></script>
-    <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
-    <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
-    <script src="../../_static/copybutton.js?v=f281be69"></script>
-    <script defer="defer" src="../../_static/theme.js?v=5db23cf8"></script>
-    <script src="../../_static/design-tabs.js?v=f930bc37"></script>
+    <script src="../../../_static/documentation_options.js?v=c8897f99"></script>
+    <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/clipboard.min.js?v=a7894cd8"></script>
+    <script src="../../../_static/copybutton.js?v=f281be69"></script>
+    <script defer="defer" src="../../../_static/theme.js?v=5db23cf8"></script>
+    <script src="../../../_static/design-tabs.js?v=f930bc37"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7.9.0/dist/d3.min.js"></script>
     <script type="module">import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11.12.1/dist/mermaid.esm.min.mjs";
 
@@ -797,7 +764,7 @@ mermaid.initialize(
 
 window.addEventListener("load", load);
 window.runMermaid = runMermaid;</script>
-    <script src="../../_static/js/custom.js?v=956e5d78"></script>
+    <script src="../../../_static/js/custom.js?v=956e5d78"></script>
     
 </body>
 

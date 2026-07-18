@@ -1,0 +1,637 @@
+# index.html.md
+
+# airflow-config
+
+Declarative Apache Airflow DAGs from Hydra YAML and `airflow-pydantic` models.
+
+[![Build Status](https://github.com/airflow-laminar/airflow-config/actions/workflows/build.yaml/badge.svg?branch=main&event=push)](https://github.com/airflow-laminar/airflow-config/actions/workflows/build.yaml)
+[![codecov](https://codecov.io/gh/airflow-laminar/airflow-config/branch/main/graph/badge.svg)](https://codecov.io/gh/airflow-laminar/airflow-config)
+[![License](https://img.shields.io/github/license/airflow-laminar/airflow-config)](https://github.com/airflow-laminar/airflow-config)
+[![PyPI](https://img.shields.io/pypi/v/airflow-config.svg)](https://pypi.python.org/pypi/airflow-config)
+
+```yaml
+# config/pipeline.yaml
+# @package _global_
+_target_: airflow_config.Configuration
+
+dags:
+  daily-report:
+    schedule: "0 6 * * *"
+    start_date: "2025-01-01"
+    catchup: false
+    tasks:
+      report:
+        _target_: airflow_config.BashTask
+        bash_command: python /opt/jobs/report.py
+```
+
+```python
+from airflow_config import load_config
+
+config = load_config("config", "pipeline")
+config.generate_in_mem()
+```
+
+Configuration can provide shared defaults, environment overrides, templates,
+extensions, generated Python DAG files, or in-memory DAG registration.
+
+## Documentation
+
+- [Tutorial: generate a DAG from YAML](docs/src/tutorial.md)
+- [How-to guides](docs/src/how-to.md)
+- [Why configuration and DAG models are separate](docs/src/explanation.md)
+- [API reference](docs/src/api.md)
+
+Published documentation is available at
+[airflow-laminar.github.io/airflow-config](https://airflow-laminar.github.io/airflow-config/).
+
+## Ecosystem
+
+- [airflow-pydantic](https://github.com/airflow-laminar/airflow-pydantic) supplies the DAG, task, sensor, schedule, pool, and variable models.
+- [airflow-supervisor](https://github.com/airflow-laminar/airflow-supervisor) and [supervisor-pydantic](https://github.com/airflow-laminar/supervisor-pydantic) manage supervisord jobs.
+- [airflow-systemd](https://github.com/airflow-laminar/airflow-systemd) and [systemd-pydantic](https://github.com/airflow-laminar/systemd-pydantic) manage systemd services.
+- [airflow-cron](https://github.com/airflow-laminar/airflow-cron) and [cron-pydantic](https://github.com/airflow-laminar/cron-pydantic) convert crontabs into DAG models.
+- [airflow-balancer](https://github.com/airflow-laminar/airflow-balancer) supplies host and port selection extensions.
+- [airflow-common](https://github.com/airflow-laminar/airflow-common) supplies common operators and library management.
+
+#### NOTE
+This library was generated using [copier](https://copier.readthedocs.io/en/stable/) from the [Base Python Project Template repository](https://github.com/python-project-templates/base).
+
+
+# api.html.md
+
+# API reference
+
+This reference is generated from public signatures and docstrings.
+
+## Configuration
+
+### *pydantic model* airflow_config.configuration.base.Configuration
+
+Bases: `BaseModel`
+
+#### *field* default_task_args *: TaskArgs | None* *[Optional]*
+
+Global default default_args (task arguments)
+
+#### *field* default_dag_args *: DagArgs* *[Optional]*
+
+Global default dag arguments
+
+#### *field* dags *: Dict[str, Annotated[Dag, SerializeAsAny()]] | None* *[Optional]*
+
+List of dags statically configured via Pydantic
+
+#### *field* templates *: \_Templates | None* *[Optional]*
+
+Templates for DAGs and Tasks
+
+#### *field* extensions *: Dict[str, BaseModel] | None* *[Optional]*
+
+Any user-defined extensions
+
+#### *field* env *: str | None* *= ''*
+
+Environment to use for this configuration
+
+#### *field* name *: str | None* *= ''*
+
+Name of the configuration
+
+#### *field* root *: Path | None* *= None*
+
+Root path
+
+#### *field* tags *: Dict[str, str] | None* *[Optional]*
+
+Generic Tags for config. NOTE: Not related to dag tags
+
+#### *property* default_args
+
+#### *static* load(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](#airflow_config.configuration.base.Configuration)
+
+#### pre_apply(dag, dag_kwargs)
+
+#### apply(dag, dag_kwargs)
+
+#### generate_in_mem(dir: Path | str = None, placeholder_dag_id: str = 'airflow-config-generate-dags')
+
+#### generate(dir: Path | str = None)
+
+### airflow_config.configuration.base.load_config(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](#airflow_config.configuration.base.Configuration)
+
+## DAG creation
+
+### *class* airflow_config.dag.DAG(config: [Configuration](#airflow_config.configuration.base.Configuration) = None, \*\*kwargs)
+
+Bases: `DAG`
+
+### airflow_config.dag.create_dag(arg, \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)
+
+### airflow_config.dag.create_dag(config: [Configuration](#airflow_config.configuration.base.Configuration), dag_id: str = '', \_offset: int = 3) → [DAG](#airflow_config.dag.DAG)
+
+### airflow_config.dag.create_dag(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, dag_id: str = '', \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)
+
+### airflow_config.dag.create_dags(arg, \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)
+
+### airflow_config.dag.create_dags(configs: list, dag_ids: list[str] = None, \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
+
+### airflow_config.dag.create_dags(config_dir: str = 'config', config_names: list[list[str]] = None, overrides: list[str] | None = None, dag_id_base: str = '', \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
+
+### airflow_config.dag.generate_dag_id(name: str = '', dag_root: str = '', offset: int = 2) → str
+
+## Utilities
+
+### airflow_config.utils.generate_dag_id(name: str = '', dag_root: str = '', offset: int = 2) → str
+
+## Exceptions
+
+### *exception* airflow_config.exceptions.ConfigNotFoundError(config_dir, dagfile)
+
+Bases: `RuntimeError`
+
+## Viewer functions
+
+### airflow_config.ui.functions.get_configs_from_yaml(yaml: str, overrides: list[str]) → list[str]
+
+### airflow_config.ui.functions.get_yaml_files(dags_folder: str) → list[Path]
+
+
+# explanation.html.md
+
+# Why configuration and DAG models are separate
+
+`airflow-config` treats DAG authoring as configuration composition followed by
+materialization. Hydra composes YAML; Pydantic validates the resulting object
+graph; `airflow-pydantic` renders or instantiates Airflow objects. Each layer has
+one responsibility.
+
+## Composition before execution
+
+Airflow DAG files are executable modules, which makes ordinary Python imports a
+natural configuration mechanism. That approach becomes repetitive when many
+DAGs share schedules, retry policies, hosts, pools, and task shapes.
+
+Hydra adds named configuration files, defaults lists, search paths,
+interpolation, and command-style overrides before any Airflow object is
+created. Pydantic then converts Hydra’s generic data into a typed graph. This
+ordering makes composition flexible without leaving validation until task
+execution.
+
+## Why `_target_` is the extension boundary
+
+Hydra `_target_` entries identify Python model classes. A Bash task, SSH task,
+supervisord lifecycle, systemd lifecycle, and host query can therefore appear
+in the same task mapping without `airflow-config` knowing every integration in
+advance.
+
+This is deliberately a model boundary rather than an arbitrary code-execution
+framework. Targets construct configuration objects; Airflow still owns DAG
+parsing and operator execution. Configuration repositories should receive the
+same review and access controls as Python DAG repositories.
+
+## Generated source versus in-memory DAGs
+
+Generated Python makes deployment artifacts explicit. Reviewers can inspect
+the exact DAG source, and the scheduler does not need Hydra or source YAML.
+Generation adds an artifact-management step and requires regeneration after
+configuration changes.
+
+In-memory generation keeps YAML authoritative and eliminates generated-file
+drift. It places configuration loading on the scheduler’s DAG-import path, so
+dependency availability and parse performance matter more.
+
+The two modes share one `Configuration` model and can coexist. Teams can use
+generated files for controlled production releases and in-memory generation
+for development without changing the YAML schema.
+
+## Relationship to airflow-pydantic
+
+[airflow-pydantic](https://github.com/airflow-laminar/airflow-pydantic) defines
+the typed DAG vocabulary and can be used independently from Python.
+`airflow-config` owns discovery, Hydra composition, shared defaults,
+environment selection, templates, and materialization across collections of
+DAGs.
+
+This division keeps the data model reusable and prevents the configuration
+loader from becoming a second Airflow API.
+
+## Relationship to DAG factories
+
+Like other DAG factories, `airflow-config` reduces repeated Python and makes
+DAG structures data-driven. Its distinguishing choice is to use public
+Pydantic models as the schema and Hydra as the composition engine. The benefits
+are Python/YAML parity, normal Pydantic serialization, and an open extension
+boundary. The cost is exposure to Hydra concepts such as search paths,
+defaults, packages, and interpolation.
+
+Projects that need only a few static DAGs may find direct Python clearer. The
+configuration layer becomes valuable when shared policy, environment variants,
+generated artifacts, or third-party model extensions outweigh that additional
+machinery.
+
+## The wider ecosystem
+
+The extension boundary connects configuration to runtime-specific models:
+
+- [airflow-supervisor](https://github.com/airflow-laminar/airflow-supervisor) and [supervisor-pydantic](https://github.com/airflow-laminar/supervisor-pydantic) model supervisord workloads.
+- [airflow-systemd](https://github.com/airflow-laminar/airflow-systemd) and [systemd-pydantic](https://github.com/airflow-laminar/systemd-pydantic) model systemd workloads.
+- [airflow-cron](https://github.com/airflow-laminar/airflow-cron) and [cron-pydantic](https://github.com/airflow-laminar/cron-pydantic) import cron workloads.
+- [airflow-balancer](https://github.com/airflow-laminar/airflow-balancer) composes host, port, queue, and pool selection.
+- [airflow-common](https://github.com/airflow-laminar/airflow-common) contributes common operators and library management.
+
+The result is one declarative graph whose components retain independent owners
+and release cycles.
+
+
+# how-to.html.md
+
+# How-to guides
+
+These guides cover configuration composition, materialization, templates,
+environment selection, and ecosystem integrations.
+
+## How to apply shared DAG and task defaults
+
+Set global defaults and override only the fields that differ:
+
+```yaml
+# @package _global_
+_target_: airflow_config.Configuration
+
+default_task_args:
+  _target_: airflow_config.TaskArgs
+  owner: platform
+  retries: 3
+  retry_delay: 00:05:00
+
+default_dag_args:
+  _target_: airflow_config.DagArgs
+  start_date: "2025-01-01"
+  catchup: false
+  max_active_runs: 1
+  tags: [managed]
+
+dags:
+  hourly-import:
+    schedule: "@hourly"
+  daily-report:
+    schedule: "0 6 * * *"
+    default_args:
+      owner: analytics
+```
+
+Per-DAG values override `default_dag_args`. Per-DAG `default_args` values
+override `default_task_args` field by field.
+
+## How to select an environment
+
+Keep one file per environment and choose it at load time:
+
+```text
+config/
+├── dev.yaml
+└── prod.yaml
+```
+
+```python
+import os
+
+from airflow_config import load_config
+
+environment = os.environ.get("AIRFLOW_ENV", "dev")
+config = load_config("config", environment)
+```
+
+Use Hydra overrides for narrow runtime changes:
+
+```python
+config = load_config(
+    "config",
+    "prod",
+    overrides=["dags.daily-report.schedule=0 7 * * *"],
+)
+```
+
+## How to generate Python DAG files
+
+Write one deterministic file per configured DAG:
+
+```python
+from airflow_config import load_config
+
+config = load_config("config", "prod")
+config.generate("generated_dags")
+```
+
+Commit or deploy the generated directory when DAG review and an Airflow runtime
+without Hydra are preferred. Unchanged files are not rewritten.
+
+## How to generate DAGs in memory
+
+Register DAG objects in the calling module:
+
+```python
+from airflow_config import load_config
+
+config = load_config("config", "prod")
+config.generate_in_mem()
+```
+
+Use this path when the scheduler should consume YAML directly. Keep the loader
+file and configuration directory at stable relative paths.
+
+## How to combine generated and hand-written DAGs
+
+Create native Airflow DAGs with the configuration-aware wrapper:
+
+```python
+from airflow_config import DAG, load_config
+
+config = load_config("config", "prod")
+
+with DAG(dag_id="hand-written", config=config, schedule="@daily") as dag:
+    pass
+
+config.generate_in_mem()
+```
+
+The wrapper applies matching shared and per-DAG options before the context opens.
+Configured DAG models can coexist with explicitly authored DAGs.
+
+## How to reuse DAG and task templates
+
+Store typed templates and reference them with OmegaConf interpolation:
+
+```yaml
+templates:
+  dag:
+    batch:
+      _target_: airflow_config.DagArgs
+      start_date: "2025-01-01"
+      catchup: false
+      tags: [batch]
+  task:
+    shell:
+      _target_: airflow_config.BashTaskArgs
+      retries: 2
+      env:
+        MODE: production
+
+dags:
+  report:
+    template: ${templates.dag.batch}
+    schedule: "@daily"
+    tasks:
+      build:
+        _target_: airflow_config.BashTask
+        template: ${templates.task.shell}
+        bash_command: python /opt/jobs/report.py
+```
+
+Explicit DAG and task fields override template fields.
+
+## How to create task dependencies
+
+List upstream task IDs in `dependencies`:
+
+```yaml
+tasks:
+  extract:
+    _target_: airflow_config.BashTask
+    bash_command: extract
+  transform:
+    _target_: airflow_config.BashTask
+    bash_command: transform
+    dependencies: [extract]
+  publish:
+    _target_: airflow_config.BashTask
+    bash_command: publish
+    dependencies: [transform]
+```
+
+Multiple downstream tasks may name the same upstream task to create branches.
+Every dependency must name a task in the same DAG.
+
+## How to disable DAGs by environment
+
+Use the registered `eq` and `neq` resolvers:
+
+```yaml
+env: prod
+
+dags:
+  production-report:
+    enabled: ${eq:${env},prod}
+    schedule: "@daily"
+  development-report:
+    enabled: ${neq:${env},prod}
+    schedule: null
+```
+
+An explicitly disabled DAG exits before registration. `default_dag_args.enabled`
+provides a global default that individual DAGs can override.
+
+## How to add a supervisord-managed task
+
+Install `airflow-supervisor` and use its task model:
+
+```yaml
+dags:
+  long-running-worker:
+    schedule: "@daily"
+    tasks:
+      worker:
+        _target_: airflow_supervisor.SupervisorTask
+        cfg:
+          working_dir: /var/tmp/worker-supervisor
+          stop_on_exit: true
+          cleanup: true
+          program:
+            worker:
+              command: python /opt/jobs/worker.py
+```
+
+The underlying process configuration is supplied by
+[supervisor-pydantic](https://github.com/airflow-laminar/supervisor-pydantic).
+
+## How to add a systemd-managed task
+
+Install `airflow-systemd` and use its task model:
+
+```yaml
+dags:
+  system-service:
+    schedule: "@daily"
+    tasks:
+      service:
+        _target_: airflow_systemd.SystemdTask
+        cfg:
+          scope: user
+          service:
+            report:
+              service:
+                type: exec
+                exec_start: /opt/jobs/report
+```
+
+Unit-file models come from
+[systemd-pydantic](https://github.com/airflow-laminar/systemd-pydantic).
+
+## How to import cron jobs
+
+Merge DAG models returned by `airflow-cron`:
+
+```python
+from airflow_config import Configuration, load_config
+from airflow_cron import CronAirflowConfiguration, create_dags
+
+base = load_config("config", "prod")
+cron = CronAirflowConfiguration.load("cron.yaml")
+
+config = Configuration.model_validate(
+    {
+        **base.model_dump(),
+        "dags": {**(base.dags or {}), **create_dags(cron)},
+    }
+)
+config.generate_in_mem()
+```
+
+The source crontab models are provided by
+[cron-pydantic](https://github.com/airflow-laminar/cron-pydantic).
+
+## How to select a host with airflow-balancer
+
+Store the balancer in `extensions` and interpolate it into an SSH task query:
+
+```yaml
+extensions:
+  balancer:
+    _target_: airflow_pydantic.BalancerConfiguration
+    hosts:
+      - name: reports-1
+        tags: [reports]
+
+dags:
+  remote-report:
+    start_date: "2025-01-01"
+    tasks:
+      report:
+        _target_: airflow_config.SSHTask
+        ssh_hook:
+          _target_: airflow_pydantic.BalancerHostQueryConfiguration
+          balancer: ${extensions.balancer}
+          tag: reports
+        command: python /opt/jobs/report.py
+```
+
+Install [airflow-balancer](https://github.com/airflow-laminar/airflow-balancer)
+when using its full configuration and runtime selection features.
+
+## How to inspect configurations visually
+
+Start the standalone viewer with a configuration path:
+
+```bash
+airflow-config-viewer --help
+```
+
+Airflow 2 also discovers the packaged viewer plugin through its plugin entry
+point. The standalone viewer is available without enabling the webserver plugin.
+
+
+# tutorial.html.md
+
+# Tutorial: generate a DAG from YAML
+
+In this tutorial, we will describe a two-task workflow in YAML, load its
+Pydantic models, and register the resulting DAG with Airflow.
+
+## Install the packages
+
+For Airflow 3, run:
+
+```bash
+pip install 'airflow-config[airflow3]'
+```
+
+## Create the configuration
+
+Create `config/etl.yaml` beside your DAG file:
+
+```yaml
+# @package _global_
+_target_: airflow_config.Configuration
+
+default_task_args:
+  _target_: airflow_config.TaskArgs
+  owner: data-platform
+  retries: 2
+
+default_dag_args:
+  _target_: airflow_config.DagArgs
+  start_date: "2025-01-01"
+  catchup: false
+  tags: [tutorial]
+
+dags:
+  daily-etl:
+    schedule: "0 2 * * *"
+    tasks:
+      extract:
+        _target_: airflow_config.BashTask
+        bash_command: python /opt/etl/extract.py
+      load:
+        _target_: airflow_config.BashTask
+        bash_command: python /opt/etl/load.py
+        dependencies: [extract]
+```
+
+## Load the configuration
+
+Create `daily_etl.py` beside the `config` directory:
+
+```python
+from airflow_config import load_config
+
+config = load_config("config", "etl")
+
+dag = config.dags["daily-etl"]
+print(dag.schedule)
+print(dag.default_args.owner)
+print(dag.tasks["load"].dependencies)
+```
+
+Run the file with Python. The output should be:
+
+```text
+0 2 * * *
+data-platform
+['extract']
+```
+
+The loader found the configuration relative to the calling file, composed it
+with Hydra, instantiated each `_target_`, and applied shared defaults.
+
+## Register the DAG
+
+Add this line to `daily_etl.py`:
+
+```python
+config.generate_in_mem()
+```
+
+Place the Python file and `config` directory in an Airflow DAG folder. Then
+inspect the result:
+
+```bash
+airflow dags list | grep daily-etl
+airflow tasks list daily-etl
+```
+
+The DAG contains `extract` and `load`, with `load` downstream of `extract`.
+
+You have now generated an Airflow DAG from validated, composable YAML.
+
+

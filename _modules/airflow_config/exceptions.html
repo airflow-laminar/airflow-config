@@ -23,9 +23,9 @@
   <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
   <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#030711" />
   
-  <title>airflow_config.dag | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;</title>
-  <meta property="og:title" content="airflow_config.dag | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;" />
-  <meta name="twitter:title" content="airflow_config.dag | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;" />
+  <title>airflow_config.exceptions | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;</title>
+  <meta property="og:title" content="airflow_config.exceptions | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;" />
+  <meta name="twitter:title" content="airflow_config.exceptions | airflow-config &lt;code style=&#39;font-size: var(--font-size--small--4);color: var(--sd-color-primary);&#39;&gt;v1.11.1&lt;/code&gt;" />
   <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=03e43079" />
   <link rel="stylesheet" type="text/css" href="../../_static/theme.css?v=d6d7c91b" />
   <link rel="stylesheet" type="text/css" href="../../_static/mystnb.11b39860a7a0cbfd473a3ad8a317855267ff0bd372690045ca344a6b62be495e.css" />
@@ -152,104 +152,20 @@
        href="../index.html">Module code</a>
     
 <div class="mr-1">/</div><span aria-current="page"
-        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">airflow_config.dag</span>
+        class="font-medium text-foreground overflow-hidden text-ellipsis whitespace-nowrap">airflow_config.exceptions</span>
 </nav>
 
     <div id="content" role="main">
-      <h1>Source code for airflow_config.dag</h1><div class="highlight"><pre>
-<span></span><code><span id="line-1"><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">singledispatch</span>
-</span><span id="line-2"><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">currentframe</span>
-</span><span id="line-3"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
-</span><span id="line-4">
-</span><span id="line-5"><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_pydantic.airflow</span><span class="w"> </span><span class="kn">import</span> <span class="n">DAG</span> <span class="k">as</span> <span class="n">BaseDag</span>
-</span><span id="line-6">
-</span><span id="line-7"><span class="kn">from</span><span class="w"> </span><span class="nn">.configuration.base</span><span class="w"> </span><span class="kn">import</span> <span class="n">Configuration</span>
-</span><span id="line-8"><span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_dag_id</span>
-</span><span id="line-9">
-</span><span id="line-10"><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="line-11">    <span class="s2">&quot;generate_dag_id&quot;</span><span class="p">,</span>
-</span><span id="line-12">    <span class="s2">&quot;create_dag&quot;</span><span class="p">,</span>
-</span><span id="line-13">    <span class="s2">&quot;create_dags&quot;</span><span class="p">,</span>
-</span><span id="line-14">    <span class="s2">&quot;DAG&quot;</span><span class="p">,</span>
-</span><span id="line-15"><span class="p">)</span>
-</span><span id="line-16">
-</span><span id="line-17">
-<div class="viewcode-block" id="DAG">
-<a class="viewcode-back" href="../../docs/src/api.html#airflow_config.dag.DAG">[docs]</a>
-</span><span id="line-18"><span class="k">class</span><span class="w"> </span><span class="nc">DAG</span><span class="p">(</span><span class="n">BaseDag</span><span class="p">):</span>
-</span><span id="line-19">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-</span><span id="line-20">        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
-</span><span id="line-21">            <span class="n">config</span><span class="o">.</span><span class="n">pre_apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
-</span><span id="line-22">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="line-23">        <span class="k">if</span> <span class="n">config</span><span class="p">:</span>
-</span><span id="line-24">            <span class="n">config</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span></div>
+      <h1>Source code for airflow_config.exceptions</h1><div class="highlight"><pre>
+<span></span><code><span id="line-1"><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ConfigNotFoundError&quot;</span><span class="p">,)</span>
+</span><span id="line-2">
+</span><span id="line-3">
+<div class="viewcode-block" id="ConfigNotFoundError">
+<a class="viewcode-back" href="../../docs/src/api.html#airflow_config.exceptions.ConfigNotFoundError">[docs]</a>
+</span><span id="line-4"><span class="k">class</span><span class="w"> </span><span class="nc">ConfigNotFoundError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+</span><span id="line-5">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_dir</span><span class="p">,</span> <span class="n">dagfile</span><span class="p">):</span>
+</span><span id="line-6">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find `</span><span class="si">{</span><span class="n">config_dir</span><span class="si">}</span><span class="s2">` directory on or above DAG: </span><span class="si">{</span><span class="n">dagfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
-</span><span id="line-25">
-</span><span id="line-26">
-<div class="viewcode-block" id="create_dag">
-<a class="viewcode-back" href="../../docs/src/api.html#airflow_config.dag.create_dag">[docs]</a>
-</span><span id="line-27"><span class="nd">@singledispatch</span>
-</span><span id="line-28"><span class="k">def</span><span class="w"> </span><span class="nf">create_dag</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-</span><span id="line-29">    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-
-</span><span id="line-30">
-</span><span id="line-31">
-<div class="viewcode-block" id="create_dags">
-<a class="viewcode-back" href="../../docs/src/api.html#airflow_config.dag.create_dags">[docs]</a>
-</span><span id="line-32"><span class="nd">@singledispatch</span>
-</span><span id="line-33"><span class="k">def</span><span class="w"> </span><span class="nf">create_dags</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-</span><span id="line-34">    <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">()</span></div>
-
-</span><span id="line-35">
-</span><span id="line-36">
-</span><span id="line-37"><span class="nd">@create_dag</span><span class="o">.</span><span class="n">register</span>
-</span><span id="line-38"><span class="k">def</span><span class="w"> </span><span class="nf">_create_dag_config</span><span class="p">(</span><span class="n">config</span><span class="p">:</span> <span class="n">Configuration</span><span class="p">,</span> <span class="n">dag_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">_offset</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">3</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-</span><span id="line-39">    <span class="n">dag_id</span> <span class="o">=</span> <span class="n">dag_id</span> <span class="ow">or</span> <span class="n">generate_dag_id</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="n">_offset</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)</span>
-</span><span id="line-40">    <span class="n">dag</span> <span class="o">=</span> <span class="n">DAG</span><span class="p">(</span><span class="n">config</span><span class="o">=</span><span class="n">config</span><span class="p">,</span> <span class="n">dag_id</span><span class="o">=</span><span class="n">dag_id</span><span class="p">)</span>
-</span><span id="line-41">    <span class="n">cur_frame</span> <span class="o">=</span> <span class="n">currentframe</span><span class="p">()</span>
-</span><span id="line-42">    <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">_offset</span> <span class="o">-</span> <span class="mi">1</span><span class="p">):</span>
-</span><span id="line-43">        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cur_frame</span><span class="p">,</span> <span class="s2">&quot;f_back&quot;</span><span class="p">)</span> <span class="ow">and</span> <span class="n">cur_frame</span><span class="o">.</span><span class="n">f_back</span> <span class="ow">and</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">cur_frame</span><span class="o">.</span><span class="n">f_back</span><span class="p">,</span> <span class="s2">&quot;f_globals&quot;</span><span class="p">):</span>
-</span><span id="line-44">            <span class="n">cur_frame</span> <span class="o">=</span> <span class="n">cur_frame</span><span class="o">.</span><span class="n">f_back</span>
-</span><span id="line-45">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-46">            <span class="k">break</span>
-</span><span id="line-47">    <span class="n">cur_frame</span><span class="o">.</span><span class="n">f_globals</span><span class="p">[</span><span class="n">dag_id</span><span class="p">]</span> <span class="o">=</span> <span class="n">dag</span>
-</span><span id="line-48">    <span class="k">return</span> <span class="n">dag</span>
-</span><span id="line-49">
-</span><span id="line-50">
-</span><span id="line-51"><span class="nd">@create_dag</span><span class="o">.</span><span class="n">register</span>
-</span><span id="line-52"><span class="k">def</span><span class="w"> </span><span class="nf">_create_dag_dir</span><span class="p">(</span><span class="n">config_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span> <span class="n">config_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dag_id</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DAG</span><span class="p">:</span>
-</span><span id="line-53">    <span class="n">dag_id</span> <span class="o">=</span> <span class="n">dag_id</span> <span class="ow">or</span> <span class="n">generate_dag_id</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</span><span id="line-54">    <span class="n">config</span> <span class="o">=</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">config_dir</span><span class="o">=</span><span class="n">config_dir</span><span class="p">,</span> <span class="n">config_name</span><span class="o">=</span><span class="n">config_name</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</span><span id="line-55">    <span class="k">return</span> <span class="n">create_dag</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dag_id</span><span class="o">=</span><span class="n">dag_id</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-</span><span id="line-56">
-</span><span id="line-57">
-</span><span id="line-58"><span class="nd">@create_dags</span><span class="o">.</span><span class="n">register</span>
-</span><span id="line-59"><span class="k">def</span><span class="w"> </span><span class="nf">_create_dags_config</span><span class="p">(</span><span class="n">configs</span><span class="p">:</span> <span class="nb">list</span><span class="p">,</span> <span class="n">dag_ids</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DAG</span><span class="p">]:</span>
-</span><span id="line-60">    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-61">    <span class="n">dag_ids</span> <span class="o">=</span> <span class="n">dag_ids</span> <span class="ow">or</span> <span class="p">[]</span>
-</span><span id="line-62">    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">config</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">configs</span><span class="p">):</span>
-</span><span id="line-63">        <span class="k">if</span> <span class="n">i</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">dag_ids</span><span class="p">):</span>
-</span><span id="line-64">            <span class="n">dag_id</span> <span class="o">=</span> <span class="n">dag_ids</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>
-</span><span id="line-65">        <span class="k">else</span><span class="p">:</span>
-</span><span id="line-66">            <span class="n">dag_id</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-</span><span id="line-67">        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">create_dag</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dag_id</span><span class="o">=</span><span class="n">dag_id</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-</span><span id="line-68">    <span class="k">return</span> <span class="n">ret</span>
-</span><span id="line-69">
-</span><span id="line-70">
-</span><span id="line-71"><span class="nd">@create_dags</span><span class="o">.</span><span class="n">register</span>
-</span><span id="line-72"><span class="k">def</span><span class="w"> </span><span class="nf">_create_dags_dirs</span><span class="p">(</span>
-</span><span id="line-73">    <span class="n">config_dir</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;config&quot;</span><span class="p">,</span>
-</span><span id="line-74">    <span class="n">config_names</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-75">    <span class="n">overrides</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-</span><span id="line-76">    <span class="n">dag_id_base</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-</span><span id="line-77">    <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-</span><span id="line-78"><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">DAG</span><span class="p">]:</span>
-</span><span id="line-79">    <span class="n">ret</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-80">    <span class="n">dag_id_base</span> <span class="o">=</span> <span class="n">dag_id_base</span> <span class="ow">or</span> <span class="n">generate_dag_id</span><span class="p">(</span><span class="n">offset</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
-</span><span id="line-81">    <span class="k">for</span> <span class="n">config_name</span> <span class="ow">in</span> <span class="n">config_names</span><span class="p">:</span>
-</span><span id="line-82">        <span class="n">config</span> <span class="o">=</span> <span class="n">Configuration</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">config_dir</span><span class="o">=</span><span class="n">config_dir</span><span class="p">,</span> <span class="n">config_name</span><span class="o">=</span><span class="n">config_name</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">)</span>
-</span><span id="line-83">        <span class="n">ret</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">create_dag</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="n">dag_id</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">dag_id_base</span><span class="si">}</span><span class="s2">-</span><span class="si">{</span><span class="n">config_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">_offset</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
-</span><span id="line-84">    <span class="k">return</span> <span class="n">ret</span>
 </span></code></pre></div>
     </div></div>
           </main>

@@ -1,6 +1,0 @@
-﻿airflow\_config.create\_dags
-============================
-
-.. currentmodule:: airflow_config
-
-.. autofunction:: create_dags
