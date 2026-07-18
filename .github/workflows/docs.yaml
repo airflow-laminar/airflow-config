@@ -13,7 +13,7 @@ jobs:
       - uses: actions-ext/python/setup@main
       - uses: actions-ext/node/setup@main
       - run: pip install .[airflow]
-      - run: pip install yardang
+      - run: pip install "yardang[llms,themes]>=0.6.1,<0.7"
       - run: yardang build
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v4
