@@ -157,14 +157,24 @@
 
     <div id="content" role="main">
       <h1>Source code for airflow_config.exceptions</h1><div class="highlight"><pre>
-<span></span><code><span id="line-1"><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;ConfigNotFoundError&quot;</span><span class="p">,)</span>
-</span><span id="line-2">
-</span><span id="line-3">
+<span></span><code><span id="line-1"><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="line-2">    <span class="s2">&quot;ConfigFileExtensionError&quot;</span><span class="p">,</span>
+</span><span id="line-3">    <span class="s2">&quot;ConfigNotFoundError&quot;</span><span class="p">,</span>
+</span><span id="line-4"><span class="p">)</span>
+</span><span id="line-5">
+</span><span id="line-6">
+<div class="viewcode-block" id="ConfigFileExtensionError">
+<a class="viewcode-back" href="../../docs/src/api.html#airflow_config.exceptions.ConfigFileExtensionError">[docs]</a>
+</span><span id="line-7"><span class="k">class</span><span class="w"> </span><span class="nc">ConfigFileExtensionError</span><span class="p">(</span><span class="ne">ValueError</span><span class="p">):</span>
+</span><span id="line-8"><span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a configuration file uses an unsupported extension.&quot;&quot;&quot;</span></div>
+
+</span><span id="line-9">
+</span><span id="line-10">
 <div class="viewcode-block" id="ConfigNotFoundError">
 <a class="viewcode-back" href="../../docs/src/api.html#airflow_config.exceptions.ConfigNotFoundError">[docs]</a>
-</span><span id="line-4"><span class="k">class</span><span class="w"> </span><span class="nc">ConfigNotFoundError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
-</span><span id="line-5">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_dir</span><span class="p">,</span> <span class="n">dagfile</span><span class="p">):</span>
-</span><span id="line-6">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find `</span><span class="si">{</span><span class="n">config_dir</span><span class="si">}</span><span class="s2">` directory on or above DAG: </span><span class="si">{</span><span class="n">dagfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
+</span><span id="line-11"><span class="k">class</span><span class="w"> </span><span class="nc">ConfigNotFoundError</span><span class="p">(</span><span class="ne">RuntimeError</span><span class="p">):</span>
+</span><span id="line-12">    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config_dir</span><span class="p">,</span> <span class="n">dagfile</span><span class="p">):</span>
+</span><span id="line-13">        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Could not find `</span><span class="si">{</span><span class="n">config_dir</span><span class="si">}</span><span class="s2">` directory on or above DAG: </span><span class="si">{</span><span class="n">dagfile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span></div>
 
 </span></code></pre></div>
     </div></div>

@@ -78,7 +78,7 @@ Global default default_args (task arguments)
 
 Global default dag arguments
 
-#### *field* dags *: Dict[str, Annotated[Dag, SerializeAsAny()]] | None* *[Optional]*
+#### *field* dags *: dict[str, Annotated[Dag, SerializeAsAny()]] | None* *[Optional]*
 
 List of dags statically configured via Pydantic
 
@@ -86,7 +86,7 @@ List of dags statically configured via Pydantic
 
 Templates for DAGs and Tasks
 
-#### *field* extensions *: Dict[str, BaseModel] | None* *[Optional]*
+#### *field* extensions *: dict[str, BaseModel] | None* *[Optional]*
 
 Any user-defined extensions
 
@@ -102,7 +102,7 @@ Name of the configuration
 
 Root path
 
-#### *field* tags *: Dict[str, str] | None* *[Optional]*
+#### *field* tags *: dict[str, str] | None* *[Optional]*
 
 Generic Tags for config. NOTE: Not related to dag tags
 
@@ -114,9 +114,9 @@ Generic Tags for config. NOTE: Not related to dag tags
 
 #### apply(dag, dag_kwargs)
 
-#### generate_in_mem(dir: Path | str = None, placeholder_dag_id: str = 'airflow-config-generate-dags')
+#### generate_in_mem(dir: Path | str | None = None, placeholder_dag_id: str = 'airflow-config-generate-dags')
 
-#### generate(dir: Path | str = None)
+#### generate(dir: Path | str | None = None)
 
 ### airflow_config.configuration.base.load_config(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](#airflow_config.configuration.base.Configuration)
 
@@ -134,9 +134,9 @@ Bases: `DAG`
 
 ### airflow_config.dag.create_dags(arg, \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)
 
-### airflow_config.dag.create_dags(configs: list, dag_ids: list[str] = None, \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
+### airflow_config.dag.create_dags(configs: list, dag_ids: list[str] | None = None, \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
 
-### airflow_config.dag.create_dags(config_dir: str = 'config', config_names: list[list[str]] = None, overrides: list[str] | None = None, dag_id_base: str = '', \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
+### airflow_config.dag.create_dags(config_dir: str = 'config', config_names: list[list[str]] | None = None, overrides: list[str] | None = None, dag_id_base: str = '', \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
 
 ### airflow_config.dag.generate_dag_id(name: str = '', dag_root: str = '', offset: int = 2) → str
 
@@ -145,6 +145,12 @@ Bases: `DAG`
 ### airflow_config.utils.generate_dag_id(name: str = '', dag_root: str = '', offset: int = 2) → str
 
 ## Exceptions
+
+### *exception* airflow_config.exceptions.ConfigFileExtensionError
+
+Bases: `ValueError`
+
+Raised when a configuration file uses an unsupported extension.
 
 ### *exception* airflow_config.exceptions.ConfigNotFoundError(config_dir, dagfile)
 

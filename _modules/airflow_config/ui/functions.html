@@ -199,23 +199,22 @@
 </span><span id="line-35">
 </span><span id="line-36">    <span class="c1"># Look if the file directly instantiates a BalancerConfiguration</span>
 </span><span id="line-37">    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;**/*.yaml&quot;</span><span class="p">):</span>
-</span><span id="line-38">        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">():</span>
-</span><span id="line-39">            <span class="k">if</span> <span class="s2">&quot;_target_: airflow_config.Configuration&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">():</span>
-</span><span id="line-40">                <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span id="line-41">    <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
-</span><span id="line-42">    <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="line-43">    <span class="c1"># If we have yamls, look for any that reference them</span>
-</span><span id="line-44">    <span class="k">while</span> <span class="n">len_yamls</span> <span class="o">!=</span> <span class="n">len_yamls_last</span><span class="p">:</span>
-</span><span id="line-45">        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;**/*.yaml&quot;</span><span class="p">):</span>
-</span><span id="line-46">            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
-</span><span id="line-47">                <span class="c1"># Check and see if this references any existing yamls</span>
-</span><span id="line-48">                <span class="k">for</span> <span class="n">yaml</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
-</span><span id="line-49">                    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">yaml</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">yaml</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">@&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">():</span>
-</span><span id="line-50">                        <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span id="line-51">                        <span class="k">break</span>
-</span><span id="line-52">        <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="n">len_yamls</span>
-</span><span id="line-53">        <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
-</span><span id="line-54">    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span></div>
+</span><span id="line-38">        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">&quot;_target_: airflow_config.Configuration&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">():</span>
+</span><span id="line-39">            <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span id="line-40">    <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
+</span><span id="line-41">    <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-42">    <span class="c1"># If we have yamls, look for any that reference them</span>
+</span><span id="line-43">    <span class="k">while</span> <span class="n">len_yamls</span> <span class="o">!=</span> <span class="n">len_yamls_last</span><span class="p">:</span>
+</span><span id="line-44">        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;**/*.yaml&quot;</span><span class="p">):</span>
+</span><span id="line-45">            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
+</span><span id="line-46">                <span class="c1"># Check and see if this references any existing yamls</span>
+</span><span id="line-47">                <span class="k">for</span> <span class="n">yaml</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
+</span><span id="line-48">                    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">yaml</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">yaml</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">@&quot;</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">():</span>
+</span><span id="line-49">                        <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span id="line-50">                        <span class="k">break</span>
+</span><span id="line-51">        <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="n">len_yamls</span>
+</span><span id="line-52">        <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
+</span><span id="line-53">    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span></div>
 
 </span></code></pre></div>
     </div></div>

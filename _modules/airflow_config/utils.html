@@ -157,7 +157,7 @@
 
     <div id="content" role="main">
       <h1>Source code for airflow_config.utils</h1><div class="highlight"><pre>
-<span></span><code><span id="line-1"><span class="kn">from</span><span class="w"> </span><span class="nn">configparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigParser</span>
+<span></span><code><span id="line-1"><span class="kn">from</span><span class="w"> </span><span class="nn">configparser</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigParser</span><span class="p">,</span> <span class="n">Error</span>
 </span><span id="line-2"><span class="kn">from</span><span class="w"> </span><span class="nn">inspect</span><span class="w"> </span><span class="kn">import</span> <span class="n">currentframe</span>
 </span><span id="line-3"><span class="kn">from</span><span class="w"> </span><span class="nn">os</span><span class="w"> </span><span class="kn">import</span> <span class="n">environ</span><span class="p">,</span> <span class="n">getcwd</span><span class="p">,</span> <span class="n">path</span>
 </span><span id="line-4"><span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">cast</span>
@@ -204,7 +204,7 @@
 </span><span id="line-43">            <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">dag_root</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;/&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="s2">&quot;-&quot;</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
 </span><span id="line-44">            <span class="k">while</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">):</span>
 </span><span id="line-45">                <span class="n">name</span> <span class="o">=</span> <span class="n">name</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-</span><span id="line-46">        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span id="line-46">        <span class="k">except</span> <span class="p">(</span><span class="ne">AttributeError</span><span class="p">,</span> <span class="n">Error</span><span class="p">,</span> <span class="ne">KeyError</span><span class="p">,</span> <span class="ne">OSError</span><span class="p">):</span>
 </span><span id="line-47">            <span class="n">name</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="nb">str</span><span class="p">,</span> <span class="n">uuid4</span><span class="p">())</span>
 </span><span id="line-48">    <span class="k">return</span> <span class="n">name</span></div>
 
