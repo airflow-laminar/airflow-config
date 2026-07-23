@@ -1,6 +1,6 @@
 from functools import singledispatch
 from inspect import currentframe
-from typing import Any, Optional
+from typing import Any
 
 from airflow_pydantic.airflow import DAG as BaseDag
 
@@ -8,10 +8,10 @@ from .configuration.base import Configuration
 from .utils import generate_dag_id
 
 __all__ = (
-    "generate_dag_id",
+    "DAG",
     "create_dag",
     "create_dags",
-    "DAG",
+    "generate_dag_id",
 )
 
 
@@ -49,14 +49,14 @@ def _create_dag_config(config: Configuration, dag_id: str = "", _offset: int = 3
 
 
 @create_dag.register
-def _create_dag_dir(config_dir: str = "config", config_name: str = "", overrides: Optional[list[str]] = None, dag_id: str = "", **kwargs: Any) -> DAG:
+def _create_dag_dir(config_dir: str = "config", config_name: str = "", overrides: list[str] | None = None, dag_id: str = "", **kwargs: Any) -> DAG:
     dag_id = dag_id or generate_dag_id(offset=4)
     config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides, _offset=5)
     return create_dag(config, dag_id=dag_id, _offset=5, **kwargs)
 
 
 @create_dags.register
-def _create_dags_config(configs: list, dag_ids: list[str] = None, **kwargs: Any) -> list[DAG]:
+def _create_dags_config(configs: list, dag_ids: list[str] | None = None, **kwargs: Any) -> list[DAG]:
     ret = []
     dag_ids = dag_ids or []
     for i, config in enumerate(configs):
@@ -71,8 +71,8 @@ def _create_dags_config(configs: list, dag_ids: list[str] = None, **kwargs: Any)
 @create_dags.register
 def _create_dags_dirs(
     config_dir: str = "config",
-    config_names: list[list[str]] = None,
-    overrides: Optional[list[str]] = None,
+    config_names: list[list[str]] | None = None,
+    overrides: list[str] | None = None,
     dag_id_base: str = "",
     **kwargs: Any,
 ) -> list[DAG]:

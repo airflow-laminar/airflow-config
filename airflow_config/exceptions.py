@@ -1,4 +1,11 @@
-__all__ = ("ConfigNotFoundError",)
+__all__ = (
+    "ConfigFileExtensionError",
+    "ConfigNotFoundError",
+)
+
+
+class ConfigFileExtensionError(ValueError):
+    """Raised when a configuration file uses an unsupported extension."""
 
 
 class ConfigNotFoundError(RuntimeError):

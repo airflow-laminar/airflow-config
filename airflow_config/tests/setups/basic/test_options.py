@@ -48,7 +48,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
-    assert set(d.tags) == set(["utility", "test"])
+    assert set(d.tags) == {"utility", "test"}
 
 
 def test_create_dag_from_config_create_dag(has_airflow):
