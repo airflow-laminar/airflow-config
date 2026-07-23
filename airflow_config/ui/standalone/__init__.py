@@ -69,7 +69,7 @@ def build_app() -> FastAPI:
             app_theme="",
             app_name="airflow-config",
             app_icon="",
-            menu=AD(get_list=lambda: [], extra_classes=None),
+            menu=AD(get_list=list, extra_classes=None),
             languages={},
             get_url_for_index="/",
             get_url_for_login="",
@@ -92,10 +92,10 @@ def build_app() -> FastAPI:
         return templates.TemplateResponse("home.html", {"yamls": yamls, **fab_common_mock})
 
     @app.get("/yaml")
-    async def yaml(yaml: str = "", overrides: list[str] = []):
+    async def yaml(yaml: str = "", overrides: list[str] | None = None):
         if not yaml:
             return templates.TemplateResponse("500.html", {"yaml": "- yaml file not specified", **fab_common_mock})
-        config = get_configs_from_yaml(yaml, overrides=overrides)
+        config = get_configs_from_yaml(yaml, overrides=overrides or [])
         return templates.TemplateResponse("yaml.html", {"config": config, **fab_common_mock})
 
     return app
@@ -109,4 +109,4 @@ def main():
     app = build_app()
 
     # Run the application using Uvicorn
-    run(app, host="0.0.0.0", port=int(os.environ.get("PORT", 8000)))
+    run(app, host="0.0.0.0", port=int(os.environ.get("PORT", "8000")))

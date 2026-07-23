@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import date, timedelta
 
 from airflow_pydantic.migration import _airflow_3
 
@@ -14,7 +14,7 @@ def test_config_and_options():
     assert conf.default_args.retries == 5
     assert conf.default_args.depends_on_past is False
     # assert conf.global_.schedule == timedelta(seconds=60)
-    assert conf.default_dag_args.start_date == datetime(2024, 1, 1)
+    assert conf.default_dag_args.start_date.date() == date(2024, 1, 1)
     assert conf.default_dag_args.catchup is False
     assert conf.default_dag_args.tags == ["utility", "test"]
 
@@ -48,7 +48,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
-    assert set(d.tags) == set(["utility", "test"])
+    assert set(d.tags) == {"utility", "test"}
 
     d = DAG(dag_id="example_dag", config=conf)
     assert d.default_args["owner"] == "custom_owner"
@@ -67,7 +67,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
-    assert set(d.tags) == set(["utility", "test"])
+    assert set(d.tags) == {"utility", "test"}
 
     d = DAG(dag_id="example_dag2", config=conf)
     assert d.default_args["owner"] == "custom_owner2"
@@ -86,7 +86,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.start_date.month == 1
     assert d.start_date.day == 1
     assert d.catchup is False
-    assert set(d.tags) == set(["utility", "test"])
+    assert set(d.tags) == {"utility", "test"}
 
 
 def test_create_dag(has_airflow):

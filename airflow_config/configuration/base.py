@@ -4,7 +4,6 @@ from copy import deepcopy
 from inspect import currentframe
 from logging import getLogger
 from pathlib import Path
-from typing import Dict, Optional
 
 from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
 from airflow_pydantic.airflow import EmptyOperator
@@ -12,7 +11,7 @@ from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import AliasChoices, BaseModel as PydanticBaseModel, Field, SerializeAsAny, model_validator
 
-from airflow_config.exceptions import ConfigNotFoundError
+from airflow_config.exceptions import ConfigFileExtensionError, ConfigNotFoundError
 from airflow_config.utils import _get_calling_dag
 
 __all__ = (
@@ -24,31 +23,31 @@ _log = getLogger(__name__)
 
 
 class _Templates(BaseModel):
-    dag: Optional[Dict[str, DagArgs]] = Field(default=None, description="Template for DAGs")
-    task: Optional[Dict[str, TaskArgs]] = Field(default=None, description="Template for Tasks")
+    dag: dict[str, DagArgs] | None = Field(default=None, description="Template for DAGs")
+    task: dict[str, TaskArgs] | None = Field(default=None, description="Template for Tasks")
 
 
 class Configuration(BaseModel):
-    default_task_args: Optional[TaskArgs] = Field(
+    default_task_args: TaskArgs | None = Field(
         default_factory=TaskArgs,
         description="Global default default_args (task arguments)",
         validation_alias=AliasChoices("default_args", "default_task_args"),
     )
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
-    dags: Optional[Dict[str, SerializeAsAny[Dag]]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+    dags: dict[str, SerializeAsAny[Dag]] | None = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
     # Templates:
-    templates: Optional[_Templates] = Field(default_factory=_Templates, description="Templates for DAGs and Tasks")
+    templates: _Templates | None = Field(default_factory=_Templates, description="Templates for DAGs and Tasks")
 
     # Extensions
-    extensions: Optional[Dict[str, PydanticBaseModel]] = Field(default_factory=dict, description="Any user-defined extensions")
+    extensions: dict[str, PydanticBaseModel] | None = Field(default_factory=dict, description="Any user-defined extensions")
 
     # Generic options
-    env: Optional[str] = Field(default="", description="Environment to use for this configuration")
-    name: Optional[str] = Field(default="", description="Name of the configuration")
-    root: Optional[Path] = Field(default=None, description="Root path")
-    tags: Optional[Dict[str, str]] = Field(default_factory=dict, description="Generic Tags for config. NOTE: Not related to dag tags")
+    env: str | None = Field(default="", description="Environment to use for this configuration")
+    name: str | None = Field(default="", description="Name of the configuration")
+    root: Path | None = Field(default=None, description="Root path")
+    tags: dict[str, str] | None = Field(default_factory=dict, description="Generic Tags for config. NOTE: Not related to dag tags")
 
     @property
     def default_args(self):
@@ -82,7 +81,7 @@ class Configuration(BaseModel):
     @staticmethod
     def _find_parent_config_folder(config_dir: str = "config", config_name: str = "", *, basepath: str = "", _offset: int = 2):
         if config_name.endswith(".yml"):
-            raise Exception("Config file must be .yaml, not .yml")
+            raise ConfigFileExtensionError("Config file must be .yaml, not .yml")
         if config_name and not config_name.endswith(".yaml"):
             config_name = f"{config_name}.yaml"
         if basepath:
@@ -100,20 +99,20 @@ class Configuration(BaseModel):
                 raise ConfigNotFoundError(config_dir=config_dir, dagfile=calling_dag)
             exists = (folder / config_dir).exists() if not config_name else (folder / config_dir / f"{config_name}").exists()
             if not exists and (folder / config_dir / f"{config_name}.yml").exists():
-                raise Exception(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
+                raise ConfigFileExtensionError(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
 
         config_dir = (folder / config_dir).resolve()
         if not config_name:
             return folder.resolve(), config_dir, ""
         elif (folder / config_dir / f"{config_name}.yml").exists():
-            raise Exception(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
+            raise ConfigFileExtensionError(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
         return folder.resolve(), config_dir, (folder / config_dir / f"{config_name}").resolve()
 
     @staticmethod
     def load(
         config_dir: str = "config",
         config_name: str = "",
-        overrides: Optional[list[str]] = None,
+        overrides: list[str] | None = None,
         *,
         basepath: str = "",
         _offset: int = 3,
@@ -203,7 +202,7 @@ class Configuration(BaseModel):
             # Instantiate self against the dag
             self.dags[dag.dag_id].instantiate(dag=dag)
 
-    def generate_in_mem(self, dir: Path | str = None, placeholder_dag_id: str = "airflow-config-generate-dags"):
+    def generate_in_mem(self, dir: Path | str | None = None, placeholder_dag_id: str = "airflow-config-generate-dags"):
         from ..dag import DAG
 
         cur_frame = currentframe().f_back
@@ -225,12 +224,12 @@ class Configuration(BaseModel):
 
                 dag_instance = DAG(dag_id=dag_id, config=self)
                 # dag_instance.doc_md = f"# Code\n```python\n{rendered}\n```"
-                _log.info(f"Updating DAG fileloc from {dag_instance.fileloc} to {str(dag_path)}")
+                _log.info(f"Updating DAG fileloc from {dag_instance.fileloc} to {dag_path!s}")
                 dag_instance.fileloc = str(dag_path)
                 cur_frame.f_globals[dag_id] = dag_instance
                 _log.info(f"Adding DAG {dag_id} complete")
 
-    def generate(self, dir: Path | str = None):
+    def generate(self, dir: Path | str | None = None):
         dir = dir or Path.cwd()
         dir_path = Path(dir)
         dir_path.mkdir(parents=True, exist_ok=True)

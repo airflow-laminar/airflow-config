@@ -24,7 +24,7 @@ def airflow_config():
         )
         (Path(td) / "airflow.cfg").write_text(tmpl)
         os.environ["AIRFLOW_HOME"] = str(Path(td))
-        os.environ["AIRFLOW_CONFIG"] = str((Path(td) / "airflow.cfg"))
+        os.environ["AIRFLOW_CONFIG"] = str(Path(td) / "airflow.cfg")
         try:
             import airflow.configuration
 

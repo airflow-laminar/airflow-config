@@ -1,4 +1,4 @@
-from configparser import ConfigParser
+from configparser import ConfigParser, Error
 from inspect import currentframe
 from os import environ, getcwd, path
 from typing import cast
@@ -43,6 +43,6 @@ def generate_dag_id(name: str = "", dag_root: str = "", offset: int = 2) -> str:
             name = name.replace(dag_root.replace("/", "-").replace("_", "-"), "")
             while name.startswith("-"):
                 name = name[1:]
-        except Exception:
+        except (AttributeError, Error, KeyError, OSError):
             name = cast(str, uuid4())
     return name
