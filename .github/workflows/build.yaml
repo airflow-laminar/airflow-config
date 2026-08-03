@@ -56,10 +56,11 @@ jobs:
       - name: Install Airflow 2.x
         run: uv pip install -e .[airflow]
         if: ${{ matrix.airflow == '2' }}
-  
+
       - name: Install Airflow 3.x
         run: uv pip install -e .[airflow3]
-        if: ${{ matrix.air
+        if: ${{ matrix.airflow == '3' }}
+
       - name: Lint
         run: make lint
         if: matrix.os == 'ubuntu-latest'
