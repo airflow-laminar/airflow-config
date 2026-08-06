@@ -21,7 +21,10 @@ def test_config_null_schedule():
 
 def test_none_schedule_instantiation():
     try:
-        from airflow.timetables.simple import NullTimetable
+        if _airflow_3():
+            from airflow.sdk.definitions.timetables.simple import NullTimetable
+        else:
+            from airflow.timetables.simple import NullTimetable
     except ImportError:
         pytest.skip("Airflow is not installed, skipping timetable tests")
 

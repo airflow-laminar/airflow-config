@@ -202,6 +202,26 @@ class Configuration(BaseModel):
             # Instantiate self against the dag
             self.dags[dag.dag_id].instantiate(dag=dag)
 
+    def _managed_dags(self):
+        dags = []
+        for extension in (self.extensions or {}).values():
+            factory = getattr(extension, "managed_dags", None)
+            if factory:
+                dags.extend(factory())
+        return dags
+
+    def _generated_files(self):
+        generated = {}
+        for extension in (self.extensions or {}).values():
+            factory = getattr(extension, "generated_files", None)
+            if not factory:
+                continue
+            for filename, source in factory().items():
+                if filename in generated and generated[filename] != source:
+                    raise ValueError(f"Extensions generated conflicting files named {filename}")
+                generated[filename] = source
+        return generated
+
     def generate_in_mem(self, dir: Path | str | None = None, placeholder_dag_id: str = "airflow-config-generate-dags"):
         from ..dag import DAG
 
@@ -229,10 +249,25 @@ class Configuration(BaseModel):
                 cur_frame.f_globals[dag_id] = dag_instance
                 _log.info(f"Adding DAG {dag_id} complete")
 
+        for dag in self._managed_dags():
+            if dag.dag_id in cur_frame.f_globals:
+                raise ValueError(f"Managed DAG ID conflicts with an existing DAG: {dag.dag_id}")
+            dag_path = dir_path / f"{dag.dag_id}.py"
+            dag_instance = dag.instantiate()
+            dag_instance.fileloc = str(dag_path)
+            cur_frame.f_globals[dag.dag_id] = dag_instance
+
     def generate(self, dir: Path | str | None = None):
         dir = dir or Path.cwd()
         dir_path = Path(dir)
         dir_path.mkdir(parents=True, exist_ok=True)
+
+        generated_files = self._generated_files()
+        configured_dag_files = {f"{dag_id}.py" for dag_id in (self.dags or {})}
+        conflicts = configured_dag_files & generated_files.keys()
+        if conflicts:
+            filenames = ", ".join(sorted(conflicts))
+            raise ValueError(f"Managed DAG files conflict with configured DAGs: {filenames}")
 
         for dag_id, dag in self.dags.items():
             if dag.tasks:
@@ -241,6 +276,12 @@ class Configuration(BaseModel):
                 if dag_path.exists() and dag_path.read_text() == rendered:
                     continue
                 dag_path.write_text(rendered)
+
+        for filename, source in generated_files.items():
+            generated_path = dir_path / filename
+            if generated_path.exists() and generated_path.read_text() == source:
+                continue
+            generated_path.write_text(source)
 
 
 load_config = Configuration.load
