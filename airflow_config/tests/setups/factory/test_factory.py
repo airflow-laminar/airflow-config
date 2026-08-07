@@ -53,7 +53,7 @@ def test_create_dag_from_config(has_airflow):
     else:
         assert d.schedule_interval == timedelta(seconds=3600)
     assert isinstance(d.timetable, delta_timetables)
-    timetable_delta = d.timetable.delta if _airflow_3() else d.timetable._delta
+    timetable_delta = d.timetable.delta if hasattr(d.timetable, "delta") else d.timetable._delta
     assert isinstance(timetable_delta, timedelta)
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
