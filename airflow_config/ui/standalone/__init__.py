@@ -1,14 +1,10 @@
 import os
-import sys
 from pathlib import Path
+from typing import Any
 
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-
-# from airflow import __file__ as airflow_root
-from flask_appbuilder import __file__ as flask_appbuilder_root
-from uvicorn import run
 
 from ..functions import get_configs_from_yaml, get_yaml_files
 
@@ -26,13 +22,13 @@ class AD(dict):
 
 def _url_for(name: str, filename: str, **kwargs) -> str:
     if name == "Airflow Config.static":
-        return f"/static/{filename}"
+        return f"static/{filename}"
     return ""
 
 
-def build_app() -> FastAPI:
+def build_app(*, dependencies: list[Any] | None = None) -> FastAPI:
     # Create a FastAPI instance
-    app = FastAPI()
+    app = FastAPI(dependencies=dependencies)
 
     # Serve static files
     app.mount(
@@ -52,7 +48,6 @@ def build_app() -> FastAPI:
         directory=[
             Path(__file__).parent.parent / "templates" / "airflow_config",
             Path(__file__).parent / "templates",
-            Path(flask_appbuilder_root).parent / "templates",
         ],
     )
 
@@ -78,32 +73,29 @@ def build_app() -> FastAPI:
         "current_user": AD(is_anonymous=True),
         "session": {"locale": "en"},
         "_": lambda *args, **kwargs: "",
+        "baselib": AD(get_nonce=lambda: ""),
     }
 
     @app.get("/")
-    async def home():
+    async def home(request: Request):
         dags_folder = os.environ.get("AIRFLOW__CORE__DAGS_FOLDER", os.environ.get("AIRFLOW_HOME", os.getcwd()))
         yamls = get_yaml_files(dags_folder=dags_folder)
         if not yamls:
-            dags_folder = Path(__file__).parent.parent.parent / "tests"
-            yamls = get_yaml_files(dags_folder=dags_folder)
-            if not yamls:
-                return templates.TemplateResponse("404.html", fab_common_mock)
-        return templates.TemplateResponse("home.html", {"yamls": yamls, **fab_common_mock})
+            return templates.TemplateResponse(request, "404.html", fab_common_mock)
+        return templates.TemplateResponse(request, "home.html", {"yamls": yamls, **fab_common_mock})
 
     @app.get("/yaml")
-    async def yaml(yaml: str = "", overrides: list[str] | None = None):
+    async def yaml(request: Request, yaml: str = "", overrides: list[str] | None = None):
         if not yaml:
-            return templates.TemplateResponse("500.html", {"yaml": "- yaml file not specified", **fab_common_mock})
+            return templates.TemplateResponse(request, "500.html", {"yaml": "- yaml file not specified", **fab_common_mock})
         config = get_configs_from_yaml(yaml, overrides=overrides or [])
-        return templates.TemplateResponse("yaml.html", {"config": config, **fab_common_mock})
+        return templates.TemplateResponse(request, "yaml.html", {"config": config, **fab_common_mock})
 
     return app
 
 
 def main():
-    # Append local dir
-    sys.path.append(os.getcwd())
+    from uvicorn import run
 
     # Build the FastAPI application
     app = build_app()

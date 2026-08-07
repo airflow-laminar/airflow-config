@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import logging
 import os
 from typing import ClassVar
 
@@ -11,9 +10,10 @@ __all__ = (
     "AirflowConfigViewerPluginView",
 )
 
-_log = logging.getLogger(__name__)
-
 try:
+    from airflow.api_fastapi.auth.managers.models.resource_details import AccessView
+    from airflow.api_fastapi.core_api.security import requires_access_view
+except ImportError:
     from airflow.configuration import conf
     from airflow.security import permissions
     from airflow.www.auth import has_access
@@ -81,13 +81,37 @@ try:
         appbuilder_views: ClassVar[list] = [view_subitem]
         appbuilder_menu_items: ClassVar[list] = [docs_link_subitem]
 
-except ImportError:
-    _log.info("airflow-config UI plugin disabled: airflow.www / Flask-AppBuilder not available (Airflow 3+)")
+else:
+    from fastapi import Depends
+
+    from .standalone import build_app
 
     class AirflowConfigViewerPluginView:  # type: ignore[no-redef]
         pass
 
     class AirflowConfigViewerPlugin(AirflowPlugin):  # type: ignore[no-redef]
-        """No-op plugin when Flask-AppBuilder UI is not available."""
+        """Airflow 3 FastAPI viewer plugin."""
 
         name = "Airflow Config"
+        fastapi_apps: ClassVar[list] = [
+            {
+                "app": build_app(dependencies=[Depends(requires_access_view(AccessView.WEBSITE))]),
+                "url_prefix": "/airflow-config",
+                "name": "Airflow Config Viewer",
+            }
+        ]
+        external_views: ClassVar[list] = [
+            {
+                "name": "Airflow Config Viewer",
+                "href": "/airflow-config/",
+                "destination": "nav",
+                "category": "admin",
+                "url_route": "airflow-config",
+            },
+            {
+                "name": "Airflow Config Docs",
+                "href": "https://airflow-laminar.github.io/airflow-config/",
+                "destination": "nav",
+                "category": "docs",
+            },
+        ]
