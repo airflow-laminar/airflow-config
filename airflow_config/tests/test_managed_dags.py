@@ -1,89 +1,73 @@
-from airflow_pydantic import BalancerConfiguration, Host
-from hydra.utils import instantiate
-from omegaconf import OmegaConf
+from typing import Any
+from unittest.mock import MagicMock
+
+import pytest
+from pydantic import BaseModel, Field
 
 from airflow_config import Configuration
 
 
-def test_generate_pool_manager_with_normal_dag_configuration(tmp_path):
+class ManagedDagExtension(BaseModel):
+    files: dict[str, str] = Field(default_factory=dict)
+    dags: list[Any] = Field(default_factory=list)
+
+    def generated_files(self):
+        return self.files
+
+    def managed_dags(self):
+        return self.dags
+
+
+class ManagedDag:
+    def __init__(self, dag_id, instance):
+        self.dag_id = dag_id
+        self.instance = instance
+
+    def instantiate(self):
+        return self.instance
+
+
+def test_generate_writes_extension_managed_files(tmp_path):
     config = Configuration(
         dags={},
         extensions={
-            "balancer": BalancerConfiguration(
-                hosts=[Host(name="worker", size=4)],
-                pool_manager={
-                    "dag": {
-                        "dag_id": "custom_pool_manager",
-                        "schedule": "0 * * * *",
-                        "tags": ["platform"],
-                        "max_active_runs": 2,
-                    },
-                    "task": {"queue": "system", "retries": 5},
-                },
+            "test": ManagedDagExtension(
+                files={"managed_runtime.py": "RUNTIME = True\n", "managed_dag.py": "DAG = True\n"},
             )
         },
     )
 
     config.generate(tmp_path)
 
-    runtime = (tmp_path / "_airflow_laminar_pool_runtime.py").read_text()
-    controller = (tmp_path / "custom_pool_manager.py").read_text()
-    assert "airflow_pydantic" not in runtime
-    assert "airflow_pydantic" not in controller
-    assert 'dag_id="custom_pool_manager"' in controller
-    assert 'schedule="0 * * * *"' in controller
-    assert 'tags=["platform"]' in controller
-    assert "max_active_runs=2" in controller
-    assert 'queue="system"' in controller
-    assert "retries=5" in controller
-    assert '"name": "worker"' in controller
+    assert (tmp_path / "managed_runtime.py").read_text() == "RUNTIME = True\n"
+    assert (tmp_path / "managed_dag.py").read_text() == "DAG = True\n"
 
 
-def test_generate_pool_manager_in_memory(tmp_path):
+def test_generate_in_memory_adds_extension_managed_dag(tmp_path, has_airflow):
+    manager = MagicMock()
     config = Configuration(
         dags={},
-        extensions={
-            "balancer": BalancerConfiguration(
-                hosts=[Host(name="worker", size=4)],
-                pool_manager={"dag": {"dag_id": "in_memory_pool_manager"}},
-            )
-        },
+        extensions={"test": ManagedDagExtension(dags=[ManagedDag("managed_dag", manager)])},
     )
 
     try:
-        config.generate_in_mem(tmp_path, placeholder_dag_id="pool_manager_placeholder")
-        manager = globals()["in_memory_pool_manager"]
+        config.generate_in_mem(tmp_path, placeholder_dag_id="managed_dag_placeholder")
 
-        assert manager.dag_id == "in_memory_pool_manager"
-        assert manager.get_task("reconcile_pools").pool == "default_pool"
+        assert globals()["managed_dag"] is manager
+        assert manager.fileloc == str(tmp_path / "managed_dag.py")
     finally:
-        globals().pop("in_memory_pool_manager", None)
-        globals().pop("pool_manager_placeholder", None)
+        globals().pop("managed_dag", None)
+        globals().pop("managed_dag_placeholder", None)
 
 
-def test_pool_manager_accepts_airflow_config_yaml_shape(tmp_path):
-    config = instantiate(
-        OmegaConf.create(
-            {
-                "_target_": "airflow_config.Configuration",
-                "dags": {},
-                "extensions": {
-                    "balancer": {
-                        "_target_": "airflow_pydantic.BalancerConfiguration",
-                        "hosts": [{"name": "worker", "size": 4}],
-                        "pool_manager": {
-                            "dag": {"schedule": "0 2 * * *", "tags": ["platform"]},
-                            "task": {"queue": "system"},
-                        },
-                    }
-                },
-            }
-        )
+def test_generate_rejects_conflicting_extension_files(tmp_path):
+    config = Configuration(
+        dags={},
+        extensions={
+            "first": ManagedDagExtension(files={"managed.py": "FIRST = True\n"}),
+            "second": ManagedDagExtension(files={"managed.py": "SECOND = True\n"}),
+        },
     )
 
-    config.generate(tmp_path)
-
-    controller = (tmp_path / "airflow_laminar_pool_manager.py").read_text()
-    assert 'schedule="0 2 * * *"' in controller
-    assert 'tags=["platform"]' in controller
-    assert 'queue="system"' in controller
+    with pytest.raises(ValueError, match="Extensions generated conflicting files named managed.py"):
+        config.generate(tmp_path)
