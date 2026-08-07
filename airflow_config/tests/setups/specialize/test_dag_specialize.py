@@ -24,7 +24,19 @@ def test_config_and_options():
 
 
 def test_create_dag_from_config(has_airflow):
-    from airflow.timetables.interval import DeltaDataIntervalTimetable
+    if _airflow_3():
+        try:
+            from airflow.sdk.definitions.timetables.interval import DeltaDataIntervalTimetable
+            from airflow.sdk.definitions.timetables.trigger import DeltaTriggerTimetable
+        except ImportError:
+            from airflow.timetables.interval import DeltaDataIntervalTimetable
+            from airflow.timetables.trigger import DeltaTriggerTimetable
+
+        delta_timetables = (DeltaDataIntervalTimetable, DeltaTriggerTimetable)
+    else:
+        from airflow.timetables.interval import DeltaDataIntervalTimetable
+
+        delta_timetables = (DeltaDataIntervalTimetable,)
 
     from airflow_config import DAG, load_config
 
@@ -42,8 +54,9 @@ def test_create_dag_from_config(has_airflow):
         assert d.schedule == timedelta(seconds=3600)
     else:
         assert d.schedule_interval == timedelta(seconds=3600)
-    assert isinstance(d.timetable, DeltaDataIntervalTimetable)
-    assert isinstance(d.timetable._delta, timedelta)
+    assert isinstance(d.timetable, delta_timetables)
+    timetable_delta = d.timetable.delta if hasattr(d.timetable, "delta") else d.timetable._delta
+    assert isinstance(timetable_delta, timedelta)
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1
