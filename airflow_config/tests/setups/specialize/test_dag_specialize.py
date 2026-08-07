@@ -25,8 +25,12 @@ def test_config_and_options():
 
 def test_create_dag_from_config(has_airflow):
     if _airflow_3():
-        from airflow.sdk.definitions.timetables.interval import DeltaDataIntervalTimetable
-        from airflow.sdk.definitions.timetables.trigger import DeltaTriggerTimetable
+        try:
+            from airflow.sdk.definitions.timetables.interval import DeltaDataIntervalTimetable
+            from airflow.sdk.definitions.timetables.trigger import DeltaTriggerTimetable
+        except ImportError:
+            from airflow.timetables.interval import DeltaDataIntervalTimetable
+            from airflow.timetables.trigger import DeltaTriggerTimetable
 
         delta_timetables = (DeltaDataIntervalTimetable, DeltaTriggerTimetable)
     else:
