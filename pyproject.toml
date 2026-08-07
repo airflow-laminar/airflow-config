@@ -78,7 +78,7 @@ airflow = [
     "apache-airflow-providers-standard",
 ]
 airflow3 = [
-    "apache-airflow>=3,<3.2",
+    "apache-airflow>=3,<3.4",
     "apache-airflow-providers-ssh",
     "apache-airflow-providers-standard",
 ]
