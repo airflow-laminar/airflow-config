@@ -1,13 +1,20 @@
 from pathlib import Path
 from unittest.mock import patch
 
+from fastapi.testclient import TestClient
+
 
 class TestAirflowPlugin:
-    def test_plugin(self, has_airflow_2):
+    def test_plugin(self, has_airflow):
+        from airflow_pydantic.migration import _airflow_3
+
         from airflow_config.ui.airflow import AirflowConfigViewerPlugin, AirflowConfigViewerPluginView
 
         AirflowConfigViewerPluginView()
-        AirflowConfigViewerPlugin()
+        plugin = AirflowConfigViewerPlugin()
+        if _airflow_3():
+            assert plugin.fastapi_apps[0]["url_prefix"] == "/airflow-config"
+            assert plugin.external_views[0]["href"] == "/airflow-config/"
 
 
 class TestPluginFunctions:
@@ -64,20 +71,22 @@ class TestPluginFunctions:
 
 
 class TestStandaloneUI:
-    def test_standalone_ui(self, has_airflow_2):
+    def test_standalone_ui(self):
         from airflow_config.ui.standalone import build_app
 
-        # Test the build_app function
         app = build_app()
-        assert app is not None
+        client = TestClient(app)
+        response = client.get("/")
+        assert response.status_code == 200
+        assert "airflow-config" in response.text
+        assert "yaml file not specified" in client.get("/yaml").text
 
-    def test_launch(self, has_airflow_2):
-        from airflow_config.ui.standalone import main
+    def test_launch(self):
+        with patch("uvicorn.run") as mock_run:
+            from airflow_config.ui.standalone import main
 
-        # Test the main function
-        with patch("airflow_config.ui.standalone.run") as mock_run:
             main()
             mock_run.assert_called_once()
 
-    def test_main(self, has_airflow_2):
+    def test_main(self):
         import airflow_config.ui.standalone.__main__  # noqa: F401
