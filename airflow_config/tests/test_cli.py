@@ -1,3 +1,4 @@
+import sys
 from pathlib import Path
 from unittest.mock import call, patch
 
@@ -52,3 +53,26 @@ def test_generate_cli_imports_modules_before_loading():
         )
 
     assert import_module.call_args_list == [call("my_resolvers"), call("my_other_resolvers")]
+
+
+def test_generate_cli_adds_current_directory_to_python_path(monkeypatch, tmp_path):
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(sys, "path", sys.path.copy())
+
+    with (
+        patch("airflow_config.cli.import_module"),
+        patch("airflow_config.cli.load_config"),
+    ):
+        main(
+            [
+                "config/prod.yaml",
+                "--output-dir",
+                "generated_dags",
+                "--airflow-version",
+                "3",
+                "--import",
+                "my_resolvers",
+            ]
+        )
+
+    assert sys.path[-1] == str(tmp_path)
