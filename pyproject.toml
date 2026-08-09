@@ -87,6 +87,7 @@ airflow3 = [
 airflow-config-viewer = "airflow_config.ui.airflow:AirflowConfigViewerPlugin"
 
 [project.scripts]
+airflow-config = "airflow_config.cli:main"
 airflow-config-viewer = "airflow_config.ui.standalone:main"
 
 [project.urls]

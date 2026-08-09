@@ -270,7 +270,7 @@ def test_render():
 def test_generate():
     conf = load_config("config", "factory")
     with TemporaryDirectory() as tmp_dir:
-        conf.generate(tmp_dir)
+        conf.generate(tmp_dir, airflow_major_version=2)
         assert sorted(listdir(tmp_dir)) == ["example_dag.py", "example_dag2.py"]
         assert (Path(tmp_dir) / "example_dag.py").read_text() == RENDERED_DAG
 
@@ -283,7 +283,7 @@ def test_render_multi():
 def test_generate_multi():
     conf = load_config("config", "multi")
     with TemporaryDirectory() as tmp_dir:
-        conf.generate(tmp_dir)
+        conf.generate(tmp_dir, airflow_major_version=2)
         assert sorted(listdir(tmp_dir)) == ["example_dag.py", "example_dag2.py"]
         assert (Path(tmp_dir) / "example_dag.py").read_text() == RENDERED_DAG_MULTI
         assert (Path(tmp_dir) / "example_dag2.py").read_text() == RENDERED_DAG_MULTI2
@@ -292,7 +292,7 @@ def test_generate_multi():
 def test_generate_type_override():
     conf = load_config("config", "type_override")
     with TemporaryDirectory() as tmp_dir:
-        conf.generate(tmp_dir)
+        conf.generate(tmp_dir, airflow_major_version=2)
         assert sorted(listdir(tmp_dir)) == ["example_dag.py", "example_dag2.py"]
         assert (Path(tmp_dir) / "example_dag.py").read_text() == RENDERED_DAG_TYPE_OVERRIDE
         assert (Path(tmp_dir) / "example_dag2.py").read_text() == RENDERED_DAG_TYPE_OVERRIDE2
@@ -314,7 +314,7 @@ def test_render_self_balancer_query():
         cfg = load_config("config", "balancer")
         assert cfg.dags["example_dag"].tasks["task_1"].ssh_hook.remote_host == "server2.local"
         with TemporaryDirectory() as tmp_dir:
-            cfg.generate(tmp_dir)
+            cfg.generate(tmp_dir, airflow_major_version=2)
             assert sorted(listdir(tmp_dir)) == [*POOL_MANAGER_FILES, "example_dag.py"]
             if AIRFLOW_PYDANTIC_VERSION >= (1, 6, 2):
                 expected = RENDERED_DAG_BALANCER
@@ -328,7 +328,7 @@ def test_render_self_balancer_query():
 def test_render_self_reference():
     cfg = load_config("config", "self_reference")
     with TemporaryDirectory() as tmp_dir:
-        cfg.generate(tmp_dir)
+        cfg.generate(tmp_dir, airflow_major_version=2)
         assert sorted(listdir(tmp_dir)) == [*POOL_MANAGER_FILES, "example_dag.py"]
         assert (Path(tmp_dir) / "example_dag.py").read_text() == RENDERED_DAG_SELF_REFERENCE
 
@@ -336,6 +336,6 @@ def test_render_self_reference():
 def test_render_templates():
     cfg = load_config("config", "templates")
     with TemporaryDirectory() as tmp_dir:
-        cfg.generate(tmp_dir)
+        cfg.generate(tmp_dir, airflow_major_version=2)
         assert sorted(listdir(tmp_dir)) == ["example_dag.py"]
         assert (Path(tmp_dir) / "example_dag.py").read_text() == RENDERED_DAG_TEMPLATES

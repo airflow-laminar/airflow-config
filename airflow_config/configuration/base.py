@@ -1,9 +1,10 @@
 import os
 import sys
 from copy import deepcopy
-from inspect import currentframe
+from inspect import currentframe, signature
 from logging import getLogger
 from pathlib import Path
+from typing import Literal
 
 from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
 from airflow_pydantic.airflow import EmptyOperator
@@ -210,13 +211,14 @@ class Configuration(BaseModel):
                 dags.extend(factory())
         return dags
 
-    def _generated_files(self):
+    def _generated_files(self, airflow_major_version: Literal[2, 3]):
         generated = {}
         for extension in (self.extensions or {}).values():
             factory = getattr(extension, "generated_files", None)
             if not factory:
                 continue
-            for filename, source in factory().items():
+            kwargs = {"airflow_major_version": airflow_major_version} if "airflow_major_version" in signature(factory).parameters else {}
+            for filename, source in factory(**kwargs).items():
                 if filename in generated and generated[filename] != source:
                     raise ValueError(f"Extensions generated conflicting files named {filename}")
                 generated[filename] = source
@@ -257,12 +259,12 @@ class Configuration(BaseModel):
             dag_instance.fileloc = str(dag_path)
             cur_frame.f_globals[dag.dag_id] = dag_instance
 
-    def generate(self, dir: Path | str | None = None):
+    def generate(self, dir: Path | str | None = None, *, airflow_major_version: Literal[2, 3]):
         dir = dir or Path.cwd()
         dir_path = Path(dir)
         dir_path.mkdir(parents=True, exist_ok=True)
 
-        generated_files = self._generated_files()
+        generated_files = self._generated_files(airflow_major_version)
         configured_dag_files = {f"{dag_id}.py" for dag_id in (self.dags or {})}
         conflicts = configured_dag_files & generated_files.keys()
         if conflicts:
@@ -271,7 +273,7 @@ class Configuration(BaseModel):
 
         for dag_id, dag in self.dags.items():
             if dag.tasks:
-                rendered = dag.render()
+                rendered = dag.render(airflow_major_version=airflow_major_version)
                 dag_path = dir_path / f"{dag_id}.py"
                 if dag_path.exists() and dag_path.read_text() == rendered:
                     continue
