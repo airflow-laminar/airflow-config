@@ -116,7 +116,7 @@ Generic Tags for config. NOTE: Not related to dag tags
 
 #### generate_in_mem(dir: Path | str | None = None, placeholder_dag_id: str = 'airflow-config-generate-dags')
 
-#### generate(dir: Path | str | None = None)
+#### generate(dir: Path | str | None = None, , airflow_major_version: Literal[2, 3])
 
 ### airflow_config.configuration.base.load_config(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](#airflow_config.configuration.base.Configuration)
 
@@ -327,11 +327,18 @@ Write one deterministic file per configured DAG:
 from airflow_config import load_config
 
 config = load_config("config", "prod")
-config.generate("generated_dags")
+config.generate("generated_dags", airflow_major_version=3)
 ```
 
 Commit or deploy the generated directory when DAG review and an Airflow runtime
 without Hydra are preferred. Unchanged files are not rewritten.
+
+To generate without installing Airflow, use the command-line interface and select
+the target major version explicitly:
+
+```console
+airflow-config config/prod.yaml --output-dir generated_dags --airflow-version 3
+```
 
 ## How to generate DAGs in memory
 

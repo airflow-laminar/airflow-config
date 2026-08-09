@@ -54,7 +54,7 @@ Generic Tags for config. NOTE: Not related to dag tags
 
 #### generate_in_mem(dir: Path | str | None = None, placeholder_dag_id: str = 'airflow-config-generate-dags')
 
-#### generate(dir: Path | str | None = None)
+#### generate(dir: Path | str | None = None, , airflow_major_version: Literal[2, 3])
 
 ### airflow_config.configuration.base.load_config(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](#airflow_config.configuration.base.Configuration)
 
