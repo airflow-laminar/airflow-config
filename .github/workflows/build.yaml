@@ -25,13 +25,10 @@ permissions:
 
 jobs:
   build:
-    runs-on: ${{ matrix.os }}
+    runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        os: [ubuntu-latest]
-        python-version: ["3.11"]
-        node-version: [22.x]
         airflow: ["2", "3", ""]
 
     steps:
@@ -43,12 +40,12 @@ jobs:
       - name: Setup Python
         uses: actions-ext/python/setup@6e1b91a408ea89f49bc8aff8724f83826f7b5446
         with:
-          version: ${{ matrix.python-version }}
+          version: "3.11"
 
       - name: Setup Node.js
         uses: actions-ext/node/setup@0ea5bdcd24d2488b28e16bf611b446a2f8e1e12f
         with:
-          version: ${{ matrix.node-version }}
+          version: 22.x
 
       - name: Install dependencies
         run: make develop
@@ -63,23 +60,20 @@ jobs:
 
       - name: Lint
         run: make lint
-        if: matrix.os == 'ubuntu-latest'
 
       - name: Checks
         run: make checks
-        if: matrix.os == 'ubuntu-latest'
 
       - name: Build
         run: make build
 
       - name: Test
         run: make coverage
-        if: matrix.os == 'ubuntu-latest'
 
       - name: Upload test results
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
-          name: test-results-${{ matrix.os }}-${{ matrix.python-version }}-${{ matrix.node-version }}
+          name: test-results
           path: '**/junit.xml'
         if: matrix.airflow == '2'
 
@@ -114,6 +108,6 @@ jobs:
       - name: Upload distributions
         uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a  # v7.0.1
         with:
-          name: dist-${{matrix.os}}
+          name: dist
           path: dist
         if: matrix.airflow == '2'
