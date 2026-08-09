@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+from importlib import import_module
 from pathlib import Path
 
 from airflow_config import load_config
@@ -10,11 +11,21 @@ def _parser() -> ArgumentParser:
     parser.add_argument("-o", "--output-dir", type=Path, required=True, help="Directory for generated DAG files")
     parser.add_argument("--airflow-version", type=int, choices=(2, 3), required=True, help="Target Airflow major version")
     parser.add_argument("--override", action="append", default=[], help="Hydra override; may be specified more than once")
+    parser.add_argument(
+        "--import",
+        dest="imports",
+        action="append",
+        default=[],
+        metavar="MODULE",
+        help="Module to import before loading the config, e.g. to register OmegaConf resolvers; may be specified more than once",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> None:
     args = _parser().parse_args(argv)
+    for module in args.imports:
+        import_module(module)
     config_path = args.config.resolve()
     config = load_config(
         config_path.parent.name,
