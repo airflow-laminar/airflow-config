@@ -1,3 +1,4 @@
+import sys
 from argparse import ArgumentParser
 from importlib import import_module
 from pathlib import Path
@@ -24,6 +25,9 @@ def _parser() -> ArgumentParser:
 
 def main(argv: list[str] | None = None) -> None:
     args = _parser().parse_args(argv)
+    cwd = str(Path.cwd())
+    if cwd not in sys.path:
+        sys.path.append(cwd)
     for module in args.imports:
         import_module(module)
     config_path = args.config.resolve()
