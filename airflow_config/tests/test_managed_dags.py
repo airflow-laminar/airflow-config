@@ -18,6 +18,14 @@ class ManagedDagExtension(BaseModel):
         return self.dags
 
 
+class VersionedManagedDagExtension(ManagedDagExtension):
+    version: int | None = None
+
+    def generated_files(self, airflow_major_version):
+        self.version = airflow_major_version
+        return self.files
+
+
 class ManagedDag:
     def __init__(self, dag_id, instance):
         self.dag_id = dag_id
@@ -37,7 +45,7 @@ def test_generate_writes_extension_managed_files(tmp_path):
         },
     )
 
-    config.generate(tmp_path)
+    config.generate(tmp_path, airflow_major_version=2)
 
     assert (tmp_path / "managed_runtime.py").read_text() == "RUNTIME = True\n"
     assert (tmp_path / "managed_dag.py").read_text() == "DAG = True\n"
@@ -70,4 +78,12 @@ def test_generate_rejects_conflicting_extension_files(tmp_path):
     )
 
     with pytest.raises(ValueError, match="Extensions generated conflicting files named managed.py"):
-        config.generate(tmp_path)
+        config.generate(tmp_path, airflow_major_version=2)
+
+
+def test_generate_passes_airflow_version_to_extensions(tmp_path):
+    config = Configuration(dags={}, extensions={"test": VersionedManagedDagExtension()})
+
+    config.generate(tmp_path, airflow_major_version=3)
+
+    assert config.extensions["test"].version == 3

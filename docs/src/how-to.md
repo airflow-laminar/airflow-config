@@ -73,11 +73,18 @@ Write one deterministic file per configured DAG:
 from airflow_config import load_config
 
 config = load_config("config", "prod")
-config.generate("generated_dags")
+config.generate("generated_dags", airflow_major_version=3)
 ```
 
 Commit or deploy the generated directory when DAG review and an Airflow runtime
 without Hydra are preferred. Unchanged files are not rewritten.
+
+To generate without installing Airflow, use the command-line interface and select
+the target major version explicitly:
+
+```console
+airflow-config config/prod.yaml --output-dir generated_dags --airflow-version 3
+```
 
 ## How to generate DAGs in memory
 
