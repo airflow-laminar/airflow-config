@@ -37,10 +37,10 @@ extensions, generated Python DAG files, or in-memory DAG registration.
 
 ## Documentation
 
-- [Tutorial: generate a DAG from YAML](docs/src/tutorial.md)
-- [How-to guides](docs/src/how-to.md)
-- [Why configuration and DAG models are separate](docs/src/explanation.md)
-- [API reference](docs/src/api.md)
+- [Tutorial: generate a DAG from YAML](docs/src/tutorial.html.md)
+- [How-to guides](docs/src/how-to.html.md)
+- [Why configuration and DAG models are separate](docs/src/explanation.html.md)
+- [API reference](docs/src/api.html.md)
 
 Published documentation is available at
 [airflow-laminar.github.io/airflow-config](https://airflow-laminar.github.io/airflow-config/).
@@ -58,7 +58,7 @@ Published documentation is available at
 This library was generated using [copier](https://copier.readthedocs.io/en/stable/) from the [Base Python Project Template repository](https://github.com/python-project-templates/base).
 
 
-# api.html.md
+# docs/src/api.html.md
 
 # API reference
 
@@ -108,7 +108,7 @@ Generic Tags for config. NOTE: Not related to dag tags
 
 #### *property* default_args
 
-#### *static* load(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](#airflow_config.configuration.base.Configuration)
+#### *static* load(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](docs/src/api.html.md#airflow_config.configuration.base.Configuration)
 
 #### pre_apply(dag, dag_kwargs)
 
@@ -118,25 +118,25 @@ Generic Tags for config. NOTE: Not related to dag tags
 
 #### generate(dir: Path | str | None = None, , airflow_major_version: Literal[2, 3])
 
-### airflow_config.configuration.base.load_config(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](#airflow_config.configuration.base.Configuration)
+### airflow_config.configuration.base.load_config(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](docs/src/api.html.md#airflow_config.configuration.base.Configuration)
 
 ## DAG creation
 
-### *class* airflow_config.dag.DAG(config: [Configuration](#airflow_config.configuration.base.Configuration) = None, \*\*kwargs)
+### *class* airflow_config.dag.DAG(config: [Configuration](docs/src/api.html.md#airflow_config.configuration.base.Configuration) = None, \*\*kwargs)
 
 Bases: `DAG`
 
-### airflow_config.dag.create_dag(arg, \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)
+### airflow_config.dag.create_dag(arg, \*\*kwargs: Any) → [DAG](docs/src/api.html.md#airflow_config.dag.DAG)
 
-### airflow_config.dag.create_dag(config: [Configuration](#airflow_config.configuration.base.Configuration), dag_id: str = '', \_offset: int = 3) → [DAG](#airflow_config.dag.DAG)
+### airflow_config.dag.create_dag(config: [Configuration](docs/src/api.html.md#airflow_config.configuration.base.Configuration), dag_id: str = '', \_offset: int = 3) → [DAG](docs/src/api.html.md#airflow_config.dag.DAG)
 
-### airflow_config.dag.create_dag(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, dag_id: str = '', \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)
+### airflow_config.dag.create_dag(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, dag_id: str = '', \*\*kwargs: Any) → [DAG](docs/src/api.html.md#airflow_config.dag.DAG)
 
-### airflow_config.dag.create_dags(arg, \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)
+### airflow_config.dag.create_dags(arg, \*\*kwargs: Any) → [DAG](docs/src/api.html.md#airflow_config.dag.DAG)
 
-### airflow_config.dag.create_dags(configs: list, dag_ids: list[str] | None = None, \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
+### airflow_config.dag.create_dags(configs: list, dag_ids: list[str] | None = None, \*\*kwargs: Any) → list[[DAG](docs/src/api.html.md#airflow_config.dag.DAG)]
 
-### airflow_config.dag.create_dags(config_dir: str = 'config', config_names: list[list[str]] | None = None, overrides: list[str] | None = None, dag_id_base: str = '', \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
+### airflow_config.dag.create_dags(config_dir: str = 'config', config_names: list[list[str]] | None = None, overrides: list[str] | None = None, dag_id_base: str = '', \*\*kwargs: Any) → list[[DAG](docs/src/api.html.md#airflow_config.dag.DAG)]
 
 ### airflow_config.dag.generate_dag_id(name: str = '', dag_root: str = '', offset: int = 2) → str
 
@@ -163,7 +163,7 @@ Bases: `RuntimeError`
 ### airflow_config.ui.functions.get_yaml_files(dags_folder: str) → list[Path]
 
 
-# explanation.html.md
+# docs/src/explanation.html.md
 
 # Why configuration and DAG models are separate
 
@@ -250,7 +250,7 @@ The result is one declarative graph whose components retain independent owners
 and release cycles.
 
 
-# how-to.html.md
+# docs/src/how-to.html.md
 
 # How-to guides
 
@@ -554,7 +554,7 @@ Airflow 2 also discovers the packaged viewer plugin through its plugin entry
 point. The standalone viewer is available without enabling the webserver plugin.
 
 
-# tutorial.html.md
+# docs/src/tutorial.html.md
 
 # Tutorial: generate a DAG from YAML
 

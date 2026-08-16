@@ -35,10 +35,10 @@ extensions, generated Python DAG files, or in-memory DAG registration.
 
 ## Documentation
 
-- [Tutorial: generate a DAG from YAML](docs/src/tutorial.md)
-- [How-to guides](docs/src/how-to.md)
-- [Why configuration and DAG models are separate](docs/src/explanation.md)
-- [API reference](docs/src/api.md)
+- [Tutorial: generate a DAG from YAML](docs/src/tutorial.html.md)
+- [How-to guides](docs/src/how-to.html.md)
+- [Why configuration and DAG models are separate](docs/src/explanation.html.md)
+- [API reference](docs/src/api.html.md)
 
 Published documentation is available at
 [airflow-laminar.github.io/airflow-config](https://airflow-laminar.github.io/airflow-config/).
