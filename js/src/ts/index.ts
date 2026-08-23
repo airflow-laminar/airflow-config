@@ -1,9 +1,18 @@
 import "@andypf/json-viewer";
-import "@andypf/json-viewer";
+
+declare global {
+  interface Window {
+    __AIRFLOW_CONFIG__: string;
+  }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
-  const root: HTMLDivElement = document.getElementById("airflow-config-root");
-  const raw_config: string = window.__AIRFLOW_CONFIG__;
+  const root = document.getElementById("airflow-config-root");
+  if (!root) {
+    return;
+  }
+
+  const raw_config = window.__AIRFLOW_CONFIG__;
   const json_viewer = document.createElement("andypf-json-viewer");
   json_viewer.setAttribute("data", raw_config);
   json_viewer.setAttribute("indent", "8");

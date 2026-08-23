@@ -8,7 +8,7 @@ from fastapi.templating import Jinja2Templates
 
 from ..functions import get_configs_from_yaml, get_yaml_files
 
-_static_path = Path(__file__).parent.parent / "static"
+_static_path = Path(__file__).parent.parent.parent / "extension"
 _static_airflow_path = Path(__file__).parent / "static"
 
 __all__ = ("build_app", "main")
