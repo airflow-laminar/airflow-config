@@ -20,6 +20,12 @@ const BUNDLES = [
 const DIST_DIR = path.resolve("dist");
 
 async function build() {
+  fs.rmSync("dist", { recursive: true, force: true });
+  fs.rmSync("../airflow_config/extension", {
+    recursive: true,
+    force: true,
+  });
+
   // Bundle css
   await bundle_css();
 
@@ -27,16 +33,31 @@ async function build() {
   await cpy("src/html/*", "dist/");
 
   // Copy images
+<<<<<<< before updating
   fs.mkdirSync("dist/img", { recursive: true });
   await cpy("src/img/*", "dist/img");
+=======
+  if (fs.existsSync("src/img")) {
+    fs.mkdirSync("dist/img", { recursive: true });
+    await cpy("src/img/*", "dist/img");
+  }
+>>>>>>> after updating
 
   await Promise.all(BUNDLES.map(bundle)).catch(() => process.exit(1));
 
   // Copy servable assets to python extension (exclude esm/)
+<<<<<<< before updating
   fs.mkdirSync("../airflow_config/ui/static", { recursive: true });
   await cpy("dist/**/*", "../airflow_config/ui/static", {
     filter: (file) => !path.relative(DIST_DIR, file.path).startsWith("esm"),
+=======
+  fs.mkdirSync("../airflow_config/extension", { recursive: true });
+  await cpy("dist/**/*", "../airflow_config/extension", {
+    filter: (file) =>
+      !file.relativePath.startsWith("esm/") &&
+      !file.relativePath.startsWith("dist/esm/"),
+>>>>>>> after updating
   });
 }
 
-build();
+await build();

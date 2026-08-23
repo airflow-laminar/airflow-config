@@ -14,11 +14,11 @@
     "noFallthroughCasesInSwitch": true,
     "outDir": "./dist/esm",
     "resolveJsonModule": true,
-    "rootDir": ".",
+    "rootDir": "./src/ts",
     "skipLibCheck": true,
     "strict": true,
     "target": "ES2020",
     "useDefineForClassFields": true
   },
-  "include": ["./src/ts/*.ts", "./tests/*.ts"]
+  "include": ["./src/ts/*.ts"]
 }

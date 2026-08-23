@@ -18,8 +18,7 @@
     "./package.json": "./package.json"
   },
   "files": [
-    "dist/**/*",
-    "index.d.ts"
+    "dist/**/*"
   ],
   "types": "./dist/esm/index.d.ts",
   "publishConfig": {
@@ -27,8 +26,15 @@
   },
   "scripts": {
     "build:debug": "node build.mjs --debug",
+<<<<<<< before updating
     "build": "node build.mjs",
     "clean": "rm -rf dist playwright-report ../airflow_config/ui/static",
+=======
+    "build:prod": "node build.mjs",
+    "build:types": "tsc",
+    "build": "npm-run-all build:prod build:types",
+    "clean": "rm -rf dist playwright-report ../airflow_config/extension",
+>>>>>>> after updating
     "dev": "npm-run-all -p start watch",
     "lint": "oxlint . && oxfmt --check \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
     "fix": "oxlint --fix . && oxfmt --write \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
