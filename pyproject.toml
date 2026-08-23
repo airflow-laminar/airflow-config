@@ -136,7 +136,7 @@ fail_under = 50
 
 [tool.hatch.build]
 artifacts = [
-    "airflow_config/ui/static",
+    "airflow_config/extension",
 ]
 
 [tool.hatch.build.sources]
@@ -165,7 +165,7 @@ path = "js"
 build_cmd = "build"
 tool = "pnpm"
 targets = [
-    "airflow_config/ui/static/cdn/index.js",
+    "airflow_config/extension/cdn/index.js",
 ]
 
 [tool.pytest.ini_options]

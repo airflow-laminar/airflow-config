@@ -29,7 +29,7 @@
     "build:prod": "node build.mjs",
     "build:types": "tsc",
     "build": "npm-run-all build:prod build:types",
-    "clean": "rm -rf dist playwright-report ../airflow_config/ui/static",
+    "clean": "rm -rf dist playwright-report ../airflow_config/extension",
     "dev": "npm-run-all -p start watch",
     "lint": "oxlint . && oxfmt --check \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
     "fix": "oxlint --fix . && oxfmt --write \"src/**/*.{js,ts,jsx,tsx,css}\" \"tests/**/*.{js,ts,jsx,tsx}\" \"*.mjs\" \"*.json\"",
