@@ -70,6 +70,29 @@ class TestPluginFunctions:
         )
 
 
+class TestPluginFunctionsDagsFolder:
+    def test_get_dags_folder_prefers_environment(self, monkeypatch):
+        from airflow_config.ui.functions import get_dags_folder
+
+        monkeypatch.setenv("AIRFLOW__CORE__DAGS_FOLDER", "/from/env")
+        assert get_dags_folder() == "/from/env"
+
+    def test_get_dags_folder_falls_back_to_airflow_config(self, has_airflow, monkeypatch):
+        from airflow.configuration import conf
+
+        from airflow_config.ui.functions import get_dags_folder
+
+        monkeypatch.delenv("AIRFLOW__CORE__DAGS_FOLDER", raising=False)
+        assert get_dags_folder() == conf.getsection("core").get("dags_folder")
+
+    def test_get_yaml_files_skips_undecodable_files(self, tmp_path):
+        from airflow_config.ui.functions import get_yaml_files
+
+        (tmp_path / "good.yaml").write_text("_target_: airflow_config.Configuration\n")
+        (tmp_path / "bad.yaml").write_bytes(b"\xff\xfe\x00\x81")
+        assert get_yaml_files(tmp_path) == [tmp_path / "good.yaml"]
+
+
 class TestStandaloneUI:
     def test_standalone_ui(self):
         from airflow_config.ui.standalone import build_app
