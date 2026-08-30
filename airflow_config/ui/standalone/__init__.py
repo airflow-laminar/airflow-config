@@ -6,7 +6,7 @@ from fastapi import FastAPI, Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
-from ..functions import get_configs_from_yaml, get_yaml_files
+from ..functions import get_configs_from_yaml, get_dags_folder, get_yaml_files
 
 _static_path = Path(__file__).parent.parent.parent / "extension"
 _static_airflow_path = Path(__file__).parent / "static"
@@ -78,7 +78,7 @@ def build_app(*, dependencies: list[Any] | None = None) -> FastAPI:
 
     @app.get("/")
     async def home(request: Request):
-        dags_folder = os.environ.get("AIRFLOW__CORE__DAGS_FOLDER", os.environ.get("AIRFLOW_HOME", os.getcwd()))
+        dags_folder = get_dags_folder() or os.environ.get("AIRFLOW_HOME") or os.getcwd()
         yamls = get_yaml_files(dags_folder=dags_folder)
         if not yamls:
             return templates.TemplateResponse(request, "404.html", fab_common_mock)
