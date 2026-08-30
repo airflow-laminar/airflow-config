@@ -159,62 +159,93 @@
       <h1>Source code for airflow_config.ui.functions</h1><div class="highlight"><pre>
 <span></span><code><span id="line-1"><span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 </span><span id="line-2">
-</span><span id="line-3"><span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
-</span><span id="line-4"><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
-</span><span id="line-5">
-</span><span id="line-6"><span class="kn">from</span><span class="w"> </span><span class="nn">hydra.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstantiationException</span>
-</span><span id="line-7">
-</span><span id="line-8"><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigNotFoundError</span><span class="p">,</span> <span class="n">load_config</span>
-</span><span id="line-9">
-</span><span id="line-10"><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
-</span><span id="line-11">    <span class="s2">"get_configs_from_yaml"</span><span class="p">,</span>
-</span><span id="line-12">    <span class="s2">"get_yaml_files"</span><span class="p">,</span>
-</span><span id="line-13"><span class="p">)</span>
-</span><span id="line-14">
-</span><span id="line-15"><span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="line-3"><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+</span><span id="line-4"><span class="kn">from</span><span class="w"> </span><span class="nn">logging</span><span class="w"> </span><span class="kn">import</span> <span class="n">getLogger</span>
+</span><span id="line-5"><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+</span><span id="line-6">
+</span><span id="line-7"><span class="kn">from</span><span class="w"> </span><span class="nn">hydra.errors</span><span class="w"> </span><span class="kn">import</span> <span class="n">InstantiationException</span>
+</span><span id="line-8">
+</span><span id="line-9"><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">ConfigNotFoundError</span><span class="p">,</span> <span class="n">load_config</span>
+</span><span id="line-10">
+</span><span id="line-11"><span class="n">__all__</span> <span class="o">=</span> <span class="p">(</span>
+</span><span id="line-12">    <span class="s2">"get_configs_from_yaml"</span><span class="p">,</span>
+</span><span id="line-13">    <span class="s2">"get_dags_folder"</span><span class="p">,</span>
+</span><span id="line-14">    <span class="s2">"get_yaml_files"</span><span class="p">,</span>
+</span><span id="line-15"><span class="p">)</span>
 </span><span id="line-16">
-</span><span id="line-17">
+</span><span id="line-17"><span class="n">log</span> <span class="o">=</span> <span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span><span id="line-18">
+</span><span id="line-19">
+<div class="viewcode-block" id="get_dags_folder">
+<a class="viewcode-back" href="../../../docs/src/api.html#airflow_config.ui.functions.get_dags_folder">[docs]</a>
+</span><span id="line-20"><span class="k">def</span><span class="w"> </span><span class="nf">get_dags_folder</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+</span><span id="line-21"><span class="w">    </span><span class="sd">"""Resolve the dags folder from the environment, falling back to the Airflow config.</span>
+</span><span id="line-22">
+</span><span id="line-23"><span class="sd">    Returns None when Airflow is unavailable, so the standalone viewer can supply its own default.</span>
+</span><span id="line-24"><span class="sd">    """</span>
+</span><span id="line-25">    <span class="n">dags_folder</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"AIRFLOW__CORE__DAGS_FOLDER"</span><span class="p">)</span>
+</span><span id="line-26">    <span class="k">if</span> <span class="n">dags_folder</span><span class="p">:</span>
+</span><span id="line-27">        <span class="k">return</span> <span class="n">dags_folder</span>
+</span><span id="line-28">    <span class="k">try</span><span class="p">:</span>
+</span><span id="line-29">        <span class="kn">from</span><span class="w"> </span><span class="nn">airflow.configuration</span><span class="w"> </span><span class="kn">import</span> <span class="n">conf</span>
+</span><span id="line-30">
+</span><span id="line-31">        <span class="k">return</span> <span class="p">(</span><span class="n">conf</span><span class="o">.</span><span class="n">getsection</span><span class="p">(</span><span class="s2">"core"</span><span class="p">)</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"dags_folder"</span><span class="p">)</span>
+</span><span id="line-32">    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+</span><span id="line-33">        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="s2">"Could not read dags_folder from the Airflow configuration"</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-34">        <span class="k">return</span> <span class="kc">None</span></div>
+
+</span><span id="line-35">
+</span><span id="line-36">
+</span><span id="line-37"><span class="k">def</span><span class="w"> </span><span class="nf">_read_text</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="n">Path</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+</span><span id="line-38"><span class="w">    </span><span class="sd">"""Read a yaml file, skipping any that cannot be decoded or accessed."""</span>
+</span><span id="line-39">    <span class="k">try</span><span class="p">:</span>
+</span><span id="line-40">        <span class="k">return</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span>
+</span><span id="line-41">    <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">UnicodeError</span><span class="p">):</span>
+</span><span id="line-42">        <span class="n">log</span><span class="o">.</span><span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Skipping unreadable file </span><span class="si">{</span><span class="n">path</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span> <span class="n">exc_info</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</span><span id="line-43">        <span class="k">return</span> <span class="s2">""</span>
+</span><span id="line-44">
+</span><span id="line-45">
 <div class="viewcode-block" id="get_configs_from_yaml">
 <a class="viewcode-back" href="../../../docs/src/api.html#airflow_config.ui.functions.get_configs_from_yaml">[docs]</a>
-</span><span id="line-18"><span class="k">def</span><span class="w"> </span><span class="nf">get_configs_from_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overrides</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-</span><span id="line-19">    <span class="c1"># Process the yaml</span>
-</span><span id="line-20">    <span class="n">yaml_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
-</span><span id="line-21">    <span class="k">try</span><span class="p">:</span>
-</span><span id="line-22">        <span class="n">cfg</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">yaml_file</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">yaml_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">basepath</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">))</span>
-</span><span id="line-23">    <span class="k">except</span> <span class="p">(</span><span class="n">ConfigNotFoundError</span><span class="p">,</span> <span class="n">InstantiationException</span><span class="p">):</span>
-</span><span id="line-24">        <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error loading YAML file </span><span class="si">{</span><span class="n">yaml</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
-</span><span id="line-25">        <span class="k">return</span> <span class="s2">""</span>
-</span><span id="line-26">    <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="p">:</span>
-</span><span id="line-27">        <span class="k">return</span> <span class="s2">""</span>
-</span><span id="line-28">    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span></div>
+</span><span id="line-46"><span class="k">def</span><span class="w"> </span><span class="nf">get_configs_from_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">overrides</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+</span><span id="line-47">    <span class="c1"># Process the yaml</span>
+</span><span id="line-48">    <span class="n">yaml_file</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">yaml</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span>
+</span><span id="line-49">    <span class="k">try</span><span class="p">:</span>
+</span><span id="line-50">        <span class="n">cfg</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">yaml_file</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">name</span><span class="p">),</span> <span class="n">yaml_file</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">overrides</span><span class="o">=</span><span class="n">overrides</span><span class="p">,</span> <span class="n">basepath</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">yaml_file</span><span class="p">))</span>
+</span><span id="line-51">    <span class="k">except</span> <span class="p">(</span><span class="n">ConfigNotFoundError</span><span class="p">,</span> <span class="n">InstantiationException</span><span class="p">):</span>
+</span><span id="line-52">        <span class="n">log</span><span class="o">.</span><span class="n">exception</span><span class="p">(</span><span class="sa">f</span><span class="s2">"Error loading YAML file </span><span class="si">{</span><span class="n">yaml</span><span class="si">}</span><span class="s2">"</span><span class="p">)</span>
+</span><span id="line-53">        <span class="k">return</span> <span class="s2">""</span>
+</span><span id="line-54">    <span class="k">if</span> <span class="ow">not</span> <span class="n">cfg</span><span class="p">:</span>
+</span><span id="line-55">        <span class="k">return</span> <span class="s2">""</span>
+</span><span id="line-56">    <span class="k">return</span> <span class="nb">str</span><span class="p">(</span><span class="n">cfg</span><span class="o">.</span><span class="n">model_dump_json</span><span class="p">(</span><span class="n">exclude_unset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">))</span></div>
 
-</span><span id="line-29">
-</span><span id="line-30">
+</span><span id="line-57">
+</span><span id="line-58">
 <div class="viewcode-block" id="get_yaml_files">
 <a class="viewcode-back" href="../../../docs/src/api.html#airflow_config.ui.functions.get_yaml_files">[docs]</a>
-</span><span id="line-31"><span class="k">def</span><span class="w"> </span><span class="nf">get_yaml_files</span><span class="p">(</span><span class="n">dags_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
-</span><span id="line-32">    <span class="c1"># Look for yamls inside the dags folder</span>
-</span><span id="line-33">    <span class="n">yamls</span> <span class="o">=</span> <span class="p">[]</span>
-</span><span id="line-34">    <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dags_folder</span><span class="p">)</span>
-</span><span id="line-35">
-</span><span id="line-36">    <span class="c1"># Look if the file directly instantiates a BalancerConfiguration</span>
-</span><span id="line-37">    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"**/*.yaml"</span><span class="p">):</span>
-</span><span id="line-38">        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">"_target_: airflow_config.Configuration"</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">():</span>
-</span><span id="line-39">            <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span id="line-40">    <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
-</span><span id="line-41">    <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="mi">0</span>
-</span><span id="line-42">    <span class="c1"># If we have yamls, look for any that reference them</span>
-</span><span id="line-43">    <span class="k">while</span> <span class="n">len_yamls</span> <span class="o">!=</span> <span class="n">len_yamls_last</span><span class="p">:</span>
-</span><span id="line-44">        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"**/*.yaml"</span><span class="p">):</span>
-</span><span id="line-45">            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
-</span><span id="line-46">                <span class="c1"># Check and see if this references any existing yamls</span>
-</span><span id="line-47">                <span class="k">for</span> <span class="n">yaml</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
-</span><span id="line-48">                    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">yaml</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">yaml</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">@"</span> <span class="ow">in</span> <span class="n">path</span><span class="o">.</span><span class="n">read_text</span><span class="p">():</span>
-</span><span id="line-49">                        <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
-</span><span id="line-50">                        <span class="k">break</span>
-</span><span id="line-51">        <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="n">len_yamls</span>
-</span><span id="line-52">        <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
-</span><span id="line-53">    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span></div>
+</span><span id="line-59"><span class="k">def</span><span class="w"> </span><span class="nf">get_yaml_files</span><span class="p">(</span><span class="n">dags_folder</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">list</span><span class="p">[</span><span class="n">Path</span><span class="p">]:</span>
+</span><span id="line-60">    <span class="c1"># Look for yamls inside the dags folder</span>
+</span><span id="line-61">    <span class="n">yamls</span> <span class="o">=</span> <span class="p">[]</span>
+</span><span id="line-62">    <span class="n">base_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dags_folder</span><span class="p">)</span>
+</span><span id="line-63">
+</span><span id="line-64">    <span class="c1"># Look if the file directly instantiates a BalancerConfiguration</span>
+</span><span id="line-65">    <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"**/*.yaml"</span><span class="p">):</span>
+</span><span id="line-66">        <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="s2">"_target_: airflow_config.Configuration"</span> <span class="ow">in</span> <span class="n">_read_text</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span><span id="line-67">            <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span id="line-68">    <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
+</span><span id="line-69">    <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="mi">0</span>
+</span><span id="line-70">    <span class="c1"># If we have yamls, look for any that reference them</span>
+</span><span id="line-71">    <span class="k">while</span> <span class="n">len_yamls</span> <span class="o">!=</span> <span class="n">len_yamls_last</span><span class="p">:</span>
+</span><span id="line-72">        <span class="k">for</span> <span class="n">path</span> <span class="ow">in</span> <span class="n">base_path</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">"**/*.yaml"</span><span class="p">):</span>
+</span><span id="line-73">            <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">is_file</span><span class="p">()</span> <span class="ow">and</span> <span class="n">path</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
+</span><span id="line-74">                <span class="c1"># Check and see if this references any existing yamls</span>
+</span><span id="line-75">                <span class="k">for</span> <span class="n">yaml</span> <span class="ow">in</span> <span class="n">yamls</span><span class="p">:</span>
+</span><span id="line-76">                    <span class="k">if</span> <span class="n">path</span><span class="o">.</span><span class="n">parent</span> <span class="o">==</span> <span class="n">yaml</span><span class="o">.</span><span class="n">parent</span> <span class="ow">and</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="n">yaml</span><span class="o">.</span><span class="n">stem</span><span class="si">}</span><span class="s2">@"</span> <span class="ow">in</span> <span class="n">_read_text</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+</span><span id="line-77">                        <span class="n">yamls</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+</span><span id="line-78">                        <span class="k">break</span>
+</span><span id="line-79">        <span class="n">len_yamls_last</span> <span class="o">=</span> <span class="n">len_yamls</span>
+</span><span id="line-80">        <span class="n">len_yamls</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span>
+</span><span id="line-81">    <span class="k">return</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">yamls</span><span class="p">)</span></div>
 
 </span></code></pre></div>
     </div></div>

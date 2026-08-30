@@ -98,4 +98,10 @@ Bases: `RuntimeError`
 
 ### airflow_config.ui.functions.get_configs_from_yaml(yaml: str, overrides: list[str]) → list[str]
 
+### airflow_config.ui.functions.get_dags_folder() → str | None
+
+Resolve the dags folder from the environment, falling back to the Airflow config.
+
+Returns None when Airflow is unavailable, so the standalone viewer can supply its own default.
+
 ### airflow_config.ui.functions.get_yaml_files(dags_folder: str) → list[Path]
