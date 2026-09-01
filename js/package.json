@@ -44,7 +44,7 @@
   "devDependencies": {
     "@playwright/test": "^1.62.0",
     "cpy": "^13.2.2",
-    "esbuild": "^0.28.0",
+    "esbuild": "^0.28.2",
     "lightningcss": "^1.33.0",
     "http-server": "^14.1.1",
     "nodemon": "^3.1.14",
