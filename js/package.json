@@ -49,8 +49,13 @@
     "http-server": "^14.1.1",
     "nodemon": "^3.1.14",
     "npm-run-all": "^4.1.5",
+<<<<<<< before updating
     "oxfmt": "^0.65.0",
     "oxlint": "^1.80.0",
+=======
+    "oxfmt": "^0.66.0",
+    "oxlint": "^1.81.0",
+>>>>>>> after updating
     "typescript": "^7.0.2"
   }
 }
