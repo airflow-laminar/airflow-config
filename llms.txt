@@ -2,17 +2,14 @@
 
 > Hydra and Pydantic configuration for declarative Apache Airflow DAGs
 
-
-the airflow-config authors
-
 ## Pages
 
-- [airflow-config](index.html.md): Declarative Apache Airflow DAGs from Hydra YAML and `airflow-pydantic` models.
-- [Tutorial: generate a DAG from YAML](docs/src/tutorial.html.md): In this tutorial, we will describe a two-task workflow in YAML, load its
-- [How-to guides](docs/src/how-to.html.md): These guides cover configuration composition, materialization, templates,
-- [Why configuration and DAG models are separate](docs/src/explanation.html.md): `airflow-config` treats DAG authoring as configuration composition followed by
+- [airflow-config](index.html.md): Declarative Apache Airflow DAGs from Hydra YAML and airflow-pydantic models.
+- [Tutorial: generate a DAG from YAML](docs/src/tutorial.html.md): In this tutorial, we will describe a two-task workflow in YAML, load its Pydantic models, and register the resulting DAG with Airflow.
+- [How-to guides](docs/src/how-to.html.md): These guides cover configuration composition, materialization, templates, environment selection, and ecosystem integrations.
+- [Why configuration and DAG models are separate](docs/src/explanation.html.md): airflow-config treats DAG authoring as configuration composition followed by materialization. Hydra composes YAML; Pydantic validates the resulting object gr...
 - [API reference](docs/src/api.html.md): This reference is generated from public signatures and docstrings.
 
----
+## Full documentation
 
-For more comprehensive documentation, see [llms-full.txt](llms-full.txt)
+- [llms-full.txt](llms-full.txt): All pages in one document.
