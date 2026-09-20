@@ -27,8 +27,9 @@ a.reference > img {
     background-color: rgba(255, 255, 255, 0.08) !important;
 }
 
-/* Hide duplicate copybtn */
-.copybtn {
+/* Hide the sphinx-copybutton duplicate; the theme ships its own button.copy.
+   Must match copybutton.css's `button.copybtn` specificity to win. */
+button.copybtn {
     display: none;
 }
 
