@@ -15,6 +15,8 @@ class TestAirflowPlugin:
         if _airflow_3():
             assert hasattr(plugin, "fastapi_apps")
             assert hasattr(plugin, "external_views")
+            assert isinstance(plugin.fastapi_apps, list)
+            assert isinstance(plugin.external_views, list)
             assert plugin.fastapi_apps[0]["url_prefix"] == "/airflow-config"
             assert plugin.external_views[0]["href"] == "/airflow-config/"
 
