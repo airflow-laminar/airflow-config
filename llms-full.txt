@@ -551,7 +551,7 @@ This reference is generated from public signatures and docstrings.
 
 Bases: `BaseModel`
 
-#### *field* default_task_args *: TaskArgs | None* *[Optional]*
+#### *field* default_task_args *: TaskArgs* *[Optional]*
 
 Global default default_args (task arguments)
 
@@ -559,7 +559,7 @@ Global default default_args (task arguments)
 
 Global default dag arguments
 
-#### *field* dags *: dict[str, Annotated[Dag, SerializeAsAny()]] | None* *[Optional]*
+#### *field* dags *: dict[str, Annotated[Dag, SerializeAsAny()]]* *[Optional]*
 
 List of dags statically configured via Pydantic
 
@@ -567,7 +567,7 @@ List of dags statically configured via Pydantic
 
 Templates for DAGs and Tasks
 
-#### *field* extensions *: dict[str, BaseModel] | None* *[Optional]*
+#### *field* extensions *: dict[str, BaseModel]* *[Optional]*
 
 Any user-defined extensions
 
@@ -603,7 +603,7 @@ Generic Tags for config. NOTE: Not related to dag tags
 
 ## DAG creation
 
-### *class* airflow_config.dag.DAG(config: [Configuration](#airflow_config.configuration.base.Configuration) = None, \*\*kwargs)[[source]](../../_modules/airflow_config/dag.html.md#DAG)
+### *class* airflow_config.dag.DAG(config: [Configuration](#airflow_config.configuration.base.Configuration) | None = None, \*\*kwargs)[[source]](../../_modules/airflow_config/dag.html.md#DAG)
 
 Bases: `DAG`
 
@@ -613,11 +613,11 @@ Bases: `DAG`
 
 ### airflow_config.dag.create_dag(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, dag_id: str = '', \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)
 
-### airflow_config.dag.create_dags(arg, \*\*kwargs: Any) → [DAG](#airflow_config.dag.DAG)[[source]](../../_modules/airflow_config/dag.html.md#create_dags)
+### airflow_config.dag.create_dags(arg, \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)][[source]](../../_modules/airflow_config/dag.html.md#create_dags)
 
 ### airflow_config.dag.create_dags(configs: list, dag_ids: list[str] | None = None, \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
 
-### airflow_config.dag.create_dags(config_dir: str = 'config', config_names: list[list[str]] | None = None, overrides: list[str] | None = None, dag_id_base: str = '', \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
+### airflow_config.dag.create_dags(config_dir: str = 'config', config_names: list[str] | None = None, overrides: list[str] | None = None, dag_id_base: str = '', \*\*kwargs: Any) → list[[DAG](#airflow_config.dag.DAG)]
 
 ### airflow_config.dag.generate_dag_id(name: str = '', dag_root: str = '', offset: int = 2) → str[[source]](../../_modules/airflow_config/utils.html.md#generate_dag_id)
 
@@ -639,7 +639,7 @@ Bases: `RuntimeError`
 
 ## Viewer functions
 
-### airflow_config.ui.functions.get_configs_from_yaml(yaml: str, overrides: list[str]) → list[str][[source]](../../_modules/airflow_config/ui/functions.html.md#get_configs_from_yaml)
+### airflow_config.ui.functions.get_configs_from_yaml(yaml: str | Path, overrides: Sequence[str]) → str[[source]](../../_modules/airflow_config/ui/functions.html.md#get_configs_from_yaml)
 
 ### airflow_config.ui.functions.get_dags_folder() → str | None[[source]](../../_modules/airflow_config/ui/functions.html.md#get_dags_folder)
 
@@ -647,4 +647,4 @@ Resolve the dags folder from the environment, falling back to the Airflow config
 
 Returns None when Airflow is unavailable, so the standalone viewer can supply its own default.
 
-### airflow_config.ui.functions.get_yaml_files(dags_folder: str) → list[Path][[source]](../../_modules/airflow_config/ui/functions.html.md#get_yaml_files)
+### airflow_config.ui.functions.get_yaml_files(dags_folder: str | Path) → list[Path][[source]](../../_modules/airflow_config/ui/functions.html.md#get_yaml_files)
