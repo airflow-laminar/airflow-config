@@ -4,10 +4,14 @@ from copy import deepcopy
 from inspect import currentframe, signature
 from logging import getLogger
 from pathlib import Path
-from typing import Literal
+from typing import TYPE_CHECKING, Literal
 
 from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
-from airflow_pydantic.airflow import EmptyOperator
+
+if TYPE_CHECKING:
+    from airflow.providers.standard.operators.empty import EmptyOperator
+else:
+    from airflow_pydantic.airflow import EmptyOperator
 from hydra import compose, initialize_config_dir
 from hydra.utils import instantiate
 from pydantic import AliasChoices, BaseModel as PydanticBaseModel, Field, SerializeAsAny, model_validator
@@ -29,20 +33,20 @@ class _Templates(BaseModel):
 
 
 class Configuration(BaseModel):
-    default_task_args: TaskArgs | None = Field(
+    default_task_args: TaskArgs = Field(
         default_factory=TaskArgs,
         description="Global default default_args (task arguments)",
         validation_alias=AliasChoices("default_args", "default_task_args"),
     )
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
 
-    dags: dict[str, SerializeAsAny[Dag]] | None = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
+    dags: dict[str, SerializeAsAny[Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
     # Templates:
     templates: _Templates | None = Field(default_factory=_Templates, description="Templates for DAGs and Tasks")
 
     # Extensions
-    extensions: dict[str, PydanticBaseModel] | None = Field(default_factory=dict, description="Any user-defined extensions")
+    extensions: dict[str, PydanticBaseModel] = Field(default_factory=dict, description="Any user-defined extensions")
 
     # Generic options
     env: str | None = Field(default="", description="Environment to use for this configuration")
@@ -68,6 +72,7 @@ class Configuration(BaseModel):
             else:
                 # Otherwise set key-by-key
                 for key, value in self.default_args.model_dump(exclude_unset=True).items():
+                    assert dag.default_args is not None
                     if key not in dag.default_args.model_fields_set:
                         setattr(dag.default_args, key, deepcopy(value))
 
@@ -102,12 +107,12 @@ class Configuration(BaseModel):
             if not exists and (folder / config_dir / f"{config_name}.yml").exists():
                 raise ConfigFileExtensionError(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
 
-        config_dir = (folder / config_dir).resolve()
+        resolved_config_dir = (folder / config_dir).resolve()
         if not config_name:
-            return folder.resolve(), config_dir, ""
+            return folder.resolve(), resolved_config_dir, ""
         elif (folder / config_dir / f"{config_name}.yml").exists():
             raise ConfigFileExtensionError(f"Config file {config_name}.yml exists in {config_dir} but must be .yaml!")
-        return folder.resolve(), config_dir, (folder / config_dir / f"{config_name}").resolve()
+        return folder.resolve(), resolved_config_dir, (folder / config_dir / f"{config_name}").resolve()
 
     @staticmethod
     def load(
@@ -122,13 +127,13 @@ class Configuration(BaseModel):
 
         with initialize_config_dir(config_dir=str(Path(__file__).resolve().parent / "hydra"), version_base=None):
             if config_dir:
-                hydra_folder, config_dir, _ = Configuration._find_parent_config_folder(
+                hydra_folder, resolved_config_dir, _ = Configuration._find_parent_config_folder(
                     config_dir=config_dir, config_name=config_name, basepath=basepath, _offset=_offset
                 )
 
                 cfg = compose(config_name="conf", overrides=[], return_hydra_config=True)
                 searchpaths = cfg["hydra"]["searchpath"]
-                searchpaths.extend([hydra_folder, config_dir])
+                searchpaths.extend([hydra_folder, resolved_config_dir])
                 if config_name:
                     overrides = [f"+config={config_name}", *overrides.copy(), f"hydra.searchpath=[{','.join(searchpaths)}]"]
                 else:
@@ -144,7 +149,7 @@ class Configuration(BaseModel):
             for dag_id, dag in config.dags.items():
                 if not dag.dag_id:
                     dag.dag_id = dag_id
-                for task_id, task in dag.tasks.items():
+                for task_id, task in (dag.tasks or {}).items():
                     if not task.task_id:
                         task.task_id = task_id
             return config
@@ -227,7 +232,10 @@ class Configuration(BaseModel):
     def generate_in_mem(self, dir: Path | str | None = None, placeholder_dag_id: str = "airflow-config-generate-dags"):
         from ..dag import DAG
 
-        cur_frame = currentframe().f_back
+        frame = currentframe()
+        assert frame is not None
+        cur_frame = frame.f_back
+        assert cur_frame is not None
 
         _log.info("Generating Placeholder DAG for in-memory generation")
         placeholder_dag = DAG(dag_id=placeholder_dag_id, config=self, schedule=None)

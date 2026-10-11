@@ -1,8 +1,11 @@
 from functools import singledispatch
 from inspect import currentframe
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from airflow_pydantic.airflow import DAG as BaseDag
+if TYPE_CHECKING:
+    from airflow.models import DAG as BaseDag
+else:
+    from airflow_pydantic.airflow import DAG as BaseDag
 
 from .configuration.base import Configuration
 from .utils import generate_dag_id
@@ -16,7 +19,7 @@ __all__ = (
 
 
 class DAG(BaseDag):
-    def __init__(self, config: Configuration = None, **kwargs):
+    def __init__(self, config: Configuration | None = None, **kwargs):
         if config:
             config.pre_apply(self, kwargs)
         super().__init__(**kwargs)
@@ -30,7 +33,7 @@ def create_dag(arg, **kwargs: Any) -> DAG:
 
 
 @singledispatch
-def create_dags(arg, **kwargs: Any) -> DAG:
+def create_dags(arg, **kwargs: Any) -> list[DAG]:
     raise NotImplementedError()
 
 
@@ -39,6 +42,7 @@ def _create_dag_config(config: Configuration, dag_id: str = "", _offset: int = 3
     dag_id = dag_id or generate_dag_id(offset=_offset + 1)
     dag = DAG(config=config, dag_id=dag_id)
     cur_frame = currentframe()
+    assert cur_frame is not None
     for _ in range(_offset - 1):
         if hasattr(cur_frame, "f_back") and cur_frame.f_back and hasattr(cur_frame.f_back, "f_globals"):
             cur_frame = cur_frame.f_back
@@ -71,14 +75,14 @@ def _create_dags_config(configs: list, dag_ids: list[str] | None = None, **kwarg
 @create_dags.register
 def _create_dags_dirs(
     config_dir: str = "config",
-    config_names: list[list[str]] | None = None,
+    config_names: list[str] | None = None,
     overrides: list[str] | None = None,
     dag_id_base: str = "",
     **kwargs: Any,
 ) -> list[DAG]:
     ret = []
     dag_id_base = dag_id_base or generate_dag_id(offset=4)
-    for config_name in config_names:
+    for config_name in config_names or []:
         config = Configuration.load(config_dir=config_dir, config_name=config_name, overrides=overrides, _offset=5)
         ret.append(create_dag(config, dag_id=f"{dag_id_base}-{config_name}", _offset=5, **kwargs))
     return ret

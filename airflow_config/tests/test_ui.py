@@ -83,7 +83,7 @@ class TestPluginFunctionsDagsFolder:
         from airflow_config.ui.functions import get_dags_folder
 
         monkeypatch.delenv("AIRFLOW__CORE__DAGS_FOLDER", raising=False)
-        assert get_dags_folder() == conf.getsection("core").get("dags_folder")
+        assert get_dags_folder() == (conf.getsection("core") or {}).get("dags_folder")
 
     def test_get_yaml_files_skips_undecodable_files(self, tmp_path):
         from airflow_config.ui.functions import get_yaml_files

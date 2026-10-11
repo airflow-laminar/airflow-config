@@ -21,7 +21,7 @@ class ManagedDagExtension(BaseModel):
 class VersionedManagedDagExtension(ManagedDagExtension):
     version: int | None = None
 
-    def generated_files(self, airflow_major_version):
+    def generated_files(self, airflow_major_version=None):
         self.version = airflow_major_version
         return self.files
 
@@ -86,4 +86,6 @@ def test_generate_passes_airflow_version_to_extensions(tmp_path):
 
     config.generate(tmp_path, airflow_major_version=3)
 
-    assert config.extensions["test"].version == 3
+    extension = config.extensions["test"]
+    assert isinstance(extension, VersionedManagedDagExtension)
+    assert extension.version == 3

@@ -76,9 +76,9 @@ except ImportError:
         """Defining the plugin class"""
 
         name = "Airflow Config"
-        flask_blueprints: ClassVar[list] = [bp]
-        appbuilder_views: ClassVar[list] = [view_subitem]
-        appbuilder_menu_items: ClassVar[list] = [docs_link_subitem]
+        flask_blueprints: ClassVar[list] = [bp]  # ty: ignore[invalid-attribute-override]
+        appbuilder_views: ClassVar[list] = [view_subitem]  # ty: ignore[invalid-attribute-override]
+        appbuilder_menu_items: ClassVar[list] = [docs_link_subitem]  # ty: ignore[invalid-attribute-override]
 
 else:
     from fastapi import Depends
@@ -92,14 +92,14 @@ else:
         """Airflow 3 FastAPI viewer plugin."""
 
         name = "Airflow Config"
-        fastapi_apps: ClassVar[list] = [
+        fastapi_apps: ClassVar[list] = [  # ty: ignore[invalid-attribute-override]
             {
                 "app": build_app(dependencies=[Depends(requires_access_view(AccessView.WEBSITE))]),
                 "url_prefix": "/airflow-config",
                 "name": "Airflow Config Viewer",
             }
         ]
-        external_views: ClassVar[list] = [
+        external_views: ClassVar[list] = [  # ty: ignore[invalid-attribute-override]
             {
                 "name": "Airflow Config Viewer",
                 "href": "/airflow-config/",

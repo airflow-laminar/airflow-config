@@ -1,7 +1,7 @@
 from datetime import timedelta
 
 from airflow_pydantic.migration import _airflow_3
-from pendulum import Timezone
+from pendulum import DateTime, Timezone
 
 from airflow_config import DAG, load_config
 
@@ -14,6 +14,7 @@ def test_config_and_options():
     assert conf.default_args.email_on_retry is False
     assert conf.default_args.retries == 0
     assert conf.default_args.depends_on_past is False
+    assert isinstance(conf.default_dag_args.start_date, DateTime)
     assert conf.default_dag_args.start_date.year == 2024
     assert conf.default_dag_args.start_date.month == 1
     assert conf.default_dag_args.start_date.day == 1
@@ -57,6 +58,7 @@ def test_create_dag_from_config(has_airflow):
     timetable_delta = d.timetable.delta if hasattr(d.timetable, "delta") else d.timetable._delta
     assert isinstance(timetable_delta, timedelta)
     assert timetable_delta.total_seconds() == 4200
+    assert d.start_date is not None
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1

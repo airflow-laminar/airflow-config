@@ -306,12 +306,14 @@ def test_render_dynamic_gen(has_airflow):
 
 def test_render_self_host():
     cfg = load_config("config", "host")
+    assert cfg.dags["example_dag"].tasks is not None
     assert cfg.dags["example_dag"].tasks["task_1"].ssh_hook.remote_host == "test_host.local"
 
 
 def test_render_self_balancer_query():
     with pools(), variables({"password": "thepassword"}):
         cfg = load_config("config", "balancer")
+        assert cfg.dags["example_dag"].tasks is not None
         assert cfg.dags["example_dag"].tasks["task_1"].ssh_hook.remote_host == "server2.local"
         with TemporaryDirectory() as tmp_dir:
             cfg.generate(tmp_dir, airflow_major_version=2)
