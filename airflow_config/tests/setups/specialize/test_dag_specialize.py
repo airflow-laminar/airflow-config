@@ -1,4 +1,4 @@
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 from airflow_pydantic.migration import _airflow_3
 
@@ -14,10 +14,12 @@ def test_config_and_options():
     assert conf.default_args.retries == 5
     assert conf.default_args.depends_on_past is False
     # assert conf.global_.schedule == timedelta(seconds=60)
+    assert isinstance(conf.default_dag_args.start_date, datetime)
     assert conf.default_dag_args.start_date.date() == date(2024, 1, 1)
     assert conf.default_dag_args.catchup is False
     assert conf.default_dag_args.tags == ["utility", "test"]
 
+    assert conf.dags["example_dag"].default_args is not None
     assert conf.dags["example_dag"].default_args.owner == "custom_owner"
 
     assert str(conf.model_dump_json(indent=2))
@@ -51,12 +53,14 @@ def test_create_dag_from_config(has_airflow):
     assert d.max_active_tasks == 16
     assert d.max_active_runs == 16
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == timedelta(seconds=3600)
     else:
         assert d.schedule_interval == timedelta(seconds=3600)
     assert isinstance(d.timetable, delta_timetables)
     timetable_delta = d.timetable.delta if hasattr(d.timetable, "delta") else d.timetable._delta
     assert isinstance(timetable_delta, timedelta)
+    assert d.start_date is not None
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1
@@ -73,9 +77,11 @@ def test_create_dag_from_config(has_airflow):
     assert d.max_active_tasks == 1
     assert d.max_active_runs == 1
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == "0 3 * * *"
     else:
         assert d.schedule_interval == "0 3 * * *"
+    assert d.start_date is not None
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1
@@ -92,9 +98,11 @@ def test_create_dag_from_config(has_airflow):
     assert d.max_active_tasks == 16
     assert d.max_active_runs == 16
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == "0 4 * * *"
     else:
         assert d.schedule_interval == "0 4 * * *"
+    assert d.start_date is not None
     assert d.start_date.year == 2024
     assert d.start_date.month == 1
     assert d.start_date.day == 1

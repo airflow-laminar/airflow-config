@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import os
+from collections.abc import Sequence
 from logging import getLogger
 from pathlib import Path
 
@@ -28,7 +29,8 @@ def get_dags_folder() -> str | None:
     try:
         from airflow.configuration import conf
 
-        return (conf.getsection("core") or {}).get("dags_folder")
+        folder = (conf.getsection("core") or {}).get("dags_folder")
+        return str(folder) if folder is not None else None
     except Exception:
         log.debug("Could not read dags_folder from the Airflow configuration", exc_info=True)
         return None
@@ -43,11 +45,11 @@ def _read_text(path: Path) -> str:
         return ""
 
 
-def get_configs_from_yaml(yaml: str, overrides: list[str]) -> list[str]:
+def get_configs_from_yaml(yaml: str | Path, overrides: Sequence[str]) -> str:
     # Process the yaml
     yaml_file = Path(yaml).resolve()
     try:
-        cfg = load_config(str(yaml_file.parent.name), yaml_file.name, overrides=overrides, basepath=str(yaml_file))
+        cfg = load_config(str(yaml_file.parent.name), yaml_file.name, overrides=list(overrides), basepath=str(yaml_file))
     except (ConfigNotFoundError, InstantiationException):
         log.exception(f"Error loading YAML file {yaml}")
         return ""
@@ -56,7 +58,7 @@ def get_configs_from_yaml(yaml: str, overrides: list[str]) -> list[str]:
     return str(cfg.model_dump_json(exclude_unset=True, indent=2))
 
 
-def get_yaml_files(dags_folder: str) -> list[Path]:
+def get_yaml_files(dags_folder: str | Path) -> list[Path]:
     # Look for yamls inside the dags folder
     yamls = []
     base_path = Path(dags_folder)
