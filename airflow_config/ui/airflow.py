@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 from pathlib import Path
-from typing import ClassVar
 
 from airflow.plugins_manager import AirflowPlugin
 
@@ -76,9 +75,9 @@ except ImportError:
         """Defining the plugin class"""
 
         name = "Airflow Config"
-        flask_blueprints: ClassVar[list] = [bp]  # ty: ignore[invalid-attribute-override]
-        appbuilder_views: ClassVar[list] = [view_subitem]  # ty: ignore[invalid-attribute-override]
-        appbuilder_menu_items: ClassVar[list] = [docs_link_subitem]  # ty: ignore[invalid-attribute-override]
+        flask_blueprints: list = [bp]  # noqa: RUF012
+        appbuilder_views: list = [view_subitem]  # noqa: RUF012
+        appbuilder_menu_items: list = [docs_link_subitem]  # noqa: RUF012
 
 else:
     from fastapi import Depends
@@ -92,14 +91,14 @@ else:
         """Airflow 3 FastAPI viewer plugin."""
 
         name = "Airflow Config"
-        fastapi_apps: ClassVar[list] = [  # ty: ignore[invalid-attribute-override]
+        fastapi_apps: list = [  # noqa: RUF012
             {
                 "app": build_app(dependencies=[Depends(requires_access_view(AccessView.WEBSITE))]),
                 "url_prefix": "/airflow-config",
                 "name": "Airflow Config Viewer",
             }
         ]
-        external_views: ClassVar[list] = [  # ty: ignore[invalid-attribute-override]
+        external_views: list = [  # noqa: RUF012
             {
                 "name": "Airflow Config Viewer",
                 "href": "/airflow-config/",
