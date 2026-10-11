@@ -53,6 +53,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.max_active_tasks == 16
     assert d.max_active_runs == 16
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == timedelta(seconds=3600)
     else:
         assert d.schedule_interval == timedelta(seconds=3600)
@@ -76,6 +77,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.max_active_tasks == 1
     assert d.max_active_runs == 1
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == "0 3 * * *"
     else:
         assert d.schedule_interval == "0 3 * * *"
@@ -96,6 +98,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.max_active_tasks == 16
     assert d.max_active_runs == 16
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == "0 4 * * *"
     else:
         assert d.schedule_interval == "0 4 * * *"

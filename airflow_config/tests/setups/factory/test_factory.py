@@ -51,6 +51,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.default_args["retries"] == 0
     assert d.default_args["depends_on_past"] is False
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == timedelta(seconds=3600)
     else:
         assert d.schedule_interval == timedelta(seconds=3600)
@@ -68,6 +69,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.default_args["owner"] == "custom_owner"
     assert d.default_args["email"] == ["myemail@myemail.com"]
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == "0 3 * * *"
     else:
         assert d.schedule_interval == "0 3 * * *"

@@ -51,6 +51,7 @@ def test_create_dag_from_config(has_airflow):
     assert d.default_args["depends_on_past"] is False
 
     if _airflow_3() or not hasattr(d, "schedule_interval"):
+        assert hasattr(d, "schedule")
         assert d.schedule == timedelta(hours=1, minutes=10)
     else:
         assert d.schedule_interval == timedelta(hours=1, minutes=10)
