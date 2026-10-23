@@ -4,6 +4,8 @@ from copy import deepcopy
 from inspect import currentframe, signature
 from logging import getLogger
 from pathlib import Path
+from shutil import which
+from subprocess import run
 from typing import TYPE_CHECKING, Literal
 
 from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
@@ -287,8 +289,18 @@ class Configuration(BaseModel):
                     continue
                 dag_path.write_text(rendered)
 
+        ruff = which("ruff")
         for filename, source in generated_files.items():
             generated_path = dir_path / filename
+            if generated_path.suffix == ".py" and ruff:
+                for arguments in (("check", "--fix", "--select", "I"), ("format",)):
+                    source = run(
+                        [ruff, *arguments, "--stdin-filename", str(generated_path), "-"],
+                        input=source,
+                        capture_output=True,
+                        text=True,
+                        check=True,
+                    ).stdout
             if generated_path.exists() and generated_path.read_text() == source:
                 continue
             generated_path.write_text(source)
