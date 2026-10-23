@@ -55,7 +55,7 @@ def has_airflow_2():
 @pytest.fixture(scope="function", autouse=True)
 def configuration() -> Configuration:
     config = Configuration(
-        default_args=TaskArgs(),
+        default_task_args=TaskArgs(),
         default_dag_args=DagArgs(),
         dags={},
     )
