@@ -1,3 +1,44 @@
+/* Generic defaults applied for every theme. Theme-specific overrides live in a
+   bundled `{theme}.css` and are appended after this file. */
+
+/* Handle logo switching for light/dark themes */
+/* Put in code like:
+<a class="logo-light" href="https://github.com/nbprint/nbprint#gh-light-mode-only">
+  <img src="https://github.com/nbprint/nbprint/raw/main/docs/img/logo-light.png?raw=true#gh-light-mode-only" alt="nbprint" width="400"></a>
+</a>
+<a class="logo-dark" href="https://github.com/nbprint/nbprint#gh-dark-mode-only">
+  <img src="https://github.com/nbprint/nbprint/raw/main/docs/img/logo-dark.png?raw=true#gh-dark-mode-only" alt="nbprint" width="400"></a>
+</a>
+*/
+/* Themes that toggle the color scheme with their own attribute add matching
+   rules on top of this file. */
+@media (prefers-color-scheme: dark) {
+    .logo-light {
+        display: none;
+    }
+}
+
+@media (prefers-color-scheme: light) {
+    .logo-dark {
+        display: none;
+    }
+}
+
+
+/* Handle mermaid diagrams in dark mode */
+@media (prefers-color-scheme: dark) {
+    .mermaid-container {
+        background-color: #222;
+    }
+    pre.mermaid svg path {
+        stroke: white !important;
+    }
+}
+@media (prefers-color-scheme: light) {
+    .mermaid-container {
+        background-color: #fafafa;
+    }
+}
 a.reference  {
     display: inline;
 }
