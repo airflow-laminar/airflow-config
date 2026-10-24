@@ -108,9 +108,17 @@
 <section class="tex2jax_ignore mathjax_ignore" id="api-reference">
 <h1>API reference<a class="headerlink" href="#api-reference" title="Link to this heading">¶</a></h1>
 <p>This reference is generated from public signatures and docstrings.</p>
-<section id="module-airflow_config.configuration.base">
-<span id="configuration"></span><h2>Configuration<a class="headerlink" href="#module-airflow_config.configuration.base" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-airflow_config.configuration.base'">¶</a></h2>
-<dl class="py class pydantic_model">
+<section id="configuration">
+<h2>Configuration<a class="headerlink" href="#configuration" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#configuration'">¶</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">Configuration.default_operator_args</span></code> is a list of mappings. Each mapping contains
+an <code class="docutils literal notranslate"><span class="pre">operator</span></code> import path or class followed by default task arguments. The selector
+matches task model instances or subclasses of an installed Airflow operator class.
+Later matching entries override earlier entries. Explicit task values, including
+<code class="docutils literal notranslate"><span class="pre">None</span></code>, override these defaults. Values are validated against the task model and
+copied for each task. The rules apply to tasks in <code class="docutils literal notranslate"><span class="pre">Configuration.dags</span></code>.</p>
+<p>Operator defaults become task arguments, taking precedence over the DAG’s
+<code class="docutils literal notranslate"><span class="pre">default_args</span></code> and global <code class="docutils literal notranslate"><span class="pre">default_task_args</span></code> during rendering and instantiation.</p>
+<dl class="py class pydantic_model" id="module-airflow_config.configuration.base">
 <dt class="sig sig-object py" id="airflow_config.configuration.base.Configuration">
 <em class="property"><span class="pre">pydantic</span> <span class="pre">model</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airflow_config.configuration.base.</span></span><span class="sig-name descname"><span class="pre">Configuration</span></span><a class="reference internal" href="../../_modules/airflow_config/configuration/base.html#Configuration"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#airflow_config.configuration.base.Configuration" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#airflow_config.configuration.base.Configuration'">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseModel</span></code></p>
@@ -123,6 +131,11 @@
 <dt class="sig sig-object py" id="airflow_config.configuration.base.Configuration.default_dag_args">
 <em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_dag_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DagArgs</span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.configuration.base.Configuration.default_dag_args" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#airflow_config.configuration.base.Configuration.default_dag_args'">¶</a></dt>
 <dd><p>Global default dag arguments</p>
+</dd></dl>
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="airflow_config.configuration.base.Configuration.default_operator_args">
+<em class="property"><span class="pre">field</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">default_operator_args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">_OperatorDefaults</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#airflow_config.configuration.base.Configuration.default_operator_args" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#airflow_config.configuration.base.Configuration.default_operator_args'">¶</a></dt>
+<dd><p>Default task arguments selected by task model or operator class</p>
 </dd></dl>
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="airflow_config.configuration.base.Configuration.dags">
@@ -259,10 +272,11 @@
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
-<li><a :data-current="activeSection === '#module-airflow_config.configuration.base'" class="reference internal" href="#module-airflow_config.configuration.base">Configuration</a><ul>
+<li><a :data-current="activeSection === '#configuration'" class="reference internal" href="#configuration">Configuration</a><ul>
 <li><a :data-current="activeSection === '#airflow_config.configuration.base.Configuration'" class="reference internal" href="#airflow_config.configuration.base.Configuration"><code class="docutils literal notranslate"><span class="pre">Configuration</span></code></a><ul>
 <li><a :data-current="activeSection === '#airflow_config.configuration.base.Configuration.default_task_args'" class="reference internal" href="#airflow_config.configuration.base.Configuration.default_task_args"><code class="docutils literal notranslate"><span class="pre">Configuration.default_task_args</span></code></a></li>
 <li><a :data-current="activeSection === '#airflow_config.configuration.base.Configuration.default_dag_args'" class="reference internal" href="#airflow_config.configuration.base.Configuration.default_dag_args"><code class="docutils literal notranslate"><span class="pre">Configuration.default_dag_args</span></code></a></li>
+<li><a :data-current="activeSection === '#airflow_config.configuration.base.Configuration.default_operator_args'" class="reference internal" href="#airflow_config.configuration.base.Configuration.default_operator_args"><code class="docutils literal notranslate"><span class="pre">Configuration.default_operator_args</span></code></a></li>
 <li><a :data-current="activeSection === '#airflow_config.configuration.base.Configuration.dags'" class="reference internal" href="#airflow_config.configuration.base.Configuration.dags"><code class="docutils literal notranslate"><span class="pre">Configuration.dags</span></code></a></li>
 <li><a :data-current="activeSection === '#airflow_config.configuration.base.Configuration.templates'" class="reference internal" href="#airflow_config.configuration.base.Configuration.templates"><code class="docutils literal notranslate"><span class="pre">Configuration.templates</span></code></a></li>
 <li><a :data-current="activeSection === '#airflow_config.configuration.base.Configuration.extensions'" class="reference internal" href="#airflow_config.configuration.base.Configuration.extensions"><code class="docutils literal notranslate"><span class="pre">Configuration.extensions</span></code></a></li>

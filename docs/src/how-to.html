@@ -141,6 +141,36 @@ environment selection, and ecosystem integrations.</p>
 <p>Per-DAG values override <code class="docutils literal notranslate"><span class="pre">default_dag_args</span></code>. Per-DAG <code class="docutils literal notranslate"><span class="pre">default_args</span></code> values
 override <code class="docutils literal notranslate"><span class="pre">default_task_args</span></code> field by field.</p>
 </section>
+<section id="how-to-share-arguments-across-tasks-of-one-type">
+<h2>How to share arguments across tasks of one type<a class="headerlink" href="#how-to-share-arguments-across-tasks-of-one-type" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-to-share-arguments-across-tasks-of-one-type'">¶</a></h2>
+<p>Add operator defaults to your configuration and override individual task values
+where needed:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># @package _global_</span>
+</span><span id="line-2"><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_config.Configuration</span>
+</span><span id="line-3"><span class="nt">default_operator_args</span><span class="p">:</span>
+</span><span id="line-4"><span class="w">  </span><span class="p p-Indicator">-</span><span class="w"> </span><span class="nt">operator</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_pydantic.SSHTask</span>
+</span><span id="line-5"><span class="w">    </span><span class="nt">conn_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">20</span>
+</span><span id="line-6"><span class="w">    </span><span class="nt">cmd_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">300</span>
+</span><span id="line-7"><span class="nt">dags</span><span class="p">:</span>
+</span><span id="line-8"><span class="w">  </span><span class="nt">remote-checks</span><span class="p">:</span>
+</span><span id="line-9"><span class="w">    </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="s">"@daily"</span>
+</span><span id="line-10"><span class="w">    </span><span class="nt">start_date</span><span class="p">:</span><span class="w"> </span><span class="s">"2025-01-01"</span>
+</span><span id="line-11"><span class="w">    </span><span class="nt">tasks</span><span class="p">:</span>
+</span><span id="line-12"><span class="w">      </span><span class="nt">check</span><span class="p">:</span>
+</span><span id="line-13"><span class="w">        </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_pydantic.SSHTask</span>
+</span><span id="line-14"><span class="w">        </span><span class="nt">ssh_conn_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker</span>
+</span><span id="line-15"><span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">hostname</span>
+</span><span id="line-16"><span class="w">      </span><span class="nt">slow-check</span><span class="p">:</span>
+</span><span id="line-17"><span class="w">        </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_pydantic.SSHTask</span>
+</span><span id="line-18"><span class="w">        </span><span class="nt">ssh_conn_id</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">worker</span>
+</span><span id="line-19"><span class="w">        </span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/opt/check-storage</span>
+</span><span id="line-20"><span class="w">        </span><span class="nt">cmd_timeout</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">600</span>
+</span></code></pre></div>
+</div>
+<p>Both tasks use a connection timeout of 20 seconds. <code class="docutils literal notranslate"><span class="pre">slow-check</span></code> keeps its explicit
+command timeout of 600 seconds. Refer to the <a class="reference internal" href="api.html#configuration"><span class="std std-ref">configuration reference</span></a>
+for matching and precedence rules.</p>
+</section>
 <section id="how-to-select-an-environment">
 <h2>How to select an environment<a class="headerlink" href="#how-to-select-an-environment" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-to-select-an-environment'">¶</a></h2>
 <p>Keep one file per environment and choose it at load time:</p>
@@ -381,6 +411,7 @@ point. The standalone viewer is available without enabling the webserver plugin.
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
 <li><a :data-current="activeSection === '#how-to-apply-shared-dag-and-task-defaults'" class="reference internal" href="#how-to-apply-shared-dag-and-task-defaults">How to apply shared DAG and task defaults</a></li>
+<li><a :data-current="activeSection === '#how-to-share-arguments-across-tasks-of-one-type'" class="reference internal" href="#how-to-share-arguments-across-tasks-of-one-type">How to share arguments across tasks of one type</a></li>
 <li><a :data-current="activeSection === '#how-to-select-an-environment'" class="reference internal" href="#how-to-select-an-environment">How to select an environment</a></li>
 <li><a :data-current="activeSection === '#how-to-generate-python-dag-files'" class="reference internal" href="#how-to-generate-python-dag-files">How to generate Python DAG files</a></li>
 <li><a :data-current="activeSection === '#how-to-generate-dags-in-memory'" class="reference internal" href="#how-to-generate-dags-in-memory">How to generate DAGs in memory</a></li>

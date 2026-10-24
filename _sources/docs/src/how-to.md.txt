@@ -36,6 +36,38 @@ dags:
 Per-DAG values override `default_dag_args`. Per-DAG `default_args` values
 override `default_task_args` field by field.
 
+## How to share arguments across tasks of one type
+
+Add operator defaults to your configuration and override individual task values
+where needed:
+
+```yaml
+# @package _global_
+_target_: airflow_config.Configuration
+default_operator_args:
+  - operator: airflow_pydantic.SSHTask
+    conn_timeout: 20
+    cmd_timeout: 300
+dags:
+  remote-checks:
+    schedule: "@daily"
+    start_date: "2025-01-01"
+    tasks:
+      check:
+        _target_: airflow_pydantic.SSHTask
+        ssh_conn_id: worker
+        command: hostname
+      slow-check:
+        _target_: airflow_pydantic.SSHTask
+        ssh_conn_id: worker
+        command: /opt/check-storage
+        cmd_timeout: 600
+```
+
+Both tasks use a connection timeout of 20 seconds. `slow-check` keeps its explicit
+command timeout of 600 seconds. Refer to the [configuration reference](api.md#configuration)
+for matching and precedence rules.
+
 ## How to select an environment
 
 Keep one file per environment and choose it at load time:
