@@ -397,6 +397,29 @@ provides a global default that individual DAGs can override.</p>
 <p>Install <a class="reference external" href="https://github.com/airflow-laminar/airflow-balancer">airflow-balancer</a>
 when using its full configuration and runtime selection features.</p>
 </section>
+<section id="how-to-test-configured-dags-and-tasks">
+<h2>How to test configured DAGs and tasks<a class="headerlink" href="#how-to-test-configured-dags-and-tasks" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-to-test-configured-dags-and-tasks'">¶</a></h2>
+<p>Load the configuration in a test, then assert its expected DAG IDs, task IDs,
+and operator types:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config</span><span class="w"> </span><span class="kn">import</span> <span class="n">load_config</span>
+</span><span id="line-2"><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_config.testing</span><span class="w"> </span><span class="kn">import</span> <span class="n">assert_dag_ids</span><span class="p">,</span> <span class="n">assert_task_ids</span><span class="p">,</span> <span class="n">assert_task_type</span>
+</span><span id="line-3"><span class="kn">from</span><span class="w"> </span><span class="nn">airflow_pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">SSHTask</span>
+</span><span id="line-4">
+</span><span id="line-5">
+</span><span id="line-6"><span class="k">def</span><span class="w"> </span><span class="nf">test_remote_report</span><span class="p">():</span>
+</span><span id="line-7">    <span class="n">config</span> <span class="o">=</span> <span class="n">load_config</span><span class="p">(</span><span class="s2">"config"</span><span class="p">,</span> <span class="s2">"production"</span><span class="p">)</span>
+</span><span id="line-8">    <span class="n">assert_dag_ids</span><span class="p">(</span><span class="n">config</span><span class="p">,</span> <span class="p">{</span><span class="s2">"remote-report"</span><span class="p">})</span>
+</span><span id="line-9">    <span class="n">dag</span> <span class="o">=</span> <span class="n">config</span><span class="o">.</span><span class="n">dags</span><span class="p">[</span><span class="s2">"remote-report"</span><span class="p">]</span>
+</span><span id="line-10">    <span class="n">assert_task_ids</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="p">{</span><span class="s2">"report"</span><span class="p">})</span>
+</span><span id="line-11">    <span class="n">assert_task_type</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="s2">"report"</span><span class="p">,</span> <span class="n">SSHTask</span><span class="p">)</span>
+</span></code></pre></div>
+</div>
+<p>Use task model classes for checks without Airflow installed. With Airflow
+installed, pass an operator class such as <code class="docutils literal notranslate"><span class="pre">SSHOperator</span></code> to check its base type.
+The <a class="reference internal" href="api.html#configuration-testing"><span class="std std-ref">testing reference</span></a> describes matching and
+failure messages. The configuration’s own resolvers still run during loading;
+the assertion helpers do not start an Airflow database or execute tasks.</p>
+</section>
 <section id="how-to-inspect-configurations-visually">
 <h2>How to inspect configurations visually<a class="headerlink" href="#how-to-inspect-configurations-visually" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-to-inspect-configurations-visually'">¶</a></h2>
 <p>Start the standalone viewer with a configuration path:</p>
@@ -423,6 +446,7 @@ point. The standalone viewer is available without enabling the webserver plugin.
 <li><a :data-current="activeSection === '#how-to-add-a-systemd-managed-task'" class="reference internal" href="#how-to-add-a-systemd-managed-task">How to add a systemd-managed task</a></li>
 <li><a :data-current="activeSection === '#how-to-import-cron-jobs'" class="reference internal" href="#how-to-import-cron-jobs">How to import cron jobs</a></li>
 <li><a :data-current="activeSection === '#how-to-select-a-host-with-airflow-balancer'" class="reference internal" href="#how-to-select-a-host-with-airflow-balancer">How to select a host with airflow-balancer</a></li>
+<li><a :data-current="activeSection === '#how-to-test-configured-dags-and-tasks'" class="reference internal" href="#how-to-test-configured-dags-and-tasks">How to test configured DAGs and tasks</a></li>
 <li><a :data-current="activeSection === '#how-to-inspect-configurations-visually'" class="reference internal" href="#how-to-inspect-configurations-visually">How to inspect configurations visually</a></li>
 </ul>
 </div>

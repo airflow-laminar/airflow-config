@@ -320,6 +320,31 @@ dags:
 Install [airflow-balancer](https://github.com/airflow-laminar/airflow-balancer)
 when using its full configuration and runtime selection features.
 
+## How to test configured DAGs and tasks
+
+Load the configuration in a test, then assert its expected DAG IDs, task IDs,
+and operator types:
+
+```python
+from airflow_config import load_config
+from airflow_config.testing import assert_dag_ids, assert_task_ids, assert_task_type
+from airflow_pydantic import SSHTask
+
+
+def test_remote_report():
+    config = load_config("config", "production")
+    assert_dag_ids(config, {"remote-report"})
+    dag = config.dags["remote-report"]
+    assert_task_ids(dag, {"report"})
+    assert_task_type(dag, "report", SSHTask)
+```
+
+Use task model classes for checks without Airflow installed. With Airflow
+installed, pass an operator class such as `SSHOperator` to check its base type.
+The [testing reference](api.html.md#configuration-testing) describes matching and
+failure messages. The configuration’s own resolvers still run during loading;
+the assertion helpers do not start an Airflow database or execute tasks.
+
 ## How to inspect configurations visually
 
 Start the standalone viewer with a configuration path:

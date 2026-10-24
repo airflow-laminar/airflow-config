@@ -474,6 +474,31 @@ dags:
 Install [airflow-balancer](https://github.com/airflow-laminar/airflow-balancer)
 when using its full configuration and runtime selection features.
 
+## How to test configured DAGs and tasks
+
+Load the configuration in a test, then assert its expected DAG IDs, task IDs,
+and operator types:
+
+```python
+from airflow_config import load_config
+from airflow_config.testing import assert_dag_ids, assert_task_ids, assert_task_type
+from airflow_pydantic import SSHTask
+
+
+def test_remote_report():
+    config = load_config("config", "production")
+    assert_dag_ids(config, {"remote-report"})
+    dag = config.dags["remote-report"]
+    assert_task_ids(dag, {"report"})
+    assert_task_type(dag, "report", SSHTask)
+```
+
+Use task model classes for checks without Airflow installed. With Airflow
+installed, pass an operator class such as `SSHOperator` to check its base type.
+The [testing reference](api.html.md#configuration-testing) describes matching and
+failure messages. The configuration’s own resolvers still run during loading;
+the assertion helpers do not start an Airflow database or execute tasks.
+
 ## How to inspect configurations visually
 
 Start the standalone viewer with a configuration path:
@@ -670,6 +695,39 @@ Bases: `DAG`
 ### airflow_config.dag.generate_dag_id(name: str = '', dag_root: str = '', offset: int = 2) → str[[source]](../../_modules/airflow_config/utils.html.md#generate_dag_id)
 
 ## Utilities
+
+### Configuration testing
+
+`airflow_config.testing` provides database-free assertions over stored model
+definitions. DAG and task IDs refer to mapping keys. Disabled definitions are
+included; DAGs produced by extensions are outside these assertions.
+
+- `assert_dag_ids(config, expected)` checks the exact set of configuration DAG keys.
+- `assert_task_ids(dag, expected)` checks the exact set of task keys in a DAG model.
+- `assert_task_type(dag, task_id, expected)` accepts a task model class or an
+  installed Airflow operator base class. Subclasses match. A missing task reports
+  the available keys; a type mismatch reports the actual model and operator.
+
+ID mismatches raise `AssertionError` with missing and unexpected keys. These
+assertions inspect definitions and do not execute tasks or resolve connections.
+
+<a id="module-airflow_config.testing"></a>
+
+Assertions for configuration models without an Airflow database.
+
+### airflow_config.testing.assert_dag_ids(config: [Configuration](#airflow_config.configuration.base.Configuration), expected: Collection[str]) → None[[source]](../../_modules/airflow_config/testing.html.md#assert_dag_ids)
+
+Assert the exact set of DAG keys in a configuration.
+
+### airflow_config.testing.assert_task_ids(dag: Dag, expected: Collection[str]) → None[[source]](../../_modules/airflow_config/testing.html.md#assert_task_ids)
+
+Assert the exact set of task keys in a DAG model.
+
+### airflow_config.testing.assert_task_type(dag: Dag, task_id: str, expected: type) → None[[source]](../../_modules/airflow_config/testing.html.md#assert_task_type)
+
+Assert a task model type or an installed Airflow operator base class.
+
+<a id="module-airflow_config.utils"></a>
 
 ### airflow_config.utils.generate_dag_id(name: str = '', dag_root: str = '', offset: int = 2) → str[[source]](../../_modules/airflow_config/utils.html.md#generate_dag_id)
 
