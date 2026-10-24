@@ -30,6 +30,26 @@ Operator defaults become task arguments, taking precedence over the DAG's
 
 ## Utilities
 
+### Configuration testing
+
+`airflow_config.testing` provides database-free assertions over stored model
+definitions. DAG and task IDs refer to mapping keys. Disabled definitions are
+included; DAGs produced by extensions are outside these assertions.
+
+- `assert_dag_ids(config, expected)` checks the exact set of configuration DAG keys.
+- `assert_task_ids(dag, expected)` checks the exact set of task keys in a DAG model.
+- `assert_task_type(dag, task_id, expected)` accepts a task model class or an
+  installed Airflow operator base class. Subclasses match. A missing task reports
+  the available keys; a type mismatch reports the actual model and operator.
+
+ID mismatches raise `AssertionError` with missing and unexpected keys. These
+assertions inspect definitions and do not execute tasks or resolve connections.
+
+```{eval-rst}
+.. automodule:: airflow_config.testing
+   :members:
+```
+
 ```{eval-rst}
 .. automodule:: airflow_config.utils
    :members:
