@@ -8,7 +8,7 @@ from shutil import which
 from subprocess import run
 from typing import TYPE_CHECKING, Literal
 
-from airflow_pydantic import BaseModel, Dag, DagArgs, TaskArgs
+from airflow_pydantic import BaseModel, Dag, DagArgs, ImportPath, TaskArgs
 
 if TYPE_CHECKING:
     from airflow.providers.standard.operators.empty import EmptyOperator
@@ -34,6 +34,10 @@ class _Templates(BaseModel):
     task: dict[str, TaskArgs] | None = Field(default=None, description="Template for Tasks")
 
 
+class _OperatorDefaults(BaseModel, extra="allow"):
+    operator: ImportPath
+
+
 class Configuration(BaseModel):
     default_task_args: TaskArgs = Field(
         default_factory=TaskArgs,
@@ -41,6 +45,9 @@ class Configuration(BaseModel):
         validation_alias=AliasChoices("default_args", "default_task_args"),
     )
     default_dag_args: DagArgs = Field(default_factory=DagArgs, description="Global default dag arguments")
+    default_operator_args: list[_OperatorDefaults] = Field(
+        default_factory=list, description="Default task arguments selected by task model or operator class"
+    )
 
     dags: dict[str, SerializeAsAny[Dag]] = Field(default_factory=dict, description="List of dags statically configured via Pydantic")
 
@@ -84,6 +91,16 @@ class Configuration(BaseModel):
                 # If `key` is not set in `dag`, set it to the value from `default_dag_args`
                 if key not in dag.model_fields_set:
                     setattr(dag, key, deepcopy(value))
+
+        for dag in self.dags.values():
+            for task in (dag.tasks or {}).values():
+                defaults = {}
+                for rule in self.default_operator_args:
+                    if isinstance(task, rule.operator) or issubclass(task.operator, rule.operator):
+                        defaults.update(rule.model_extra or {})
+                for key, value in defaults.items():
+                    if key not in task.model_fields_set:
+                        setattr(task, key, deepcopy(value))
         return self
 
     @staticmethod
