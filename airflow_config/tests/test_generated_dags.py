@@ -52,3 +52,17 @@ def test_generated_control_id_cannot_replace_configured_dag(tmp_path, generation
         else:
             config.generate(tmp_path, airflow_major_version=2)
             exec((tmp_path / "main.py").read_text(), {})  # noqa: S102
+
+
+@pytest.mark.parametrize("generation", ["memory", "file"])
+def test_generated_control_id_cannot_replace_module_global(tmp_path, generation):
+    config = configuration()
+    existing = object()
+    namespace = {"config": config, "directory": tmp_path, "service-control": existing}
+    with pytest.raises(ValueError, match="service-control"):
+        if generation == "memory":
+            exec("config.generate_in_mem(directory)", namespace)  # noqa: S102
+        else:
+            config.generate(tmp_path, airflow_major_version=2)
+            exec((tmp_path / "main.py").read_text(), namespace)  # noqa: S102
+    assert namespace["service-control"] is existing
