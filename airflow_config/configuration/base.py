@@ -248,6 +248,13 @@ class Configuration(BaseModel):
                 generated[filename] = source
         return generated
 
+    def _register_generated_dags(self, dag, namespace):
+        for dag_id, generated in getattr(dag, "_generated_dags", {}).items():
+            if dag_id in self.dags or (dag_id in namespace and namespace[dag_id] is not generated):
+                raise ValueError(f"Generated DAG ID conflicts with an existing DAG: {dag_id}")
+            generated.fileloc = dag.fileloc
+            namespace[dag_id] = generated
+
     def generate_in_mem(self, dir: Path | str | None = None, placeholder_dag_id: str = "airflow-config-generate-dags"):
         from ..dag import DAG
 
@@ -276,6 +283,7 @@ class Configuration(BaseModel):
                 _log.info(f"Updating DAG fileloc from {dag_instance.fileloc} to {dag_path!s}")
                 dag_instance.fileloc = str(dag_path)
                 cur_frame.f_globals[dag_id] = dag_instance
+                self._register_generated_dags(dag_instance, cur_frame.f_globals)
                 _log.info(f"Adding DAG {dag_id} complete")
 
         for dag in self._managed_dags():
@@ -285,6 +293,7 @@ class Configuration(BaseModel):
             dag_instance = dag.instantiate()
             dag_instance.fileloc = str(dag_path)
             cur_frame.f_globals[dag.dag_id] = dag_instance
+            self._register_generated_dags(dag_instance, cur_frame.f_globals)
 
     def generate(self, dir: Path | str | None = None, *, airflow_major_version: Literal[2, 3]):
         dir = dir or Path.cwd()
@@ -301,6 +310,14 @@ class Configuration(BaseModel):
         for dag_id, dag in self.dags.items():
             if dag.tasks:
                 rendered = dag.render(airflow_major_version=airflow_major_version)
+                if any(getattr(task.operator, "generates_dags", False) for task in dag.tasks.values()):
+                    rendered += (
+                        '\nfor _generated_dag_id, _generated_dag in getattr(dag, "_generated_dags", {}).items():\n'
+                        f"    if _generated_dag_id in {sorted(self.dags)!r} or _generated_dag_id in globals():\n"
+                        '        raise ValueError(f"Generated DAG ID conflicts with an existing DAG: {_generated_dag_id}")\n'
+                        "    _generated_dag.fileloc = dag.fileloc\n"
+                        "    globals()[_generated_dag_id] = _generated_dag\n"
+                    )
                 dag_path = dir_path / f"{dag_id}.py"
                 if dag_path.exists() and dag_path.read_text() == rendered:
                     continue

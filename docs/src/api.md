@@ -22,6 +22,18 @@ Operator defaults become task arguments, taking precedence over the DAG's
 
 ## DAG creation
 
+Task integration operators can set `generates_dags = True` and attach a
+`_generated_dags` mapping to their native DAG,
+keyed by generated DAG ID. `Configuration.generate_in_mem()` registers these DAGs
+in the calling module. `Configuration.generate()` includes registration code in
+the rendered Python file; it runs when Airflow imports that file. Generated DAGs
+use their parent DAG's file location. IDs that conflict with configured DAGs or
+existing module globals raise `ValueError` instead of replacing those values.
+
+For example, `airflow-supervisor` uses this registration to expose per-program
+start/stop/restart controls. Task integrations decide which auxiliary DAGs to
+create; Config does not contact remote services to discover them.
+
 ```{eval-rst}
 .. automodule:: airflow_config.dag
    :members:
