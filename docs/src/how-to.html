@@ -30,7 +30,7 @@
 <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
 <link href="../../_static/autodoc_pydantic.css" rel="stylesheet" type="text/css"/>
-<link href="../../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sphinx-design.min.css?v=6a604523" rel="stylesheet" type="text/css"/>
 <link href="../../_static/searchlite.css?v=4235115c" rel="stylesheet" type="text/css"/>
 <link href="../../_static/styles/custom.css?v=113af4ad" rel="stylesheet" type="text/css"/>
 <link href="../../_static/awesome-sphinx-design.css?v=b41b1d54" rel="stylesheet" type="text/css"/>
@@ -110,6 +110,34 @@
 <h1>How-to guides<a class="headerlink" href="#how-to-guides" title="Link to this heading">¶</a></h1>
 <p>These guides cover configuration composition, materialization, templates,
 environment selection, and ecosystem integrations.</p>
+<section id="how-to-generate-supervisor-program-controls">
+<h2>How to generate Supervisor program controls<a class="headerlink" href="#how-to-generate-supervisor-program-controls" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-to-generate-supervisor-program-controls'">¶</a></h2>
+<p>Define a Supervisor task normally; current Supervisor versions create discrete
+program tasks by default:</p>
+<div class="highlight-yaml notranslate"><div class="highlight"><pre><span></span><code><span id="line-1"><span class="c1"># @package _global_</span>
+</span><span id="line-2"><span class="nt">dags</span><span class="p">:</span>
+</span><span id="line-3"><span class="w">  </span><span class="nt">services</span><span class="p">:</span>
+</span><span id="line-4"><span class="w">    </span><span class="nt">schedule</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">null</span>
+</span><span id="line-5"><span class="w">    </span><span class="nt">tasks</span><span class="p">:</span>
+</span><span id="line-6"><span class="w">      </span><span class="nt">worker</span><span class="p">:</span>
+</span><span id="line-7"><span class="w">        </span><span class="nt">_target_</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">airflow_supervisor.SupervisorTask</span>
+</span><span id="line-8"><span class="w">        </span><span class="nt">cfg</span><span class="p">:</span>
+</span><span id="line-9"><span class="w">          </span><span class="nt">working_dir</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">/tmp/worker</span>
+</span><span id="line-10"><span class="w">          </span><span class="nt">program</span><span class="p">:</span>
+</span><span id="line-11"><span class="w">            </span><span class="nt">main</span><span class="p">:</span><span class="w"> </span><span class="p p-Indicator">{</span><span class="nt">command</span><span class="p">:</span><span class="w"> </span><span class="nv">/opt/services/worker</span><span class="p p-Indicator">}</span>
+</span></code></pre></div>
+</div>
+<p>Load the file and call <code class="docutils literal notranslate"><span class="pre">generate_in_mem()</span></code> or <code class="docutils literal notranslate"><span class="pre">generate(...,</span> <span class="pre">airflow_major_version=2)</span></code> (use <code class="docutils literal notranslate"><span class="pre">3</span></code> for Airflow 3). Config also registers the
+unscheduled <code class="docutils literal notranslate"><span class="pre">worker-start-main</span></code>, <code class="docutils literal notranslate"><span class="pre">worker-stop-main</span></code>, and <code class="docutils literal notranslate"><span class="pre">worker-restart-main</span></code>
+control DAGs, all-program controls, and force kill. No additional helper call is
+needed. <code class="docutils literal notranslate"><span class="pre">SupervisorSSHTask</span></code> uses the same registration with its normal SSH
+configuration. Use distinct lifecycle task keys across DAGs to keep control DAG
+IDs unique.</p>
+<p>In Supervisor, <code class="docutils literal notranslate"><span class="pre">cfg.program_lifecycle:</span> <span class="pre">null</span></code> with no subtask overrides retains
+grouped behavior and does not produce program controls. See the
+<a class="reference external" href="https://airflow-laminar.github.io/airflow-supervisor/how-to.html#how-to-configure-generated-tasks-with-subtasks">Supervisor task configuration guide</a>
+for startup order, waits, shutdown order, and retries.</p>
+</section>
 <section id="how-to-apply-shared-dag-and-task-defaults">
 <h2>How to apply shared DAG and task defaults<a class="headerlink" href="#how-to-apply-shared-dag-and-task-defaults" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#how-to-apply-shared-dag-and-task-defaults'">¶</a></h2>
 <p>Set global defaults and override only the fields that differ:</p>
@@ -433,6 +461,7 @@ point. The standalone viewer is available without enabling the webserver plugin.
 </div></div><aside class="hidden text-sm xl:block" id="right-sidebar">
 <div class="sticky top-16 -mt-10 max-h-[calc(100vh-5rem)] h-full overflow-y-auto pt-6 space-y-2"><p class="font-medium">On this page</p>
 <ul>
+<li><a :data-current="activeSection === '#how-to-generate-supervisor-program-controls'" class="reference internal" href="#how-to-generate-supervisor-program-controls">How to generate Supervisor program controls</a></li>
 <li><a :data-current="activeSection === '#how-to-apply-shared-dag-and-task-defaults'" class="reference internal" href="#how-to-apply-shared-dag-and-task-defaults">How to apply shared DAG and task defaults</a></li>
 <li><a :data-current="activeSection === '#how-to-share-arguments-across-tasks-of-one-type'" class="reference internal" href="#how-to-share-arguments-across-tasks-of-one-type">How to share arguments across tasks of one type</a></li>
 <li><a :data-current="activeSection === '#how-to-select-an-environment'" class="reference internal" href="#how-to-select-an-environment">How to select an environment</a></li>
@@ -467,7 +496,7 @@ point. The standalone viewer is available without enabling the webserver plugin.
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=f281be69"></script>
 <script defer="defer" src="../../_static/theme.js?v=49cc6205"></script>
-<script src="../../_static/design-tabs.js?v=f930bc37"></script>
+<script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
 <script data-searchlite-index="searchlite-index.json" defer="defer" src="../../_static/searchlite.js?v=a5320898"></script>
 <script data-searchlite-adopt="true" defer="defer" src="../../_static/searchlite-ui.js?v=4e4bdd69"></script>
 <script src="../../_static/js/custom.js?v=956e5d78"></script>

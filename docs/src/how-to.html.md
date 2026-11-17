@@ -3,6 +3,37 @@
 These guides cover configuration composition, materialization, templates,
 environment selection, and ecosystem integrations.
 
+## How to generate Supervisor program controls
+
+Define a Supervisor task normally; current Supervisor versions create discrete
+program tasks by default:
+
+```yaml
+# @package _global_
+dags:
+  services:
+    schedule: null
+    tasks:
+      worker:
+        _target_: airflow_supervisor.SupervisorTask
+        cfg:
+          working_dir: /tmp/worker
+          program:
+            main: {command: /opt/services/worker}
+```
+
+Load the file and call `generate_in_mem()` or `generate(..., airflow_major_version=2)` (use `3` for Airflow 3). Config also registers the
+unscheduled `worker-start-main`, `worker-stop-main`, and `worker-restart-main`
+control DAGs, all-program controls, and force kill. No additional helper call is
+needed. `SupervisorSSHTask` uses the same registration with its normal SSH
+configuration. Use distinct lifecycle task keys across DAGs to keep control DAG
+IDs unique.
+
+In Supervisor, `cfg.program_lifecycle: null` with no subtask overrides retains
+grouped behavior and does not produce program controls. See the
+[Supervisor task configuration guide](https://airflow-laminar.github.io/airflow-supervisor/how-to.html#how-to-configure-generated-tasks-with-subtasks)
+for startup order, waits, shutdown order, and retries.
+
 ## How to apply shared DAG and task defaults
 
 Set global defaults and override only the fields that differ:

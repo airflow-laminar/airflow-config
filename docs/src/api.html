@@ -30,7 +30,7 @@
 <link href="../../_static/copybutton.css?v=76b2166b" rel="stylesheet" type="text/css"/>
 <link href="../../_static/graphviz.css?v=4ae1632d" rel="stylesheet" type="text/css"/>
 <link href="../../_static/autodoc_pydantic.css" rel="stylesheet" type="text/css"/>
-<link href="../../_static/sphinx-design.min.css?v=95c83b7e" rel="stylesheet" type="text/css"/>
+<link href="../../_static/sphinx-design.min.css?v=6a604523" rel="stylesheet" type="text/css"/>
 <link href="../../_static/searchlite.css?v=4235115c" rel="stylesheet" type="text/css"/>
 <link href="../../_static/styles/custom.css?v=113af4ad" rel="stylesheet" type="text/css"/>
 <link href="../../_static/awesome-sphinx-design.css?v=b41b1d54" rel="stylesheet" type="text/css"/>
@@ -202,9 +202,19 @@ copied for each task. The rules apply to tasks in <code class="docutils literal 
 <span class="sig-prename descclassname"><span class="pre">airflow_config.configuration.base.</span></span><span class="sig-name descname"><span class="pre">load_config</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config_dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'config'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">overrides</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">basepath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">_offset</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">→</span> <span class="sig-return-typehint"><a class="reference internal" href="#airflow_config.configuration.base.Configuration" title="airflow_config.configuration.base.Configuration"><span class="pre">Configuration</span></a></span></span><a class="headerlink" href="#airflow_config.configuration.base.load_config" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#airflow_config.configuration.base.load_config'">¶</a></dt>
 <dd></dd></dl>
 </section>
-<section id="module-airflow_config.dag">
-<span id="dag-creation"></span><h2>DAG creation<a class="headerlink" href="#module-airflow_config.dag" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#module-airflow_config.dag'">¶</a></h2>
-<dl class="py class">
+<section id="dag-creation">
+<h2>DAG creation<a class="headerlink" href="#dag-creation" title="Link to this heading" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#dag-creation'">¶</a></h2>
+<p>Task integration operators can set <code class="docutils literal notranslate"><span class="pre">generates_dags</span> <span class="pre">=</span> <span class="pre">True</span></code> and attach a
+<code class="docutils literal notranslate"><span class="pre">_generated_dags</span></code> mapping to their native DAG,
+keyed by generated DAG ID. <code class="docutils literal notranslate"><span class="pre">Configuration.generate_in_mem()</span></code> registers these DAGs
+in the calling module. <code class="docutils literal notranslate"><span class="pre">Configuration.generate()</span></code> includes registration code in
+the rendered Python file; it runs when Airflow imports that file. Generated DAGs
+use their parent DAG’s file location. IDs that conflict with configured DAGs or
+existing module globals raise <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> instead of replacing those values.</p>
+<p>For example, <code class="docutils literal notranslate"><span class="pre">airflow-supervisor</span></code> uses this registration to expose per-program
+start/stop/restart controls. Task integrations decide which auxiliary DAGs to
+create; Config does not contact remote services to discover them.</p>
+<dl class="py class" id="module-airflow_config.dag">
 <dt class="sig sig-object py" id="airflow_config.dag.DAG">
 <em class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">airflow_config.dag.</span></span><span class="sig-name descname"><span class="pre">DAG</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#airflow_config.configuration.base.Configuration" title="airflow_config.configuration.base.Configuration"><span class="pre">Configuration</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/airflow_config/dag.html#DAG"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#airflow_config.dag.DAG" title="Link to this definition" x-intersect.margin.0%.0%.-70%.0%="activeSection = '#airflow_config.dag.DAG'">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">DAG</span></code></p>
@@ -326,7 +336,7 @@ assertions inspect definitions and do not execute tasks or resolve connections.<
 <li><a :data-current="activeSection === '#airflow_config.configuration.base.load_config'" class="reference internal" href="#airflow_config.configuration.base.load_config"><code class="docutils literal notranslate"><span class="pre">load_config()</span></code></a></li>
 </ul>
 </li>
-<li><a :data-current="activeSection === '#module-airflow_config.dag'" class="reference internal" href="#module-airflow_config.dag">DAG creation</a><ul>
+<li><a :data-current="activeSection === '#dag-creation'" class="reference internal" href="#dag-creation">DAG creation</a><ul>
 <li><a :data-current="activeSection === '#airflow_config.dag.DAG'" class="reference internal" href="#airflow_config.dag.DAG"><code class="docutils literal notranslate"><span class="pre">DAG</span></code></a></li>
 <li><a :data-current="activeSection === '#airflow_config.dag.create_dag'" class="reference internal" href="#airflow_config.dag.create_dag"><code class="docutils literal notranslate"><span class="pre">create_dag()</span></code></a></li>
 <li><a :data-current="activeSection === '#airflow_config.dag.create_dags'" class="reference internal" href="#airflow_config.dag.create_dags"><code class="docutils literal notranslate"><span class="pre">create_dags()</span></code></a></li>
@@ -373,7 +383,7 @@ assertions inspect definitions and do not execute tasks or resolve connections.<
 <script src="../../_static/clipboard.min.js?v=a7894cd8"></script>
 <script src="../../_static/copybutton.js?v=f281be69"></script>
 <script defer="defer" src="../../_static/theme.js?v=49cc6205"></script>
-<script src="../../_static/design-tabs.js?v=f930bc37"></script>
+<script data-sd-tabs-storage-prefix="sphinx-design-tab-id-" src="../../_static/design-tabs.js?v=fcb327ea"></script>
 <script data-searchlite-index="searchlite-index.json" defer="defer" src="../../_static/searchlite.js?v=a5320898"></script>
 <script data-searchlite-adopt="true" defer="defer" src="../../_static/searchlite-ui.js?v=4e4bdd69"></script>
 <script src="../../_static/js/custom.js?v=956e5d78"></script>

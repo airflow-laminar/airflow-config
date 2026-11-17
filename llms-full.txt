@@ -157,6 +157,37 @@ You have now generated an Airflow DAG from validated, composable YAML.
 These guides cover configuration composition, materialization, templates,
 environment selection, and ecosystem integrations.
 
+## How to generate Supervisor program controls
+
+Define a Supervisor task normally; current Supervisor versions create discrete
+program tasks by default:
+
+```yaml
+# @package _global_
+dags:
+  services:
+    schedule: null
+    tasks:
+      worker:
+        _target_: airflow_supervisor.SupervisorTask
+        cfg:
+          working_dir: /tmp/worker
+          program:
+            main: {command: /opt/services/worker}
+```
+
+Load the file and call `generate_in_mem()` or `generate(..., airflow_major_version=2)` (use `3` for Airflow 3). Config also registers the
+unscheduled `worker-start-main`, `worker-stop-main`, and `worker-restart-main`
+control DAGs, all-program controls, and force kill. No additional helper call is
+needed. `SupervisorSSHTask` uses the same registration with its normal SSH
+configuration. Use distinct lifecycle task keys across DAGs to keep control DAG
+IDs unique.
+
+In Supervisor, `cfg.program_lifecycle: null` with no subtask overrides retains
+grouped behavior and does not produce program controls. See the
+[Supervisor task configuration guide](https://airflow-laminar.github.io/airflow-supervisor/how-to.html#how-to-configure-generated-tasks-with-subtasks)
+for startup order, waits, shutdown order, and retries.
+
 ## How to apply shared DAG and task defaults
 
 Set global defaults and override only the fields that differ:
@@ -675,6 +706,20 @@ Generic Tags for config. NOTE: Not related to dag tags
 ### airflow_config.configuration.base.load_config(config_dir: str = 'config', config_name: str = '', overrides: list[str] | None = None, , basepath: str = '', \_offset: int = 3) → [Configuration](#airflow_config.configuration.base.Configuration)
 
 ## DAG creation
+
+Task integration operators can set `generates_dags = True` and attach a
+`_generated_dags` mapping to their native DAG,
+keyed by generated DAG ID. `Configuration.generate_in_mem()` registers these DAGs
+in the calling module. `Configuration.generate()` includes registration code in
+the rendered Python file; it runs when Airflow imports that file. Generated DAGs
+use their parent DAG’s file location. IDs that conflict with configured DAGs or
+existing module globals raise `ValueError` instead of replacing those values.
+
+For example, `airflow-supervisor` uses this registration to expose per-program
+start/stop/restart controls. Task integrations decide which auxiliary DAGs to
+create; Config does not contact remote services to discover them.
+
+<a id="module-airflow_config.dag"></a>
 
 ### *class* airflow_config.dag.DAG(config: [Configuration](#airflow_config.configuration.base.Configuration) | None = None, \*\*kwargs)[[source]](../../_modules/airflow_config/dag.html.md#DAG)
 
